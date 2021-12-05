@@ -4,5 +4,8 @@ module.exports = {
   parserOptions: {
     // tsconfigRootDir: __dirname,
     // project: ['./tsconfig.eslint.json'],
+  },
+  env: {
+    browser: true,
   }
 }
