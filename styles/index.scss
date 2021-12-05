@@ -16,9 +16,19 @@ ol {
 body {
   @apply bg-red-50 text-gray-700 text-sm;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', 'Noto Sans SC', 'Noto Sans', 'Microsoft YaHei', sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  $normal-fonts: 'Microsoft YaHei', '微软雅黑', 'SimHei', '黑体';
+  $modern-fonts: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',
+    'Noto Sans SC', 'Noto Sans', 'HarmonyOS Sans SC', 'Sarasa Gothic SC';
+  $emoji-fonts: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+
+  font-family: $normal-fonts, sans-serif, $emoji-fonts;
+
+  // modern fonts are 125% screens only
+  @media screen and (min-resolution: 120dpi) {
+    font-family: $modern-fonts, $normal-fonts, sans-serif, $emoji-fonts;
+  }
 }
 
 p {
