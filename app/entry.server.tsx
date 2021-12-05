@@ -8,14 +8,22 @@ export default function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const markup = renderToString(
-    <RemixServer context={remixContext} url={request.url} />,
-  )
+  try {
+    const markup = renderToString(
+      <RemixServer context={remixContext} url={request.url} />,
+    )
 
-  responseHeaders.set('Content-Type', 'text/html')
+    responseHeaders.set('Content-Type', 'text/html')
 
-  return new Response('<!DOCTYPE html>' + markup, {
-    status: responseStatusCode,
-    headers: responseHeaders,
-  })
+    return new Response('<!DOCTYPE html>' + markup, {
+      status: responseStatusCode,
+      headers: responseHeaders,
+    })
+  } catch (e) {
+    console.error(e)
+    return new Response('internal error', {
+      status: 500,
+      headers: responseHeaders,
+    })
+  }
 }
