@@ -1,0 +1,40 @@
+.BlogPost {
+  @apply bg-gray-50 bg-opacity-50 px-6 py-3 my-4;
+  &_Head {
+    a {
+      @apply text-gray-500;
+      &:hover {
+        @apply text-yellow-700;
+      }
+    }
+  }
+  &_Title {
+    @apply text-xl font-semibold;
+  }
+  &_Meta {
+    @apply my-2;
+  }
+  &_Body {
+    @apply text-base;
+  }
+  &_ReadMore a {
+    @apply text-base block py-1;
+  }
+}
+
+.BlogMeta {
+  @apply inline-block;
+  &_Label,
+  &_Value {
+    @apply inline-block text-gray-500;
+    line-height: 1;
+  }
+  &_Label {
+    .i-icon {
+      @apply align-middle;
+    }
+  }
+  &_Value {
+    @apply ml-1 mr-2;
+  }
+}

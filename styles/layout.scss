@@ -1,5 +1,6 @@
 .BlogLayout {
-  @apply flex;
+  @apply flex mx-auto;
+  max-width: 1080px;
 
   &_Sidebar {
     @apply w-72 mr-2 px-8;
