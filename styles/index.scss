@@ -1,8 +1,41 @@
-html,
-body {
+:root {
+  font-size: 16px;
+}
+
+* {
   margin: 0;
   padding: 0;
-}
-* {
   box-sizing: border-box;
 }
+
+ul,
+ol {
+  @apply list-none;
+}
+
+body {
+  @apply bg-red-50 text-gray-700 text-sm;
+  line-height: 1.5;
+}
+
+p {
+  @apply text-base mb-1;
+}
+
+small {
+  @apply text-sm;
+}
+
+a {
+  @apply no-underline text-yellow-700;
+  &:hover {
+    @apply text-yellow-600;
+  }
+}
+
+@import './layout.scss';
+
+@import './sidebar/BlogTitle.scss';
+@import './sidebar/SideLinks.scss';
+@import './sidebar/SideHeader.scss';
+@import './sidebar/CreativeCommons.scss';

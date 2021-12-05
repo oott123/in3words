@@ -1,0 +1,13 @@
+.BlogTitle {
+  @apply my-4 mt-8;
+  h1 a {
+    @apply block text-3xl font-semibold text-gray-700;
+    @apply mb-2;
+    &:hover {
+      @apply text-yellow-600;
+    }
+  }
+  h2 {
+    @apply text-sm font-normal text-gray-500;
+  }
+}

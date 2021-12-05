@@ -1,0 +1,12 @@
+.SideLinks {
+  &_Item a,
+  &_Item button {
+    @apply block px-2 py-1 my-1;
+    &:hover {
+      @apply bg-red-100;
+    }
+    &.SideLinks_Item-Active {
+      @apply bg-red-100;
+    }
+  }
+}

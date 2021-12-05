@@ -1,0 +1,11 @@
+.BlogLayout {
+  @apply flex;
+
+  &_Sidebar {
+    @apply w-72 mr-2 px-8;
+  }
+
+  &_Main {
+    @apply flex-1;
+  }
+}

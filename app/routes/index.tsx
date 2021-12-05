@@ -10,9 +10,6 @@ type IndexData = {
 // https://remix.run/api/conventions#loader
 export const loader: LoaderFunction = async () => {
   return json({ posts: [] })
-  const posts = await getPosts()
-  // https://remix.run/api/remix#json
-  return json({ posts })
 }
 
 // https://remix.run/api/conventions#meta
@@ -31,7 +28,7 @@ export default function Index() {
   }, [data])
 
   return (
-    <div className="remix__page">
+    <div className="BlogIndex">
       <main>
         <h2>Welcome to Remix!</h2>
         <p>We're stoked that you're here. 🥳</p>
