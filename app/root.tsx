@@ -126,27 +126,24 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="BlogLayout">
       <aside className="BlogLayout_Sidebar BlogSidebar">
-        <BlogTitle
-          title="三言三语"
-          headline="best33.com | 希望和你做朋友！"
-        ></BlogTitle>
+        <BlogTitle title="三言三语" headline="best33.com | 希望和你做朋友！" />
         <SideLinks>
-          <SideLinkItem to="/" title="文章" active></SideLinkItem>
-          <SideLinkItem to="/" title="留言"></SideLinkItem>
-          <SideLinkItem to="/" title="链接"></SideLinkItem>
-          <SideLinkItem to="/" title="关于"></SideLinkItem>
+          <SideLinkItem to="/" title="文章" active />
+          <SideLinkItem to="/" title="留言" />
+          <SideLinkItem to="/" title="链接" />
+          <SideLinkItem to="/" title="关于" />
         </SideLinks>
         <SideHeader>分类</SideHeader>
         <SideLinks>
-          <SideLinkItem to="/" title="Linux 笔记 (18)"></SideLinkItem>
-          <SideLinkItem to="/" title="M$ 大法 (3)"></SideLinkItem>
-          <SideLinkItem to="/" title="PHP 手札 (23)"></SideLinkItem>
-          <SideLinkItem to="/" title="Web 万象 (30)"></SideLinkItem>
-          <SideLinkItem to="/" title="仓鼠症 (1)"></SideLinkItem>
-          <SideLinkItem to="/" title="博客记录 (13)"></SideLinkItem>
-          <SideLinkItem to="/" title="原理拾穗 (4)"></SideLinkItem>
-          <SideLinkItem to="/" title="瞎想瞎扯 (1)"></SideLinkItem>
-          <SideLinkItem to="/" title="辣鸡水果 (1)"></SideLinkItem>
+          <SideLinkItem to="/" title="Linux 笔记 (18)" />
+          <SideLinkItem to="/" title="M$ 大法 (3)" />
+          <SideLinkItem to="/" title="PHP 手札 (23)" />
+          <SideLinkItem to="/" title="Web 万象 (30)" />
+          <SideLinkItem to="/" title="仓鼠症 (1)" />
+          <SideLinkItem to="/" title="博客记录 (13)" />
+          <SideLinkItem to="/" title="原理拾穗 (4)" />
+          <SideLinkItem to="/" title="瞎想瞎扯 (1)" />
+          <SideLinkItem to="/" title="辣鸡水果 (1)" />
         </SideLinks>
         <SideHeader>标签</SideHeader>
         <SideHeader>授权协议</SideHeader>

@@ -27,7 +27,7 @@ export interface Post {
 
 export type SummarizedPost = Omit<Post, 'content'> & { summary: string }
 
-export async function getPosts(page: number = 1): Promise<Post[]> {
+export async function getPosts(page = 1): Promise<Post[]> {
   const posts = await get(`/wp/v2/posts`, {
     _embed: 'author,wp:term',
     page,

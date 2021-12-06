@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ainou/code-style@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@ainou/code-style/-/code-style-0.0.7.tgz#a720df7735d91cb5242efdfb50f0f87cf68d36e7"
-  integrity sha512-QPZJHL0Kywjb5mpD6qJaWBdIQgpiTUBK6IHDsUBN9Gzi9jkPCtobiLIzz77ALMaLKj/JCdSM5yHS4Am4fhJDZQ==
+"@ainou/code-style@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@ainou/code-style/-/code-style-0.0.10.tgz#7ecdeded461a67e29c70b59f74221d656f33e7a1"
+  integrity sha512-i4ALPKaNjCv8Hz2WJD/kPGp8Y3+B31EQ9IT/rDe/OkNq8BPSqj4fiYx9v1SFTPaeNIgcs3YOAI8uvIi9zQ85+A==
   dependencies:
     "@babel/core" "^7.16.0"
     "@babel/eslint-parser" "^7.16.3"

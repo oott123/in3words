@@ -1,6 +1,6 @@
 .BlogPost {
-  // @apply bg-gray-50 bg-opacity-50;
-  @apply bg-red-50;
+  @apply bg-gray-50 bg-opacity-50;
+  // @apply bg-red-50;
   @apply px-6 py-4 m-4;
   &_Head {
     a {

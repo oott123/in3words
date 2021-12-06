@@ -22,7 +22,7 @@ export async function get<T = any>(
 }
 
 export class CmsError extends Error {
-  constructor(
+  public constructor(
     message: string,
     public readonly code: string,
     public readonly status?: number,

@@ -11,11 +11,13 @@ body {
   max-width: $max-width;
 
   &_Sidebar {
-    @apply w-72 px-8 pr-2 bg-red-50;
+    @apply w-72 px-8 pr-2;
+    // @apply bg-red-50;
   }
 
   &_Main {
-    @apply flex-1 bg-red-50;
+    @apply flex-1;
+    // @apply bg-red-50;
   }
 
   &_Ainou {
