@@ -1,3 +1,7 @@
+if (!globalThis.blogApiGetCache) {
+  globalThis.blogApiGetCache = new Map()
+}
+
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,
@@ -7,15 +11,28 @@ export async function get<T = any>(
   const queryString = query
     ? `?${Object.entries(query)
         .map((x) => x.map(encodeURIComponent).join('='))
+        .sort()
         .join('&')}`
     : ''
-  const response = await fetch(`${baseUrl}${path}${queryString}`)
-  const data = await response.json()
-  if (!response.ok && data) {
-    throw new CmsError(data.message, data.code, response.status)
+  const url = `${baseUrl}${path}${queryString}`
+
+  if (globalThis.blogApiGetCache!.has(url)) {
+    return globalThis.blogApiGetCache!.get(url)
   }
-  if (!response.ok) {
-    throw new CmsError('Unknown error', 'unknown', response.status)
+
+  const resp = await fetch(url)
+  const result = await response(resp)
+  globalThis.blogApiGetCache!.set(url, result)
+  return result
+}
+
+async function response(resp: Response) {
+  const data = await resp.json()
+  if (!resp.ok && data) {
+    throw new CmsError(data.message, data.code, resp.status)
+  }
+  if (!resp.ok) {
+    throw new CmsError('Unknown error', 'unknown', resp.status)
   }
 
   return data
