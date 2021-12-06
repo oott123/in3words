@@ -127,6 +127,7 @@ function Document({
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="BlogLayout">
+      <main className="BlogLayout_Main BlogMain">{children}</main>
       <aside className="BlogLayout_Sidebar BlogSidebar">
         <BlogTitle title="三言三语" headline="best33.com | 希望和你做朋友！" />
         <SideLinks>
@@ -151,7 +152,6 @@ function Layout({ children }: { children: React.ReactNode }) {
         <SideHeader>授权协议</SideHeader>
         <CreativeCommons />
       </aside>
-      <main className="BlogLayout_Main BlogMain">{children}</main>
       <aside className="BlogLayout_Ainou"></aside>
     </div>
   )

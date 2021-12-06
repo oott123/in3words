@@ -12,16 +12,19 @@ body {
 
   &_Sidebar {
     @apply w-72 px-8 pr-2;
+    order: 1;
     // @apply bg-red-50;
   }
 
   &_Main {
     @apply flex-1;
+    order: 2;
     // @apply bg-red-50;
   }
 
   &_Ainou {
     @apply hidden;
+    order: 3;
   }
 
   @media screen and (min-width: $ainou-breakpoint) {
