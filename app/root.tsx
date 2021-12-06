@@ -21,14 +21,16 @@ import SideLinks, { SideLinkItem } from './components/SideLinks'
 import SideHeader from './components/SideHeader'
 import CreativeCommons from './components/CreativeCommons'
 import { BlogIconsDef } from './components/BlogIcon'
-import { getCategories, getSite } from './data/site'
+import { getCategories, getSite, getTagCloud } from './data/site'
+import TagCloud from './components/TagCloud'
 
 const loadData = async () => {
-  const [site, categories] = await Promise.all([
+  const [site, categories, tagCloud] = await Promise.all([
     getSite(),
     getCategories(),
+    getTagCloud(),
   ] as const)
-  return { site, categories }
+  return { site, categories, tagCloud }
 }
 
 type RootData = Awaited<ReturnType<typeof loadData>>
@@ -144,7 +146,7 @@ function Document({
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const { site, categories } = useLoaderData<RootData>()
+  const { site, categories, tagCloud } = useLoaderData<RootData>()
 
   return (
     <div className="BlogLayout">
@@ -170,6 +172,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             ))}
         </SideLinks>
         <SideHeader>标签</SideHeader>
+        <TagCloud tags={tagCloud} />
         <SideHeader>授权协议</SideHeader>
         <CreativeCommons />
       </aside>

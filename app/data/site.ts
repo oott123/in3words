@@ -31,3 +31,31 @@ export async function getCategories(): Promise<CategoryMeta[]> {
     count,
   }))
 }
+
+export type TagMeta = {
+  id: number
+  name: string
+  slug: string
+  count: number
+}
+
+export async function getTagCloud(): Promise<TagMeta[]> {
+  const data = await get('/wp/v2/tags', {
+    per_page: 50,
+    orderby: 'count',
+    order: 'desc',
+    _fields: 'id,name,slug,count',
+  })
+  return (data as any[])
+    .map(
+      ({ id, name, slug, count }: TagMeta) =>
+        ({
+          id,
+          name,
+          slug,
+          count,
+        } as TagMeta),
+    )
+    .filter((c) => c.count > 1)
+    .sort((x1, x2) => x1.name.localeCompare(x2.name))
+}
