@@ -3,21 +3,101 @@
   // @apply bg-red-50;
   @apply px-6 py-4 m-4;
   &_Head {
+  }
+  &_Title {
+    @apply text-2xl font-semibold;
     a {
-      @apply text-gray-500;
+      color: inherit;
       &:hover {
         @apply text-yellow-700;
       }
     }
   }
-  &_Title {
-    @apply text-xl font-semibold;
-  }
   &_Meta {
     @apply my-2;
+    a + a {
+      @apply ml-2;
+    }
+    a {
+      color: inherit;
+      &:hover {
+        @apply text-yellow-700;
+      }
+    }
   }
   &_Body {
     @apply text-base;
+
+    p {
+      @apply my-2;
+    }
+
+    em {
+      @apply not-italic text-gray-500;
+    }
+
+    ul,
+    ol {
+      @apply list-disc ml-6;
+    }
+
+    ol {
+      @apply list-decimal;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-gray-900 font-semibold;
+      @apply text-xl mt-4 mb-2;
+    }
+
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-base mt-2 mb-1;
+    }
+
+    img,
+    figure {
+      @apply max-w-full h-auto;
+    }
+
+    figure {
+      @apply px-4 py-2 bg-white;
+    }
+
+    figcaption {
+      @apply text-center;
+    }
+
+    pre,
+    code {
+      @apply whitespace-pre-wrap break-all bg-gray-50;
+      font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+    }
+
+    pre {
+      @apply px-4 py-2 my-1;
+    }
+
+    blockquote {
+      @apply px-12 pt-6 pb-4 my-1 bg-gray-100 relative;
+      &::before {
+        content: '“';
+        font-family: 'Consolas';
+        @apply absolute top-0 left-0 text-6xl pl-4 text-gray-300;
+      }
+      &::after {
+        content: '”';
+        font-family: 'Consolas';
+        bottom: -0.25em;
+        @apply absolute right-0 text-6xl pr-4 text-gray-300;
+      }
+    }
   }
   &_ReadMore a {
     @apply text-base block py-1;

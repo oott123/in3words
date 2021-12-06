@@ -1,6 +1,9 @@
 body {
   @apply bg-red-50;
 }
+
+$sidebar-width: 288px;
+
 .BlogLayout {
   @apply flex mx-auto min-h-screen;
 
@@ -11,19 +14,18 @@ body {
   max-width: $max-width;
 
   &_Sidebar {
-    @apply w-72 px-8 pr-2;
+    @apply flex-shrink-0;
+    width: $sidebar-width;
     order: 1;
-    // @apply bg-red-50;
   }
 
   &_Main {
-    @apply flex-1;
+    @apply overflow-hidden;
     order: 2;
-    // @apply bg-red-50;
   }
 
   &_Ainou {
-    @apply hidden;
+    @apply hidden flex-shrink-0;
     order: 3;
   }
 
@@ -52,4 +54,9 @@ body {
       width: 0;
     }
   }
+}
+
+.BlogSidebar {
+  @apply px-8 pr-2;
+  width: $sidebar-width;
 }

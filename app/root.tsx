@@ -23,6 +23,7 @@ import CreativeCommons from './components/CreativeCommons'
 import { BlogIconsDef } from './components/BlogIcon'
 import { getCategories, getSite, getTagCloud } from './data/site'
 import TagCloud from './components/TagCloud'
+import BlogSidebar from './components/BlogSidebar'
 
 const loadData = async () => {
   const [site, categories, tagCloud] = await Promise.all([
@@ -151,30 +152,32 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="BlogLayout">
       <main className="BlogLayout_Main BlogMain">{children}</main>
-      <aside className="BlogLayout_Sidebar BlogSidebar">
-        <BlogTitle title={site.name} headline={site.description} />
-        <SideLinks>
-          <SideLinkItem to="/" title="文章" active />
-          <SideLinkItem to="/" title="留言" />
-          <SideLinkItem to="/" title="链接" />
-          <SideLinkItem to="/" title="关于" />
-        </SideLinks>
-        <SideHeader>分类</SideHeader>
-        <SideLinks>
-          {categories
-            .filter((c) => c.count > 0)
-            .map((c) => (
-              <SideLinkItem
-                key={c.id}
-                to={`/category/${c.slug}`}
-                title={`${c.name} (${c.count})`}
-              />
-            ))}
-        </SideLinks>
-        <SideHeader>标签</SideHeader>
-        <TagCloud tags={tagCloud} />
-        <SideHeader>授权协议</SideHeader>
-        <CreativeCommons />
+      <aside className="BlogLayout_Sidebar">
+        <BlogSidebar>
+          <BlogTitle title={site.name} headline={site.description} />
+          <SideLinks>
+            <SideLinkItem to="/" title="文章" active />
+            <SideLinkItem to="/" title="留言" />
+            <SideLinkItem to="/" title="链接" />
+            <SideLinkItem to="/" title="关于" />
+          </SideLinks>
+          <SideHeader>分类</SideHeader>
+          <SideLinks>
+            {categories
+              .filter((c) => c.count > 0)
+              .map((c) => (
+                <SideLinkItem
+                  key={c.id}
+                  to={`/category/${c.slug}`}
+                  title={`${c.name} (${c.count})`}
+                />
+              ))}
+          </SideLinks>
+          <SideHeader>标签</SideHeader>
+          <TagCloud tags={tagCloud} />
+          <SideHeader>授权协议</SideHeader>
+          <CreativeCommons />
+        </BlogSidebar>
       </aside>
       <aside className="BlogLayout_Ainou"></aside>
     </div>

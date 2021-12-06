@@ -19,6 +19,7 @@ export interface Post {
   content: string
   author: {
     name: string
+    slug: string
     avatar: string
   }
   categories: Term<'category'>[]
@@ -43,6 +44,7 @@ export async function getPosts(page = 1): Promise<Post[]> {
         content: post.content.rendered,
         author: {
           name: findEmbedded(post._embedded, 'author', post.author).name,
+          slug: findEmbedded(post._embedded, 'author', post.author).slug,
           avatar: findEmbedded(post._embedded, 'author', post.author)
             .avatar_urls['96'],
         } as Author,
