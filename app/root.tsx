@@ -153,6 +153,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <CreativeCommons />
       </aside>
       <main className="BlogLayout_Main BlogMain">{children}</main>
+      <aside className="BlogLayout_Ainou"></aside>
     </div>
   )
 }

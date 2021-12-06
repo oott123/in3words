@@ -1,12 +1,50 @@
+body {
+  @apply bg-red-50;
+}
 .BlogLayout {
-  @apply flex mx-auto;
-  max-width: 1080px;
+  @apply flex mx-auto min-h-screen;
+
+  $max-width: 1080px;
+  $ainou-width: 288px;
+  $ainou-breakpoint: $max-width + $ainou-width;
+
+  max-width: $max-width;
 
   &_Sidebar {
-    @apply w-72 mr-2 px-8;
+    @apply w-72 px-8 pr-2 bg-red-50;
   }
 
   &_Main {
-    @apply flex-1;
+    @apply flex-1 bg-red-50;
+  }
+
+  &_Ainou {
+    @apply hidden;
+  }
+
+  @media screen and (min-width: $ainou-breakpoint) {
+    max-width: $ainou-breakpoint;
+    &_Ainou {
+      @apply block;
+      width: $ainou-width;
+
+      &::before {
+        content: ' ';
+        @apply block fixed pointer-events-none;
+        @apply bottom-0 bg-no-repeat bg-left-bottom;
+        width: $ainou-width;
+        height: 600px;
+        margin-left: -24px;
+        background-size: $ainou-width;
+        background-image: url('/ainou-grab.png');
+      }
+    }
+  }
+
+  @media screen and (min-width: $ainou-breakpoint + $ainou-width) {
+    max-width: $max-width;
+    &_Ainou {
+      width: 0;
+    }
   }
 }
