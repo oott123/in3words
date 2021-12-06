@@ -18,6 +18,7 @@ import BlogTitle from './components/BlogTitle'
 import SideLinks, { SideLinkItem } from './components/SideLinks'
 import SideHeader from './components/SideHeader'
 import CreativeCommons from './components/CreativeCommons'
+import { BlogIconsDef } from './components/BlogIcon'
 
 export const loader: LoaderFunction = async () => {
   return 1
@@ -115,6 +116,7 @@ function Document({
       <body>
         {children}
         <ScrollRestoration />
+        <BlogIconsDef />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
