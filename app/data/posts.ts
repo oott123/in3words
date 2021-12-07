@@ -36,28 +36,37 @@ export async function getPosts(page = 1): Promise<Post[]> {
   })
 
   return posts.map((post: any) => {
-    const { summary } = postProcessContent(post.content.rendered, true)
+    const transformed = transformPost(post)
+    const { summary } = postProcessContent(transformed.content, true)
     return {
-      id: post.id,
-      createdAt: parseGmt(post.date_gmt),
-      updatedAt: parseGmt(post.modified_gmt),
-      title: post.title.rendered,
+      ...transformed,
       summary,
-      author: {
-        name: findEmbedded(post._embedded, 'author', post.author).name,
-        slug: findEmbedded(post._embedded, 'author', post.author).slug,
-        avatar: findEmbedded(post._embedded, 'author', post.author).avatar_urls[
-          '96'
-        ],
-      } as Author,
-      categories: post.categories.map(
-        mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
-      ),
-      tags: post.tags.map(
-        mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
-      ),
+      content: undefined,
     } as SummarizedPost
   })
+}
+
+function transformPost(post: any): Post {
+  return {
+    id: post.id,
+    createdAt: parseGmt(post.date_gmt),
+    updatedAt: parseGmt(post.modified_gmt),
+    title: post.title.rendered,
+    content: post.content.rendered,
+    author: {
+      name: findEmbedded(post._embedded, 'author', post.author).name,
+      slug: findEmbedded(post._embedded, 'author', post.author).slug,
+      avatar: findEmbedded(post._embedded, 'author', post.author).avatar_urls[
+        '96'
+      ],
+    } as Author,
+    categories: post.categories.map(
+      mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
+    ),
+    tags: post.tags.map(
+      mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
+    ),
+  } as Post
 }
 
 function findEmbedded(embedded: any, resource: string, id: number) {
