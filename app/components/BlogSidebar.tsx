@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const BlogSidebar: React.FC = ({ children }) => {
   const [isFixed, setIsFixed] = useState(false)
@@ -8,7 +8,7 @@ const BlogSidebar: React.FC = ({ children }) => {
   const screenHeight = useRef(0)
   const lastHeight = useRef(0)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setIsFixed(true)
 
     sidebarHeight.current = sidebar.current?.clientHeight ?? 0
