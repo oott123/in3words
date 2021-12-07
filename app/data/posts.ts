@@ -1,6 +1,7 @@
 import { Parser } from 'htmlparser2'
 import { get } from './base'
 import hljs from 'highlight.js'
+import classNames from 'classnames'
 
 export interface Author {
   name: string
@@ -114,6 +115,13 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
           'AUTO'
       }
       currentTag = name
+
+      if (name === 'a') {
+        attribs.target = attribs.target || '_blank'
+        attribs.rel = attribs.rel || 'noopener noreferrer'
+        attribs.class = classNames(attribs.class, 'BlogLink-External')
+      }
+
       content.push(`<${name}`)
       for (const key in attribs) {
         content.push(
