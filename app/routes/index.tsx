@@ -10,8 +10,8 @@ type IndexData = {
 
 // https://remix.run/api/conventions#loader
 export const loader: LoaderFunction = async () => {
-  const posts = await getPosts()
-  return json({ posts })
+  const { posts, total, totalPages } = await getPosts()
+  return json({ posts, total, totalPages })
 }
 
 // https://remix.run/api/conventions#meta

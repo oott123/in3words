@@ -2,19 +2,13 @@ if (!globalThis.blogApiGetCache) {
   globalThis.blogApiGetCache = new Map()
 }
 
+const BASE_URL = 'https://best33.com/wp-json'
+
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,
 ): Promise<T> {
-  const baseUrl = 'https://best33.com/wp-json'
-
-  const queryString = query
-    ? `?${Object.entries(query)
-        .map((x) => x.map(encodeURIComponent).join('='))
-        .sort()
-        .join('&')}`
-    : ''
-  const url = `${baseUrl}${path}${queryString}`
+  const url = buildUrl(query, path)
 
   if (globalThis.blogApiGetCache!.has(url)) {
     return globalThis.blogApiGetCache!.get(url)
@@ -24,6 +18,27 @@ export async function get<T = any>(
   const result = await response(resp)
   globalThis.blogApiGetCache!.set(url, result)
   return result
+}
+
+export async function getList<T = any[]>(
+  path: string,
+  query?: Record<string, any>,
+): Promise<{ items: T; total: number; totalPages: number }> {
+  const url = buildUrl(query, path)
+  const cacheKey = `list_${url}`
+
+  if (globalThis.blogApiGetCache!.has(cacheKey)) {
+    return globalThis.blogApiGetCache!.get(cacheKey)
+  }
+
+  const resp = await fetch(url)
+  const items = await response(resp)
+  const total = Number(resp.headers.get('X-WP-Total'))
+  const totalPages = Number(resp.headers.get('X-WP-TotalPages'))
+  const data = { items, total, totalPages }
+
+  globalThis.blogApiGetCache!.set(cacheKey, data)
+  return data
 }
 
 async function response(resp: Response) {
@@ -47,4 +62,15 @@ export class CmsError extends Error {
     super(message)
     this.name = 'CmsError'
   }
+}
+
+function buildUrl(query: Record<string, any> | undefined, path: string) {
+  const queryString = query
+    ? `?${Object.entries(query)
+        .map((x) => x.map(encodeURIComponent).join('='))
+        .sort()
+        .join('&')}`
+    : ''
+  const url = `${BASE_URL}${path}${queryString}`
+  return url
 }

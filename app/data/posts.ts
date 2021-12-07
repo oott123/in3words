@@ -1,5 +1,5 @@
 import { Parser } from 'htmlparser2'
-import { get } from './base'
+import { get, getList } from './base'
 import hljs from 'highlight.js'
 import classNames from 'classnames'
 
@@ -31,13 +31,15 @@ export interface Post {
 
 export type SummarizedPost = Omit<Post, 'content'> & { summary: string }
 
-export async function getPosts(page = 1): Promise<Post[]> {
-  const posts = await get(`/wp/v2/posts`, {
+export async function getPosts(
+  page = 1,
+): Promise<{ posts: SummarizedPost[]; total: number; totalPages: number }> {
+  const { items, total, totalPages } = await getList(`/wp/v2/posts`, {
     _embed: 'author,wp:term',
     page,
   })
 
-  return posts.map((post: any) => {
+  const posts = items.map((post: any) => {
     const transformed = transformPost(post)
     const { summary } = postProcessContent(transformed.content, true)
     return {
@@ -46,6 +48,8 @@ export async function getPosts(page = 1): Promise<Post[]> {
       content: undefined,
     } as SummarizedPost
   })
+
+  return { posts, total, totalPages }
 }
 
 export async function getPost(id: number): Promise<Post> {
