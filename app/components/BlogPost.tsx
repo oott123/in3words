@@ -37,7 +37,7 @@ const BlogPost: React.FC<{ post: SummarizedPost | Post }> = ({ post }) => {
           </BlogMeta>
           <BlogMeta label={<BlogIcon>{BlogIcons.Tag}</BlogIcon>}>
             {post.tags.map((x) => (
-              <Link to={`/category/${x.slug}`} key={x.slug}>
+              <Link to={`/tag/${x.slug}`} key={x.slug}>
                 {x.name}
               </Link>
             ))}
