@@ -57,6 +57,6 @@ $sidebar-width: 288px;
 }
 
 .BlogSidebar {
-  @apply px-8 pr-2;
+  @apply px-8 pr-2 pb-4;
   width: $sidebar-width;
 }

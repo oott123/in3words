@@ -1,7 +1,7 @@
 .BlogPost {
-  @apply bg-gray-50 bg-opacity-50;
+  @apply bg-gray-50 bg-opacity-75;
   // @apply bg-red-50;
-  @apply px-6 py-4 m-4;
+  @apply px-6 py-4 m-4 rounded-sm;
   &_Head {
   }
   &_Title {
@@ -27,6 +27,7 @@
   }
   &_Body {
     @apply text-base;
+    line-height: 1.8;
 
     p {
       @apply my-2;
@@ -43,6 +44,10 @@
 
     ol {
       @apply list-decimal;
+    }
+
+    ul ul {
+      list-style: circle;
     }
 
     h2,

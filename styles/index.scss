@@ -13,15 +13,20 @@ ol {
   @apply list-none;
 }
 
+@font-face {
+  font-family: 'color-emoji';
+  src: local('Apple Color Emoji'), local('Segoe UI Emoji'),
+    local('Segoe UI Symbol'), local('Noto Color Emoji');
+}
+
 body {
   @apply text-gray-700 text-sm;
   line-height: 1.5;
 
-  $normal-fonts: 'Microsoft YaHei', '微软雅黑', 'SimHei', '黑体';
+  $normal-fonts: 'Microsoft YaHei', '微软雅黑', 'Segoe UI', 'SimHei', '黑体';
   $modern-fonts: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',
     'Noto Sans SC', 'Noto Sans', 'HarmonyOS Sans SC', 'Sarasa Gothic SC';
-  $emoji-fonts: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  $emoji-fonts: 'color-emoji';
 
   font-family: $normal-fonts, sans-serif, $emoji-fonts;
 

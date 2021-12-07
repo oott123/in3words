@@ -8,7 +8,7 @@ const TagCloud: React.FC<{ tags: TagMeta[] }> = ({ tags }) => {
   const minCount = Math.min(...tags.map((tag) => tag.count))
   const tagWithRate = tags.map((tag) => ({
     ...tag,
-    rate: Math.min((tag.count - minCount) / (maxCount - minCount), 1),
+    rate: Math.min((tag.count - minCount) / (maxCount - minCount), 1.4),
   }))
 
   return (
