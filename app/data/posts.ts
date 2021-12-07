@@ -1,5 +1,6 @@
 import { Parser } from 'htmlparser2'
 import { get } from './base'
+import hljs from 'highlight.js'
 
 export interface Author {
   name: string
@@ -101,10 +102,18 @@ function mapTermsByTaxonomy(terms: any, taxonomy: string) {
 function postProcessContent(html: string, summaryOnly?: boolean) {
   const content: string[] = []
   const summary: string[] = []
+  let currentTag = ''
+  let currentLanguage = ''
   let paragraphs = 0
 
   const parser = new Parser({
     onopentag(name, attribs) {
+      if (currentTag === 'pre' && name === 'code') {
+        currentLanguage =
+          `${attribs.class}`.match(/language-(\w+)/)?.[1]?.toLowerCase() ||
+          'AUTO'
+      }
+      currentTag = name
       content.push(`<${name}`)
       for (const key in attribs) {
         content.push(
@@ -114,9 +123,21 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
       content.push('>')
     },
     ontext(text) {
-      content.push(encodeHtmlText(text))
+      if (currentLanguage) {
+        if (currentLanguage === 'AUTO') {
+          content.push(hljs.highlightAuto(text).value)
+        } else {
+          content.push(
+            hljs.highlight(text, { language: currentLanguage }).value,
+          )
+        }
+      } else {
+        content.push(encodeHtmlText(text))
+      }
     },
     onclosetag(name) {
+      currentTag = ''
+      currentLanguage = ''
       content.push(`</${name}>`)
       if (name === 'p') {
         paragraphs++
