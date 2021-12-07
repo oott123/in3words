@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+// React currently throws a warning when using useLayoutEffect on the server.
+// To get around it, we can conditionally useEffect on the server (no-op) and
+// useLayoutEffect in the browser.
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 const BlogSidebar: React.FC = ({ children }) => {
   const [isFixed, setIsFixed] = useState(false)
@@ -8,7 +14,7 @@ const BlogSidebar: React.FC = ({ children }) => {
   const screenHeight = useRef(0)
   const lastHeight = useRef(0)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setIsFixed(true)
 
     sidebarHeight.current = sidebar.current?.clientHeight ?? 0
@@ -32,12 +38,14 @@ const BlogSidebar: React.FC = ({ children }) => {
 
     const handleResize = () => {
       screenHeight.current = window.innerHeight
-      setScroll()
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleResize, { passive: true })
     handleResize()
+
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    setTop(scrollTop)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
