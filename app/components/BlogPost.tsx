@@ -52,7 +52,7 @@ const BlogPost: React.FC<{ post: SummarizedPost | Post }> = ({ post }) => {
       ></div>
       {summarized && (
         <div className="BlogPost_ReadMore">
-          <Link to="/">阅读全文»</Link>
+          <Link to={`/${post.id}.moe`}>阅读全文»</Link>
         </div>
       )}
     </article>

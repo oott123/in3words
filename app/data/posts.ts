@@ -48,6 +48,18 @@ export async function getPosts(page = 1): Promise<Post[]> {
   })
 }
 
+export async function getPost(id: number): Promise<Post> {
+  const post = await get(`/wp/v2/posts/${id}`, {
+    _embed: 'author,wp:term',
+  })
+
+  const transformed = transformPost(post)
+  const { content } = postProcessContent(transformed.content)
+  transformed.content = content
+
+  return transformed
+}
+
 function transformPost(post: any): Post {
   return {
     id: post.id,
