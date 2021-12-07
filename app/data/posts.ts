@@ -1,3 +1,4 @@
+import { Parser } from 'htmlparser2'
 import { get } from './base'
 
 export interface Author {
@@ -34,28 +35,29 @@ export async function getPosts(page = 1): Promise<Post[]> {
     page,
   })
 
-  return posts.map(
-    (post: any) =>
-      ({
-        id: post.id,
-        createdAt: parseGmt(post.date_gmt),
-        updatedAt: parseGmt(post.modified_gmt),
-        title: post.title.rendered,
-        content: post.content.rendered,
-        author: {
-          name: findEmbedded(post._embedded, 'author', post.author).name,
-          slug: findEmbedded(post._embedded, 'author', post.author).slug,
-          avatar: findEmbedded(post._embedded, 'author', post.author)
-            .avatar_urls['96'],
-        } as Author,
-        categories: post.categories.map(
-          mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
-        ),
-        tags: post.tags.map(
-          mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
-        ),
-      } as Post),
-  )
+  return posts.map((post: any) => {
+    const { summary } = postProcessContent(post.content.rendered, true)
+    return {
+      id: post.id,
+      createdAt: parseGmt(post.date_gmt),
+      updatedAt: parseGmt(post.modified_gmt),
+      title: post.title.rendered,
+      summary,
+      author: {
+        name: findEmbedded(post._embedded, 'author', post.author).name,
+        slug: findEmbedded(post._embedded, 'author', post.author).slug,
+        avatar: findEmbedded(post._embedded, 'author', post.author).avatar_urls[
+          '96'
+        ],
+      } as Author,
+      categories: post.categories.map(
+        mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
+      ),
+      tags: post.tags.map(
+        mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
+      ),
+    } as SummarizedPost
+  })
 }
 
 function findEmbedded(embedded: any, resource: string, id: number) {
@@ -85,4 +87,53 @@ function mapTermsByTaxonomy(terms: any, taxonomy: string) {
     }
     return result[id]
   }
+}
+
+function postProcessContent(html: string, summaryOnly?: boolean) {
+  const content: string[] = []
+  const summary: string[] = []
+  let paragraphs = 0
+
+  const parser = new Parser({
+    onopentag(name, attribs) {
+      content.push(`<${name}`)
+      for (const key in attribs) {
+        content.push(
+          ` ${encodeHtmlAttr(key)}="${encodeHtmlAttr(attribs[key])}"`,
+        )
+      }
+      content.push('>')
+    },
+    ontext(text) {
+      content.push(encodeHtmlText(text))
+    },
+    onclosetag(name) {
+      content.push(`</${name}>`)
+      if (name === 'p') {
+        paragraphs++
+      }
+      if (paragraphs >= 2) {
+        summary.push(content.join(''))
+        if (summaryOnly) {
+          parser.pause()
+        }
+      }
+    },
+  })
+
+  parser.write(html)
+  parser.end()
+
+  return {
+    content: content.join(''),
+    summary: summary.join(''),
+  }
+}
+
+function encodeHtmlText(str: string) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function encodeHtmlAttr(str: string) {
+  return encodeHtmlText(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }

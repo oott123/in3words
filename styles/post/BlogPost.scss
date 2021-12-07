@@ -25,6 +25,7 @@
       }
     }
   }
+
   &_Body {
     @apply text-base;
     line-height: 1.8;
@@ -68,7 +69,7 @@
 
     img,
     figure {
-      @apply max-w-full h-auto;
+      @apply max-w-full h-auto block;
     }
 
     figure {
@@ -104,6 +105,13 @@
       }
     }
   }
+
+  &-Summarized &_Body {
+    img {
+      @apply max-h-80 mx-auto block;
+    }
+  }
+
   &_ReadMore a {
     @apply text-base block py-1;
   }

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import React from 'react'
 import { Link } from 'remix'
 import { Post, SummarizedPost } from '~/data/posts'
@@ -5,11 +6,18 @@ import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 
 const BlogPost: React.FC<{ post: SummarizedPost | Post }> = ({ post }) => {
+  const summarized = 'summary' in post
+
   return (
-    <article className="BlogPost">
+    <article
+      className={classNames('BlogPost', summarized && 'BlogPost-Summarized')}
+    >
       <div className="BlogPost_Head">
         <h1 className="BlogPost_Title">
-          <Link to={`/${post.id}.moe`}>{post.title}</Link>
+          <Link
+            to={`/${post.id}.moe`}
+            dangerouslySetInnerHTML={{ __html: post.title }}
+          />
         </h1>
         <div className="BlogPost_Meta">
           <BlogMeta label={<BlogIcon>{BlogIcons.User}</BlogIcon>}>
@@ -39,10 +47,10 @@ const BlogPost: React.FC<{ post: SummarizedPost | Post }> = ({ post }) => {
       <div
         className="BlogPost_Body"
         dangerouslySetInnerHTML={{
-          __html: 'summary' in post ? post.summary : post.content,
+          __html: summarized ? post.summary : post.content,
         }}
       ></div>
-      {'summary' in post && (
+      {summarized && (
         <div className="BlogPost_ReadMore">
           <Link to="/">阅读全文»</Link>
         </div>

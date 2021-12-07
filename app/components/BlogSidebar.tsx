@@ -38,6 +38,7 @@ const BlogSidebar: React.FC = ({ children }) => {
 
     const handleResize = () => {
       screenHeight.current = window.innerHeight
+      setScroll()
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
