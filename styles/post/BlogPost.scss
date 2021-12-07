@@ -83,7 +83,15 @@
     pre,
     code {
       @apply whitespace-pre-wrap break-all bg-gray-50;
-      font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+
+      font-family: 'Fira Code', 'JetBrains Mono', 'Consolas',
+        ChineseOnlySansSerif, monospace;
+
+      // modern fonts are 125% screens only
+      @media screen and (min-resolution: 120dpi) {
+        font-family: 'Fira Code', 'JetBrains Mono', 'Sarasa Mono SC',
+          'Noto Sans Mono CJK SC', 'Consolas', ChineseOnlySansSerif, monospace;
+      }
     }
 
     pre {
