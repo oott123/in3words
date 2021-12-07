@@ -112,6 +112,24 @@ function mapTermsByTaxonomy(terms: any, taxonomy: string) {
   }
 }
 
+const voidTags = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'keygen',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]
+
 function postProcessContent(html: string, summaryOnly?: boolean) {
   const content: string[] = []
   const summary: string[] = []
@@ -158,7 +176,10 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
     onclosetag(name) {
       currentTag = ''
       currentLanguage = ''
-      content.push(`</${name}>`)
+      if (!voidTags.includes(name)) {
+        content.push(`</${name}>`)
+      }
+
       if (name === 'p') {
         paragraphs++
       }
