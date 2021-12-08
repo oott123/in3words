@@ -1,18 +1,17 @@
 import classNames from 'classnames'
 import React from 'react'
-import { Link, useTransition } from 'remix'
+import { Link } from 'remix'
 import { Post, SummarizedPost } from '~/data/posts'
 import { authorPath, categoryPath, tagPath } from '~/path'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 
-const BlogPost: React.FC<{ post: SummarizedPost | Post; postPath: string }> = ({
-  post,
-  postPath,
-}) => {
+const BlogPost: React.FC<{
+  post: SummarizedPost | Post
+  postPath: string
+  isLoadingFull?: boolean
+}> = ({ post, postPath, isLoadingFull }) => {
   const summarized = 'summary' in post
-  const transition = useTransition()
-  const isLoadingFull = summarized && transition.location?.pathname === postPath
 
   return (
     <article
@@ -59,7 +58,7 @@ const BlogPost: React.FC<{ post: SummarizedPost | Post; postPath: string }> = ({
       {summarized && (
         <div className="BlogPost_ReadMore">
           <Link to={postPath}>
-            {isLoadingFull ? '正在加载……' : '阅读全文»'}
+            {isLoadingFull ? '全文载入中……' : '阅读全文»'}
           </Link>
         </div>
       )}

@@ -1,9 +1,7 @@
-import { useEffect } from 'react'
 import type { MetaFunction, LoaderFunction } from 'remix'
-import { useLoaderData, json, Link } from 'remix'
-import BlogPost from '~/components/BlogPost'
+import { useLoaderData, json } from 'remix'
+import PostList from '~/components/PostList'
 import { getPosts, Post } from '~/data/posts'
-import { postPath } from '~/path'
 
 type IndexData = {
   posts: Post[]
@@ -29,9 +27,7 @@ export default function Index() {
 
   return (
     <div className="BlogIndex">
-      {posts.map((post) => (
-        <BlogPost key={post.id} post={post} postPath={postPath(post)} />
-      ))}
+      <PostList posts={posts} />
     </div>
   )
 }
