@@ -1,10 +1,12 @@
 import type { MetaFunction, LoaderFunction } from 'remix'
 import { useLoaderData, json } from 'remix'
 import PostList from '~/components/PostList'
-import { getPosts, Post } from '~/data/posts'
+import { getPosts, SummarizedPost } from '~/data/posts'
 
 type IndexData = {
-  posts: Post[]
+  posts: SummarizedPost[]
+  total: number
+  totalPages: number
 }
 
 // https://remix.run/api/conventions#loader
