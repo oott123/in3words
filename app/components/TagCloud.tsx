@@ -1,5 +1,6 @@
 import React from 'react'
 import { TagMeta } from '~/data/site'
+import { tagPath } from '~/path'
 
 const TagCloud: React.FC<{ tags: TagMeta[] }> = ({ tags }) => {
   const sortedTags = [...tags].sort((a, b) => b.count - a.count)
@@ -18,7 +19,7 @@ const TagCloud: React.FC<{ tags: TagMeta[] }> = ({ tags }) => {
           key={tag.id}
           style={{ fontSize: `${(tag.rate * 0.5 + 1).toFixed(2)}em` }}
         >
-          <a href={`/tag/${tag.slug}`} title={`${tag.name} (${tag.count})`}>
+          <a href={tagPath(tag)} title={`${tag.name} (${tag.count})`}>
             {tag.name}
           </a>
         </li>

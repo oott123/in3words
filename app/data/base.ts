@@ -11,6 +11,7 @@ export async function get<T = any>(
   const url = buildUrl(query, path)
 
   if (globalThis.blogApiGetCache!.has(url)) {
+    await sleep(2000)
     return globalThis.blogApiGetCache!.get(url)
   }
 
@@ -73,4 +74,8 @@ function buildUrl(query: Record<string, any> | undefined, path: string) {
     : ''
   const url = `${BASE_URL}${path}${queryString}`
   return url
+}
+
+function sleep(time: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, time))
 }

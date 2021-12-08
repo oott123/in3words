@@ -3,6 +3,7 @@ import type { MetaFunction, LoaderFunction } from 'remix'
 import { useLoaderData, json, Link } from 'remix'
 import BlogPost from '~/components/BlogPost'
 import { getPosts, Post } from '~/data/posts'
+import { postPath } from '~/path'
 
 type IndexData = {
   posts: Post[]
@@ -29,7 +30,7 @@ export default function Index() {
   return (
     <div className="BlogIndex">
       {posts.map((post) => (
-        <BlogPost key={post.id} post={post} />
+        <BlogPost key={post.id} post={post} postPath={postPath(post)} />
       ))}
     </div>
   )

@@ -24,6 +24,7 @@ import { BlogIconsDef } from './components/BlogIcon'
 import { getCategories, getSite, getTagCloud } from './data/site'
 import TagCloud from './components/TagCloud'
 import BlogSidebar from './components/BlogSidebar'
+import { categoryPath, pagePath } from './path'
 
 const loadData = async () => {
   const [site, categories, tagCloud] = await Promise.all([
@@ -157,9 +158,9 @@ function Layout({ children }: { children: React.ReactNode }) {
           <BlogTitle title={site.name} headline={site.description} />
           <SideLinks>
             <SideLinkItem to="/" title="文章" active />
-            <SideLinkItem to="/" title="留言" />
-            <SideLinkItem to="/" title="链接" />
-            <SideLinkItem to="/" title="关于" />
+            <SideLinkItem to={pagePath({ slug: 'guestbook' })} title="留言" />
+            <SideLinkItem to={pagePath({ slug: 'links' })} title="链接" />
+            <SideLinkItem to={pagePath({ slug: 'about' })} title="关于" />
           </SideLinks>
           <SideHeader>分类</SideHeader>
           <SideLinks>
@@ -168,7 +169,7 @@ function Layout({ children }: { children: React.ReactNode }) {
               .map((c) => (
                 <SideLinkItem
                   key={c.id}
-                  to={`/category/${c.slug}`}
+                  to={categoryPath(c)}
                   title={`${c.name} (${c.count})`}
                 />
               ))}

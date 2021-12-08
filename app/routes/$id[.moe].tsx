@@ -3,6 +3,7 @@ import type { MetaFunction, LoaderFunction } from 'remix'
 import { useLoaderData, json, Link } from 'remix'
 import BlogPost from '~/components/BlogPost'
 import { getPost, getPosts, Post } from '~/data/posts'
+import { postPath } from '~/path'
 
 type PostData = {
   post: Post
@@ -25,10 +26,11 @@ export const meta: MetaFunction = () => {
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
   const { post } = useLoaderData<PostData>()
+  const path = postPath(post)
 
   return (
     <div className="BlogPage">
-      <BlogPost post={post} />
+      <BlogPost post={post} postPath={path} />
     </div>
   )
 }
