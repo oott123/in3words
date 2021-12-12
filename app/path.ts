@@ -6,11 +6,17 @@ export function authorPath({ slug }: { slug: string }) {
   return `/author/${slug}`
 }
 
-export function categoryPath({ slug }: { slug: string }) {
+export function categoryPath({ slug }: { slug: string }, page: number) {
+  if (page > 1) {
+    return `/category/${slug}/page/${page}`
+  }
   return `/category/${slug}`
 }
 
-export function tagPath({ slug }: { slug: string }) {
+export function tagPath({ slug }: { slug: string }, page: number) {
+  if (page > 1) {
+    return `/tag/${slug}/page/${page}`
+  }
   return `/tag/${slug}`
 }
 

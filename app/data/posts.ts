@@ -2,6 +2,7 @@ import { Parser } from 'htmlparser2'
 import { get, getList } from './base'
 import hljs from 'highlight.js'
 import classNames from 'classnames'
+import { getCategory, getTag } from './site'
 
 export interface Author {
   name: string
@@ -33,10 +34,12 @@ export type SummarizedPost = Omit<Post, 'content'> & { summary: string }
 
 export async function getPosts(
   page = 1,
+  queryArgs: Record<string, any> = {},
 ): Promise<{ posts: SummarizedPost[]; total: number; totalPages: number }> {
   const { items, total, totalPages } = await getList(`/wp/v2/posts`, {
     _embed: 'author,wp:term',
     page,
+    ...queryArgs,
   })
 
   const posts = items.map((post: any) => {
@@ -50,6 +53,22 @@ export async function getPosts(
   })
 
   return { posts, total, totalPages }
+}
+
+export async function getCategoryPosts(slug: string, page = 1) {
+  const category = await getCategory(slug)
+  return {
+    ...(await getPosts(page, { categories: category.id })),
+    category,
+  }
+}
+
+export async function getTagPosts(slug: string, page = 1) {
+  const tag = await getTag(slug)
+  return {
+    ...(await getPosts(page, { tags: tag.id })),
+    tag,
+  }
 }
 
 export async function getPost(id: number): Promise<Post> {

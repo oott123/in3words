@@ -1,10 +1,10 @@
 .PageNavigation {
-  @apply text-center my-4;
+  @apply my-4 flex justify-around text-gray-700 items-center;
+  line-height: 2rem;
   &_Link {
     @apply inline-block h-8 px-3 mx-2 bg-gray-50;
     @apply text-center overflow-hidden align-middle;
     @apply whitespace-nowrap overflow-ellipsis;
-    line-height: 2rem;
     font-variant: tabular-nums;
 
     &-Active {

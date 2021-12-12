@@ -32,6 +32,13 @@ export async function getCategories(): Promise<CategoryMeta[]> {
   }))
 }
 
+export async function getCategory(slugInput: string) {
+  const resp = await get('/wp/v2/categories', { slug: slugInput })
+  const { id, name, count, slug } = resp[0]
+
+  return { id, name, slug, count } as CategoryMeta
+}
+
 export type TagMeta = {
   id: number
   name: string
@@ -58,4 +65,11 @@ export async function getTagCloud(): Promise<TagMeta[]> {
     )
     .filter((c) => c.count > 1)
     .sort((x1, x2) => x1.name.localeCompare(x2.name))
+}
+
+export async function getTag(slugInput: string) {
+  const resp = await get('/wp/v2/tags', { slug: slugInput })
+  const { id, name, count, slug } = resp[0]
+
+  return { id, name, slug, count } as TagMeta
 }

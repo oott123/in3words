@@ -1,7 +1,18 @@
 import type { LoaderFunction, BlogMetaFunction } from '~/types'
-import { getPosts } from '~/data/posts'
+import { getPosts, SummarizedPost } from '~/data/posts'
 import { blogTitle } from '~/utils/meta'
-import BlogListPage, { BlogListPageData } from '~/pages/BlogListPage'
+import { useLoaderData } from 'remix'
+import PageNavigation from '~/components/PageNavigation'
+import PostList from '~/components/PostList'
+import { indexPath } from '~/path'
+import ListPage from '~/components/ListPage'
+
+type BlogListPageData = {
+  page: number
+  posts: SummarizedPost[]
+  total: number
+  totalPages: number
+}
 
 export const loader: LoaderFunction<BlogListPageData> = async () => {
   const { posts, total, totalPages } = await getPosts()
@@ -14,4 +25,13 @@ export const meta: BlogMetaFunction = ({ parentsData: { root } }) => {
   }
 }
 
-export default BlogListPage
+export default function BlogListPage() {
+  const { posts, totalPages, page } = useLoaderData<BlogListPageData>()
+
+  return (
+    <ListPage>
+      <PostList posts={posts} />
+      <PageNavigation page={page} totalPages={totalPages} path={indexPath} />
+    </ListPage>
+  )
+}

@@ -6,33 +6,36 @@ const PageNavigation: React.FC<{
   totalPages: number
   page: number
   path: (page: number) => string
-}> = ({ totalPages, page, path }) => {
+}> = ({ totalPages, page, path, children }) => {
   const transition = useTransition()
   const isLoading = transition.state === 'loading'
   const showPages = getShowPages(page, totalPages)
 
   return isLoading ? null : (
-    <nav className="PageNavigation">
-      {showPages.map((p) => (
-        <Link
-          key={p}
-          to={path(p)}
-          className={classNames({
-            PageNavigation_Link: true,
-            'PageNavigation_Link-Active': p === page,
-            'PageNavigation_Link-Disabled': p === page || p <= 0,
-          })}
-        >
-          {p > 0
-            ? p === page + 1
-              ? '下一页'
-              : p === page - 1
-              ? '上一页'
-              : p
-            : '...'}
-        </Link>
-      ))}
-    </nav>
+    <div className="PageNavigation">
+      {children}
+      <nav className="PageNavigation_Nav">
+        {showPages.map((p) => (
+          <Link
+            key={p}
+            to={path(p)}
+            className={classNames({
+              PageNavigation_Link: true,
+              'PageNavigation_Link-Active': p === page,
+              'PageNavigation_Link-Disabled': p === page || p <= 0,
+            })}
+          >
+            {p > 0
+              ? p === page + 1
+                ? '下一页'
+                : p === page - 1
+                ? '上一页'
+                : p
+              : '...'}
+          </Link>
+        ))}
+      </nav>
+    </div>
   )
 }
 
