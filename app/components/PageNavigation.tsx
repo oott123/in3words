@@ -1,15 +1,17 @@
 import classNames from 'classnames'
 import React from 'react'
-import { Link } from 'remix'
+import { Link, useTransition } from 'remix'
 
 const PageNavigation: React.FC<{
   totalPages: number
   page: number
   path: (page: number) => string
 }> = ({ totalPages, page, path }) => {
+  const transition = useTransition()
+  const isLoading = transition.state === 'loading'
   const showPages = getShowPages(page, totalPages)
 
-  return (
+  return isLoading ? null : (
     <nav className="PageNavigation">
       {showPages.map((p) => (
         <Link

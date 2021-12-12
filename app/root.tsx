@@ -35,7 +35,7 @@ const loadData = async () => {
   return { site, categories, tagCloud }
 }
 
-type RootData = Awaited<ReturnType<typeof loadData>>
+export type RootData = Awaited<ReturnType<typeof loadData>>
 
 export const loader: LoaderFunction = async () => {
   return json(await loadData())
