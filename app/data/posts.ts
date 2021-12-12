@@ -1,5 +1,12 @@
 import { Parser } from 'htmlparser2'
-import { get, getList } from './base'
+import {
+  encodeHtmlAttr,
+  encodeHtmlText,
+  get,
+  getList,
+  parseGmt,
+  voidTags,
+} from './base'
 import hljs from 'highlight.js'
 import classNames from 'classnames'
 import { getCategory, getTag } from './site'
@@ -127,10 +134,6 @@ function findEmbedded(embedded: any, resource: string, id: number) {
   return result
 }
 
-function parseGmt(date: string): string {
-  return new Date(`${date}Z`).toISOString()
-}
-
 function mapTermsByTaxonomy(terms: any, taxonomy: string) {
   return function (id: number) {
     const newTerms = terms
@@ -147,24 +150,6 @@ function mapTermsByTaxonomy(terms: any, taxonomy: string) {
     return result[id]
   }
 }
-
-const voidTags = [
-  'area',
-  'base',
-  'br',
-  'col',
-  'embed',
-  'hr',
-  'img',
-  'input',
-  'keygen',
-  'link',
-  'meta',
-  'param',
-  'source',
-  'track',
-  'wbr',
-]
 
 function postProcessContent(html: string, summaryOnly?: boolean) {
   const content: string[] = []
@@ -249,12 +234,4 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
     content: content.join(''),
     summary: summary,
   }
-}
-
-function encodeHtmlText(str: string) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-}
-
-function encodeHtmlAttr(str: string) {
-  return encodeHtmlText(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }

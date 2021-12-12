@@ -1,4 +1,4 @@
-import { AllApplication, Calendar, TagOne, User } from '@icon-park/svg'
+import { AllApplication, Calendar, Success, TagOne, User } from '@icon-park/svg'
 import type { Icon as IconPark } from '@icon-park/svg/lib/runtime'
 
 import React from 'react'
@@ -8,6 +8,7 @@ export enum BlogIcons {
   Date,
   Tag,
   User,
+  Verified,
 }
 
 function getIcons(): Record<
@@ -19,6 +20,12 @@ function getIcons(): Record<
     [BlogIcons.Date]: { icon: Calendar, size: 18, strokeWidth: 3 },
     [BlogIcons.Tag]: { icon: TagOne, size: 18, strokeWidth: 3 },
     [BlogIcons.User]: { icon: User, size: 18, strokeWidth: 3 },
+    [BlogIcons.Verified]: {
+      icon: Success,
+      size: 18,
+      theme: 'filled',
+      fill: '#f5a623',
+    },
   }
 }
 

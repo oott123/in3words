@@ -79,3 +79,33 @@ function buildUrl(query: Record<string, any> | undefined, path: string) {
 function sleep(time: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
+
+export function parseGmt(date: string): string {
+  return new Date(`${date}Z`).toISOString()
+}
+
+export const voidTags = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'keygen',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]
+
+export function encodeHtmlText(str: string) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+export function encodeHtmlAttr(str: string) {
+  return encodeHtmlText(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}

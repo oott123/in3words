@@ -5,14 +5,25 @@ import BlogPost from '~/components/BlogPost'
 import { getPost, Post } from '~/data/posts'
 import { postPath } from '~/path'
 import { blogTitle } from '~/utils/meta'
+import { getComments } from '~/data/comments'
+import BlogComment from '~/components/BlogComment'
 
 type PostData = {
   post: Post
+  comments: Awaited<ReturnType<typeof getComments>>
+  commentPage: number
 }
 
-export const loader: LoaderFunction<PostData> = async ({ params }) => {
-  const post = await getPost(parseInt(params.id!))
-  return { post }
+export const loader: LoaderFunction<PostData> = async ({ params, request }) => {
+  const commentPage = Number(
+    new URL(request.url).searchParams.get('comments_page') || '1',
+  )
+  const postId = parseInt(params.id!)
+  const [post, comments] = await Promise.all([
+    getPost(postId),
+    getComments(postId, commentPage),
+  ] as const)
+  return { post, comments, commentPage }
 }
 
 export const meta: MetaFunction<PostData> = ({
@@ -24,13 +35,14 @@ export const meta: MetaFunction<PostData> = ({
   }
 }
 
-export default function Index() {
-  const { post } = useLoaderData<PostData>()
+export default function Post() {
+  const { post, comments, commentPage } = useLoaderData<PostData>()
   const path = postPath(post)
 
   return (
     <BlogPage>
       <BlogPost post={post} postPath={path} />
+      <BlogComment {...comments} page={commentPage} />
     </BlogPage>
   )
 }

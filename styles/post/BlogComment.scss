@@ -1,0 +1,45 @@
+.BlogComment {
+  &_H1 {
+    @apply bg-transparent;
+  }
+  &_CommentHeader {
+    @apply flex;
+  }
+  &_AuthorName {
+    @apply text-base;
+    .BlogIcon {
+      @apply align-middle pl-1;
+      line-height: 1;
+    }
+  }
+  &_AuthorLink {
+    @apply inline-block text-xs align-text-bottom pl-2;
+    @apply whitespace-nowrap overflow-hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  &_Date {
+    @apply text-gray-500;
+  }
+  &_AuthorAvatar {
+    @apply w-12 h-12;
+    img {
+      @apply w-full h-full;
+    }
+  }
+  &_AuthorInfo {
+    @apply flex flex-col justify-around mx-2 flex-1;
+  }
+  &_Content {
+    @apply ml-14 my-2;
+  }
+  &_Actions {
+    @apply ml-14 my-2;
+    button {
+      @apply bg-transparent border-none cursor-pointer text-yellow-700;
+      &:hover {
+        @apply text-yellow-600;
+      }
+    }
+  }
+}
