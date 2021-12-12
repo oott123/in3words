@@ -20,7 +20,7 @@ $sidebar-width: 288px;
   }
 
   &_Main {
-    @apply overflow-hidden;
+    @apply overflow-hidden flex-1;
     order: 2;
   }
 

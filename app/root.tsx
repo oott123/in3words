@@ -42,8 +42,14 @@ export const loader: LoaderFunction = async () => {
 }
 
 export const meta: MetaFunction = ({ data }: { data: RootData }) => {
-  return {
-    title: data.site.name,
+  if (data) {
+    return {
+      title: data.site.name,
+    }
+  } else {
+    return {
+      title: 'Error',
+    }
   }
 }
 
@@ -148,37 +154,40 @@ function Document({
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const { site, categories, tagCloud } = useLoaderData<RootData>()
+  const data = useLoaderData<RootData>()
+  const { site, categories, tagCloud } = data || {}
 
   return (
     <div className="BlogLayout">
       <main className="BlogLayout_Main BlogMain">{children}</main>
       <aside className="BlogLayout_Sidebar">
-        <BlogSidebar>
-          <BlogTitle title={site.name} headline={site.description} />
-          <SideLinks>
-            <SideLinkItem to="/" title="文章" active />
-            <SideLinkItem to={pagePath({ slug: 'guestbook' })} title="留言" />
-            <SideLinkItem to={pagePath({ slug: 'links' })} title="链接" />
-            <SideLinkItem to={pagePath({ slug: 'about' })} title="关于" />
-          </SideLinks>
-          <SideHeader>分类</SideHeader>
-          <SideLinks>
-            {categories
-              .filter((c) => c.count > 0)
-              .map((c) => (
-                <SideLinkItem
-                  key={c.id}
-                  to={categoryPath(c)}
-                  title={`${c.name} (${c.count})`}
-                />
-              ))}
-          </SideLinks>
-          <SideHeader>标签</SideHeader>
-          <TagCloud tags={tagCloud} />
-          <SideHeader>授权协议</SideHeader>
-          <CreativeCommons />
-        </BlogSidebar>
+        {data && (
+          <BlogSidebar>
+            <BlogTitle title={site.name} headline={site.description} />
+            <SideLinks>
+              <SideLinkItem to="/" title="文章" active />
+              <SideLinkItem to={pagePath({ slug: 'guestbook' })} title="留言" />
+              <SideLinkItem to={pagePath({ slug: 'links' })} title="链接" />
+              <SideLinkItem to={pagePath({ slug: 'about' })} title="关于" />
+            </SideLinks>
+            <SideHeader>分类</SideHeader>
+            <SideLinks>
+              {categories
+                .filter((c) => c.count > 0)
+                .map((c) => (
+                  <SideLinkItem
+                    key={c.id}
+                    to={categoryPath(c)}
+                    title={`${c.name} (${c.count})`}
+                  />
+                ))}
+            </SideLinks>
+            <SideHeader>标签</SideHeader>
+            <TagCloud tags={tagCloud} />
+            <SideHeader>授权协议</SideHeader>
+            <CreativeCommons />
+          </BlogSidebar>
+        )}
       </aside>
       <aside className="BlogLayout_Ainou"></aside>
     </div>

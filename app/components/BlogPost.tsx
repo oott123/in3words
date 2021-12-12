@@ -17,7 +17,7 @@ const BlogPost: React.FC<{
     <article
       className={classNames('BlogPost', summarized && 'BlogPost-Summarized')}
     >
-      <div className="BlogPost_Head">
+      <header className="BlogPost_Head">
         <h1 className="BlogPost_Title">
           <Link
             to={postPath}
@@ -40,27 +40,29 @@ const BlogPost: React.FC<{
               </Link>
             ))}
           </BlogMeta>
-          <BlogMeta label={<BlogIcon>{BlogIcons.Tag}</BlogIcon>}>
-            {post.tags.map((t) => (
-              <Link to={tagPath(t)} key={t.slug}>
-                {t.name}
-              </Link>
-            ))}
-          </BlogMeta>
+          {!!post.tags.length && (
+            <BlogMeta label={<BlogIcon>{BlogIcons.Tag}</BlogIcon>}>
+              {post.tags.map((t) => (
+                <Link to={tagPath(t)} key={t.slug}>
+                  {t.name}
+                </Link>
+              ))}
+            </BlogMeta>
+          )}
         </div>
-      </div>
-      <div
+      </header>
+      <section
         className="BlogPost_Body"
         dangerouslySetInnerHTML={{
           __html: summarized ? post.summary : post.content,
         }}
-      ></div>
+      ></section>
       {summarized && (
-        <div className="BlogPost_ReadMore">
+        <footer className="BlogPost_ReadMore">
           <Link to={postPath}>
             {isLoadingFull ? '全文载入中……' : '阅读全文»'}
           </Link>
-        </div>
+        </footer>
       )}
     </article>
   )

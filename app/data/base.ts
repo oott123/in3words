@@ -2,7 +2,7 @@ if (!globalThis.blogApiGetCache) {
   globalThis.blogApiGetCache = new Map()
 }
 
-const BASE_URL = 'https://best33.com/wp-json'
+const BASE_URL = process.env.BASE_URL || 'https://best33.com/wp-json'
 
 export async function get<T = any>(
   path: string,
@@ -11,7 +11,7 @@ export async function get<T = any>(
   const url = buildUrl(query, path)
 
   if (globalThis.blogApiGetCache!.has(url)) {
-    await sleep(2000)
+    // await sleep(2000)
     return globalThis.blogApiGetCache!.get(url)
   }
 

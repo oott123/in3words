@@ -116,6 +116,19 @@
         @apply absolute right-0 text-6xl pr-4 text-gray-300;
       }
     }
+
+    hr {
+      @apply my-2 border-0 h-px bg-gray-300;
+    }
+
+    table {
+      @apply w-full border-collapse my-2;
+      th,
+      td {
+        @apply px-2 py-1;
+        @apply border border-solid border-gray-300;
+      }
+    }
   }
 
   &-Summarized &_Body {

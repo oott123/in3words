@@ -136,7 +136,7 @@ const voidTags = [
 
 function postProcessContent(html: string, summaryOnly?: boolean) {
   const content: string[] = []
-  const summary: string[] = []
+  let summary = ''
   let currentTag = ''
   let currentLanguage = ''
   let paragraphs = 0
@@ -150,7 +150,7 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
       }
       currentTag = name
 
-      if (name === 'a') {
+      if (name === 'a' && attribs.href && attribs.href.startsWith('http')) {
         attribs.target = attribs.target || '_blank'
         attribs.rel = attribs.rel || 'noopener noreferrer'
         attribs.class = classNames(attribs.class, 'BlogLink-External')
@@ -188,7 +188,7 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
         paragraphs++
       }
       if (paragraphs >= 2) {
-        summary.push(content.join(''))
+        summary = content.join('')
         if (summaryOnly) {
           parser.pause()
         }
@@ -199,9 +199,13 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
   parser.write(html)
   parser.end()
 
+  if (!summary) {
+    summary = content.join('')
+  }
+
   return {
     content: content.join(''),
-    summary: summary.join(''),
+    summary: summary,
   }
 }
 
