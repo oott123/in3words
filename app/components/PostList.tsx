@@ -11,19 +11,23 @@ const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
 
   return (
     <section className="PostList">
-      {posts.map((post) => {
-        const path = postPath(post)
-        const isPostLoading = loadingPath === path
-        if (isLoading && !isPostLoading) return null
-        return (
-          <BlogPost
-            key={post.id}
-            post={post}
-            postPath={path}
-            isLoadingFull={isLoading && isPostLoading}
-          />
-        )
-      })}
+      {posts.length > 0 ? (
+        posts.map((post) => {
+          const path = postPath(post)
+          const isPostLoading = loadingPath === path
+          if (isLoading && !isPostLoading) return null
+          return (
+            <BlogPost
+              key={post.id}
+              post={post}
+              postPath={path}
+              isLoadingFull={isLoading && isPostLoading}
+            />
+          )
+        })
+      ) : (
+        <div>没有结果</div>
+      )}
     </section>
   )
 }

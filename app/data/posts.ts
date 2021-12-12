@@ -188,6 +188,16 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
         attribs.class = classNames(attribs.class, 'BlogLink-External')
       }
 
+      // SyntaxHighlighter 兼容
+      if (name === 'pre' && attribs.class?.includes('brush:')) {
+        const language = attribs.class
+          .match(/brush:\s*(\w+)/)?.[1]
+          ?.toLowerCase()
+        if (language) {
+          currentLanguage = language
+        }
+      }
+
       content.push(`<${name}`)
       for (const key in attribs) {
         content.push(

@@ -24,10 +24,10 @@ export function pagePath({ slug }: { slug: string }) {
   return `/${slug}`
 }
 
-export function indexPath(page = 1) {
+export function indexPath(page = 1, keyword?: string) {
   if (page > 1) {
-    return `/page/${page}`
+    return `/page/${page}${keyword ? `?s=${keyword}` : ''}`
   } else {
-    return `/`
+    return `/${keyword ? `?s=${keyword}` : ''}`
   }
 }
