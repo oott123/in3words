@@ -41,6 +41,8 @@ ol {
 body {
   @apply text-gray-700 text-sm;
   line-height: 1.5;
+  scrollbar-gutter: stable;
+  overflow-wrap: break-word;
 
   $normal-fonts: QuoteFont, 'Microsoft YaHei', '微软雅黑', 'Segoe UI', 'SimHei',
     '黑体';
