@@ -33,14 +33,16 @@ const BlogPost: React.FC<{
               <BlogDate date={post.createdAt} />
             </Link>
           </BlogMeta>
-          <BlogMeta label={<BlogIcon>{BlogIcons.Category}</BlogIcon>}>
-            {post.categories.map((c) => (
-              <Link to={categoryPath(c)} key={c.slug}>
-                {c.name}
-              </Link>
-            ))}
-          </BlogMeta>
-          {!!post.tags.length && (
+          {!!post.categories?.length && (
+            <BlogMeta label={<BlogIcon>{BlogIcons.Category}</BlogIcon>}>
+              {post.categories.map((c) => (
+                <Link to={categoryPath(c)} key={c.slug}>
+                  {c.name}
+                </Link>
+              ))}
+            </BlogMeta>
+          )}
+          {!!post.tags?.length && (
             <BlogMeta label={<BlogIcon>{BlogIcons.Tag}</BlogIcon>}>
               {post.tags.map((t) => (
                 <Link to={tagPath(t)} key={t.slug}>

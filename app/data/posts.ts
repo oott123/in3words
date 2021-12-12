@@ -26,8 +26,8 @@ export interface Post {
     slug: string
     avatar: string
   }
-  categories: Term<'category'>[]
-  tags: Term<'post_tag'>[]
+  categories?: Term<'category'>[]
+  tags?: Term<'post_tag'>[]
 }
 
 export type SummarizedPost = Omit<Post, 'content'> & { summary: string }
@@ -83,6 +83,19 @@ export async function getPost(id: number): Promise<Post> {
   return transformed
 }
 
+export async function getPage(slug: string): Promise<Post> {
+  const post = await get(`/wp/v2/pages`, {
+    _embed: 'author,wp:term',
+    slug,
+  })
+
+  const transformed = transformPost(post[0])
+  const { content } = postProcessContent(transformed.content)
+  transformed.content = content
+
+  return transformed
+}
+
 function transformPost(post: any): Post {
   return {
     id: post.id,
@@ -97,10 +110,10 @@ function transformPost(post: any): Post {
         '96'
       ],
     } as Author,
-    categories: post.categories.map(
+    categories: post.categories?.map(
       mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
     ),
-    tags: post.tags.map(
+    tags: post.tags?.map(
       mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
     ),
   } as Post
