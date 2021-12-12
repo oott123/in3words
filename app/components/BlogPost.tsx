@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link } from 'remix'
 import { Post, SummarizedPost } from '~/data/posts'
 import { authorPath, categoryPath, tagPath } from '~/path'
@@ -13,6 +13,21 @@ const BlogPost: React.FC<{
   isLoadingFull?: boolean
 }> = ({ post, postPath, isLoadingFull }) => {
   const summarized = 'summary' in post
+  const html = summarized ? post.summary : post.content
+  const postBody = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    Array.from(postBody.current!.querySelectorAll('script')).forEach(
+      (oldScript) => {
+        const newScript = document.createElement('script')
+        Array.from(oldScript.attributes).forEach((attr) =>
+          newScript.setAttribute(attr.name, attr.value),
+        )
+        newScript.appendChild(document.createTextNode(oldScript.innerHTML))
+        oldScript.parentNode!.replaceChild(newScript, oldScript)
+      },
+    )
+  }, [html])
 
   return (
     <BlogCard>
@@ -58,8 +73,9 @@ const BlogPost: React.FC<{
         <section
           className="BlogPost_Body"
           dangerouslySetInnerHTML={{
-            __html: summarized ? post.summary : post.content,
+            __html: html,
           }}
+          ref={postBody}
         ></section>
         {summarized && (
           <footer className="BlogPost_ReadMore">
