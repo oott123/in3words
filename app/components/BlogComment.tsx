@@ -27,6 +27,15 @@ const BlogComment: React.FC<{
                 <div className="BlogComment_AuthorInfo">
                   <span className="BlogComment_AuthorName">
                     <span>{comment.authorName}</span>
+                    {comment.author ? (
+                      <span
+                        title={
+                          comment.author === 1 ? '博主' : '身份经过博主确认'
+                        }
+                      >
+                        <BlogIcon>{BlogIcons.Verified}</BlogIcon>
+                      </span>
+                    ) : null}
                     {comment.authorUrl ? (
                       <a
                         className="BlogComment_AuthorLink"
@@ -36,15 +45,6 @@ const BlogComment: React.FC<{
                       >
                         {new URL(comment.authorUrl).hostname}
                       </a>
-                    ) : null}
-                    {comment.author ? (
-                      <span
-                        title={
-                          comment.author === 1 ? '博主' : '身份经过博主确认'
-                        }
-                      >
-                        <BlogIcon>{BlogIcons.Verified}</BlogIcon>
-                      </span>
                     ) : null}
                   </span>
                   <a
