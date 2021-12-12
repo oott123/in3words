@@ -77,12 +77,10 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document title="Error!">
       <Layout>
         <div>
-          <h1>There was an error</h1>
+          <h1>出错了……</h1>
           <p>{error.message}</p>
-          <hr />
           <p>
-            Hey, developer, you should replace this with what you want your
-            users to see.
+            要不还是去<a href="/">首页</a>看看吧？
           </p>
         </div>
       </Layout>
@@ -96,17 +94,21 @@ export function CatchBoundary() {
 
   let message
   switch (caught.status) {
-    case 401:
-      message = (
-        <p>
-          Oops! Looks like you tried to visit a page that you do not have access
-          to.
-        </p>
-      )
-      break
     case 404:
       message = (
-        <p>Oops! Looks like you tried to visit a page that does not exist.</p>
+        <div>
+          <p>
+            对不起！我觉得很可能是由于我的疏于维护，你访问的这个链接所对应的内容已经不再存在了。
+          </p>
+          <p>
+            不过，我应该不是故意的。如果你确实想看，可以
+            <a href="/about">联系我</a>
+            试试找回来。别不好意思，我会努力帮忙的！
+          </p>
+          <p>
+            现在你还可以前往<a href="/">首页</a>看看有没有想要的内容。
+          </p>
+        </div>
       )
       break
 
@@ -118,7 +120,7 @@ export function CatchBoundary() {
     <Document title={`${caught.status} ${caught.statusText}`}>
       <Layout>
         <h1>
-          {caught.status}: {caught.statusText}
+          {caught.status} {caught.statusText}
         </h1>
         {message}
       </Layout>
