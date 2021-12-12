@@ -1,29 +1,29 @@
-import type { MetaFunction, LoaderFunction } from '~/types'
-import { useLoaderData } from 'remix'
+import type { MetaFunction, LoaderFunction } from 'remix'
+import { useLoaderData, json } from 'remix'
 import BlogPage from '~/components/BlogPage'
 import BlogPost from '~/components/BlogPost'
 import { getPost, Post } from '~/data/posts'
 import { postPath } from '~/path'
-import { blogTitle } from '~/utils/meta'
 
 type PostData = {
   post: Post
 }
 
-export const loader: LoaderFunction<PostData> = async ({ params }) => {
+// https://remix.run/api/conventions#loader
+export const loader: LoaderFunction = async ({ params }) => {
   const post = await getPost(parseInt(params.id!))
-  return { post }
+  return json({ post: post })
 }
 
-export const meta: MetaFunction<PostData> = ({
-  parentsData: { root },
-  data: { post },
-}) => {
+// https://remix.run/api/conventions#meta
+export const meta: MetaFunction = () => {
   return {
-    title: blogTitle(post.title, root),
+    title: 'Remix Starter',
+    description: 'Welcome to remix!',
   }
 }
 
+// https://remix.run/guides/routing#index-routes
 export default function Index() {
   const { post } = useLoaderData<PostData>()
   const path = postPath(post)
