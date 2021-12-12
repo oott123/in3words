@@ -48,6 +48,7 @@ export const meta: BlogMetaFunction<IndexData> = ({
       [keyword ? `搜索：${keyword}` : '', page > 1 ? `第 ${page} 页` : ''],
       root,
     ),
+    ...(keyword ? { robots: 'noindex, nofollow' } : {}),
   }
 }
 

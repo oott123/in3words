@@ -1,5 +1,7 @@
 User-agent: *
 Crawl-delay: 10
 Allow: /
-Disallow: /s?=*
+Disallow: /?s=*
+Disallow: /page/*?s=*
+Disallow: *?s=*
 Disallow: /wp-*
