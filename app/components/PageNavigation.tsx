@@ -1,10 +1,59 @@
+import classNames from 'classnames'
 import React from 'react'
+import { Link } from 'remix'
 
-const PageNavigation: React.FC<{ totalPages: number; page: number }> = ({
-  totalPages,
-  page,
-}) => {
-  return <div className="PageNavigation"></div>
+const PageNavigation: React.FC<{
+  totalPages: number
+  page: number
+  path: (page: number) => string
+}> = ({ totalPages, page, path }) => {
+  const showPages = getShowPages(page, totalPages)
+
+  return (
+    <nav className="PageNavigation">
+      {showPages.map((p) => (
+        <Link
+          key={p}
+          to={path(p)}
+          className={classNames({
+            PageNavigation_Link: true,
+            'PageNavigation_Link-Active': p === page,
+            'PageNavigation_Link-Disabled': p === page || p <= 0,
+          })}
+        >
+          {p > 0
+            ? p === page + 1
+              ? '下一页'
+              : p === page - 1
+              ? '上一页'
+              : p
+            : '...'}
+        </Link>
+      ))}
+    </nav>
+  )
 }
 
 export default PageNavigation
+
+function getShowPages(page: number, totalPages: number) {
+  const showPages = [
+    1,
+    // page - 2,
+    page - 1,
+    page,
+    page + 1,
+    // page + 2,
+    totalPages,
+  ]
+    .filter((p) => p > 0 && p <= totalPages)
+    .filter((p, i, a) => a.indexOf(p) === i)
+
+  for (let i = 1; i < showPages.length; i++) {
+    if (showPages[i] - showPages[i - 1] > 1) {
+      showPages.splice(i, 0, -i)
+      i++
+    }
+  }
+  return showPages
+}

@@ -1,0 +1,23 @@
+.PageNavigation {
+  @apply text-center my-4;
+  &_Link {
+    @apply inline-block h-8 px-3 mx-2 bg-gray-50;
+    @apply text-center overflow-hidden align-middle;
+    @apply whitespace-nowrap overflow-ellipsis;
+    line-height: 2rem;
+    font-variant: tabular-nums;
+
+    &-Active {
+      @apply bg-white text-gray-900;
+    }
+
+    &:hover {
+      @apply bg-white;
+    }
+
+    &-Disabled {
+      @apply bg-transparent;
+      @apply pointer-events-none text-gray-500;
+    }
+  }
+}

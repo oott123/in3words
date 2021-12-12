@@ -17,3 +17,13 @@ export function tagPath({ slug }: { slug: string }) {
 export function pagePath({ slug }: { slug: string }) {
   return `/${slug}`
 }
+
+export function indexPath(page: number) {
+  if (page === 1) {
+    return '/'
+  } else if (page > 0) {
+    return `/page/${page}`
+  } else {
+    return `/`
+  }
+}

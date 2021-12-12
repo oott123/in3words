@@ -1,7 +1,9 @@
 import type { MetaFunction, LoaderFunction } from 'remix'
 import { useLoaderData, json } from 'remix'
+import PageNavigation from '~/components/PageNavigation'
 import PostList from '~/components/PostList'
 import { getPosts, SummarizedPost } from '~/data/posts'
+import { indexPath } from '~/path'
 
 type IndexData = {
   posts: SummarizedPost[]
@@ -25,11 +27,12 @@ export const meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  const { posts } = useLoaderData<IndexData>()
+  const { posts, totalPages } = useLoaderData<IndexData>()
 
   return (
     <div className="BlogIndex">
       <PostList posts={posts} />
+      <PageNavigation page={1} totalPages={totalPages} path={indexPath} />
     </div>
   )
 }

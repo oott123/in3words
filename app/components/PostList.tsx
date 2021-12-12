@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTransition } from 'remix'
-import { Post, SummarizedPost } from '~/data/posts'
+import { SummarizedPost } from '~/data/posts'
 import { postPath } from '~/path'
 import BlogPost from './BlogPost'
 
@@ -10,7 +10,7 @@ const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
   const loadingPath = transition.location?.pathname
 
   return (
-    <div className="PostList">
+    <section className="PostList">
       {posts.map((post) => {
         const path = postPath(post)
         const isPostLoading = loadingPath === path
@@ -24,7 +24,7 @@ const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
           />
         )
       })}
-    </div>
+    </section>
   )
 }
 
