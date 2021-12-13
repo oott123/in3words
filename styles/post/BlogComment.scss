@@ -1,4 +1,9 @@
 .BlogComment {
+  @for $i from 1 through 10 {
+    [data-indent='#{$i}'] {
+      margin-left: #{$i * 2}rem;
+    }
+  }
   &_H1 {
     @apply bg-transparent;
   }

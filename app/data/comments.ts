@@ -18,6 +18,7 @@ export type Comment = {
   authorName: string
   date: string
   content: string
+  indent: number
 }
 
 export async function getComments(
@@ -33,6 +34,7 @@ export async function getComments(
     page: page,
     order: 'asc',
   })
+
   const comments = commentsData.map(
     (comment: any) =>
       ({
@@ -45,10 +47,32 @@ export async function getComments(
         authorName: comment.author_name,
         date: parseGmt(comment.date_gmt),
         content: postProcessContent(comment.content.rendered).content,
+        indent: 0,
       } as Comment),
   )
 
-  return { comments, total, totalPages }
+  const unknownCommentsId: number[] = []
+  const sortedCommentsId: number[] = []
+  const commentMap = new Map<number, Comment>()
+  for (const comment of comments) {
+    commentMap.set(comment.id, comment)
+    if (!comment.parent) {
+      sortedCommentsId.push(comment.id)
+    } else {
+      const foundIndex = sortedCommentsId.indexOf(comment.parent)
+      if (foundIndex < 0) {
+        unknownCommentsId.push(comment.parent)
+        sortedCommentsId.push(comment.id)
+      } else {
+        comment.indent = commentMap.get(comment.parent)!.indent + 1
+        sortedCommentsId.splice(foundIndex + 1, 0, comment.id)
+      }
+    }
+  }
+
+  const sortedComments = sortedCommentsId.map((id) => commentMap.get(id)!)
+
+  return { comments: sortedComments, total, totalPages }
 }
 
 function postProcessContent(html: string) {
