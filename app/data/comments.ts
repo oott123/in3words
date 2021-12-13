@@ -62,6 +62,7 @@ export async function getComments(
       const foundIndex = sortedCommentsId.indexOf(comment.parent)
       if (foundIndex < 0) {
         unknownCommentsId.push(comment.parent)
+        comment.indent = 1
         sortedCommentsId.push(comment.id)
       } else {
         comment.indent = commentMap.get(comment.parent)!.indent + 1
