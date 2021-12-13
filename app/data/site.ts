@@ -1,4 +1,4 @@
-import { get } from './base'
+import { CmsError, get } from './base'
 
 export interface SiteMeta {
   name: string
@@ -6,8 +6,19 @@ export interface SiteMeta {
   url: string
 }
 
-export async function getSite() {
-  const data = await get('/')
+export async function getSite(): Promise<SiteMeta> {
+  // return {
+  //   name: '三言三语',
+  //   description: 'best33.com | 希望和你交朋友！',
+  //   url: 'https://best33.com',
+  // }
+  const data = await get(
+    '/',
+    {
+      _fields: ['name', 'description', 'url'],
+    },
+    '',
+  )
   return {
     name: data.name,
     description: data.description,
@@ -23,7 +34,7 @@ export interface CategoryMeta {
 }
 
 export async function getCategories(): Promise<CategoryMeta[]> {
-  const data = await get('/wp/v2/categories')
+  const data = await get('/categories')
   return data.map(({ id, name, slug, count }: CategoryMeta) => ({
     id,
     name,
@@ -33,7 +44,10 @@ export async function getCategories(): Promise<CategoryMeta[]> {
 }
 
 export async function getCategory(slugInput: string) {
-  const resp = await get('/wp/v2/categories', { slug: slugInput })
+  const resp = await get('/categories', { slug: slugInput })
+  if (!resp[0]) {
+    throw new CmsError('请求的分类不存在', 'unknown_category', 404)
+  }
   const { id, name, count, slug } = resp[0]
 
   return { id, name, slug, count } as CategoryMeta
@@ -47,7 +61,7 @@ export type TagMeta = {
 }
 
 export async function getTagCloud(): Promise<TagMeta[]> {
-  const data = await get('/wp/v2/tags', {
+  const data = await get('/tags', {
     per_page: 50,
     orderby: 'count',
     order: 'desc',
@@ -68,7 +82,10 @@ export async function getTagCloud(): Promise<TagMeta[]> {
 }
 
 export async function getTag(slugInput: string) {
-  const resp = await get('/wp/v2/tags', { slug: slugInput })
+  const resp = await get('/tags', { slug: slugInput })
+  if (!resp[0]) {
+    throw new CmsError('请求的标签不存在', 'unknown_tag', 404)
+  }
   const { id, name, count, slug } = resp[0]
 
   return { id, name, slug, count } as TagMeta

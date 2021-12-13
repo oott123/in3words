@@ -28,7 +28,7 @@ export async function getComments(
     items: commentsData,
     totalPages,
     total,
-  } = await getList('/wp/v2/comments', {
+  } = await getList('/comments', {
     post: postId,
     page: page,
     order: 'asc',

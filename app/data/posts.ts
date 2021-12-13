@@ -1,5 +1,6 @@
 import { Parser } from 'htmlparser2'
 import {
+  CmsError,
   encodeHtmlAttr,
   encodeHtmlText,
   get,
@@ -43,7 +44,7 @@ export async function getPosts(
   page = 1,
   queryArgs: Record<string, any> = {},
 ): Promise<{ posts: SummarizedPost[]; total: number; totalPages: number }> {
-  const { items, total, totalPages } = await getList(`/wp/v2/posts`, {
+  const { items, total, totalPages } = await getList(`/posts`, {
     _embed: 'author,wp:term',
     page,
     ...queryArgs,
@@ -79,7 +80,7 @@ export async function getTagPosts(slug: string, page = 1) {
 }
 
 export async function getPost(id: number): Promise<Post> {
-  const post = await get(`/wp/v2/posts/${id}`, {
+  const post = await get(`/posts/${id}`, {
     _embed: 'author,wp:term',
   })
 
@@ -91,10 +92,14 @@ export async function getPost(id: number): Promise<Post> {
 }
 
 export async function getPage(slug: string): Promise<Post> {
-  const post = await get(`/wp/v2/pages`, {
+  const post = await get(`/pages`, {
     _embed: 'author,wp:term',
     slug,
   })
+
+  if (!post[0]) {
+    throw new CmsError('请求的页面不存在', 'unknown_page', 404)
+  }
 
   const transformed = transformPost(post[0])
   const { content } = postProcessContent(transformed.content)

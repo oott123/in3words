@@ -7,8 +7,9 @@ const BASE_URL = process.env.BASE_URL || 'https://best33.com/wp-json'
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,
+  prefix = '/wp/v2',
 ): Promise<T> {
-  const url = buildUrl(query, path)
+  const url = buildUrl(query, path, prefix)
 
   if (globalThis.blogApiGetCache!.has(url)) {
     // await sleep(2000)
@@ -24,8 +25,9 @@ export async function get<T = any>(
 export async function getList<T = any[]>(
   path: string,
   query?: Record<string, any>,
+  prefix = '/wp/v2',
 ): Promise<{ items: T; total: number; totalPages: number }> {
-  const url = buildUrl(query, path)
+  const url = buildUrl(query, path, prefix)
   const cacheKey = `list_${url}`
 
   if (globalThis.blogApiGetCache!.has(cacheKey)) {
@@ -45,10 +47,10 @@ export async function getList<T = any[]>(
 async function response(resp: Response) {
   const data = await resp.json()
   if (!resp.ok && data) {
-    throw new CmsError(data.message, data.code, resp.status)
+    throw new CmsError(data.message, data.code, resp.status, resp.url)
   }
   if (!resp.ok) {
-    throw new CmsError('Unknown error', 'unknown', resp.status)
+    throw new CmsError('Unknown error', 'unknown', resp.status, resp.url)
   }
 
   return data
@@ -59,20 +61,25 @@ export class CmsError extends Error {
     message: string,
     public readonly code: string,
     public readonly status?: number,
+    public readonly url?: string,
   ) {
     super(message)
     this.name = 'CmsError'
   }
 }
 
-function buildUrl(query: Record<string, any> | undefined, path: string) {
+function buildUrl(
+  query: Record<string, any> | undefined,
+  path: string,
+  prefix: string,
+) {
   const queryString = query
     ? `?${Object.entries(query)
         .map((x) => x.map(encodeURIComponent).join('='))
         .sort()
         .join('&')}`
     : ''
-  const url = `${BASE_URL}${path}${queryString}`
+  const url = `${BASE_URL}${prefix}${path}${queryString}`
   return url
 }
 
