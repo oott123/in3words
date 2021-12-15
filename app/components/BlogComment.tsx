@@ -16,8 +16,8 @@ const BlogComment: React.FC<{
       </BlogCard>
       {comments.length > 0 ? (
         comments.map((comment) => (
-          <BlogCard data-indent={comment.indent}>
-            <article key={comment.id} className="BlogComment_Comment">
+          <BlogCard key={comment.id} data-indent={comment.indent}>
+            <article className="BlogComment_Comment">
               <link href={`#comment-${comment.id}`} />
               <a id={`comment-${comment.id}`} />
               <header className="BlogComment_CommentHeader">
