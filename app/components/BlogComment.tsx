@@ -3,18 +3,29 @@ import BlogCard from './BlogCard'
 import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
+import PageNavigation from './PageNavigation'
+import { useLocation, useTransition } from 'remix'
 
 const BlogComment: React.FC<{
   comments: Comment[]
+  total: number
   page: number
   totalPages: number
-}> = ({ comments, page, totalPages }) => {
+}> = ({ comments, page, totalPages, total }) => {
+  const { state, location } = useTransition()
+  const currentLocation = useLocation()
+
+  const switchingPage =
+    state === 'loading' && currentLocation.pathname === location?.pathname
+
   return (
     <section className="BlogComment">
       <BlogCard className="BlogComment_H1">
         <h1>评论</h1>
       </BlogCard>
-      {comments.length > 0 ? (
+      {switchingPage ? (
+        <BlogCard>读取评论……</BlogCard>
+      ) : comments.length > 0 ? (
         comments.map((comment) => (
           <BlogCard key={comment.id} data-indent={comment.indent}>
             <article className="BlogComment_Comment">
@@ -70,6 +81,15 @@ const BlogComment: React.FC<{
           <p>还没有评论。</p>
         </BlogCard>
       )}
+      {totalPages > 1 ? (
+        <PageNavigation
+          page={page}
+          totalPages={totalPages}
+          path={(page) => `?comments_page=${page}`}
+        >
+          共 {total} 条
+        </PageNavigation>
+      ) : null}
     </section>
   )
 }

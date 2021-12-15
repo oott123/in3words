@@ -32,24 +32,27 @@ export async function getComments(
   } = await getList('/comments', {
     post: postId,
     page: page,
-    order: 'asc',
+    order: 'desc',
+    per_page: 100,
   })
 
-  const comments = commentsData.map(
-    (comment: any) =>
-      ({
-        id: comment.id,
-        post: comment.post,
-        parent: comment.parent,
-        author: comment.author,
-        authorAvatar: comment.author_avatar_urls['96'],
-        authorUrl: comment.author_url,
-        authorName: comment.author_name,
-        date: parseGmt(comment.date_gmt),
-        content: postProcessContent(comment.content.rendered).content,
-        indent: 0,
-      } as Comment),
-  )
+  const comments = commentsData
+    .map(
+      (comment: any) =>
+        ({
+          id: comment.id,
+          post: comment.post,
+          parent: comment.parent,
+          author: comment.author,
+          authorAvatar: comment.author_avatar_urls['96'],
+          authorUrl: comment.author_url,
+          authorName: comment.author_name,
+          date: parseGmt(comment.date_gmt),
+          content: postProcessContent(comment.content.rendered).content,
+          indent: 0,
+        } as Comment),
+    )
+    .sort((a, b) => a.id - b.id)
 
   const unknownCommentsId: number[] = []
   const sortedCommentsId: number[] = []
