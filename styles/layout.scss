@@ -89,6 +89,7 @@ $sidebar-width: 288px;
   width: $sidebar-width;
 
   @media screen and (max-width: 768px) {
+    @apply px-0;
     position: relative !important;
     transform: none !important;
     width: 100%;
