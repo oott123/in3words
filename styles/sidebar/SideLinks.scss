@@ -1,12 +1,20 @@
 .SideLinks {
   &_Item a,
-  &_Item button {
-    @apply block px-2 py-1 my-1;
+  &_Item button,
+  &_Item label {
+    @apply block px-2 py-1 my-1 bg-transparent;
+    @apply border-none w-full cursor-pointer text-left text-yellow-700;
+    line-height: inherit;
+    font-size: inherit;
     &:hover {
       @apply bg-red-100;
     }
     &.SideLinks_Item-Active {
       @apply bg-red-100;
     }
+  }
+
+  @media screen and (max-width: 768px) {
+    @apply flex flex-wrap justify-center;
   }
 }

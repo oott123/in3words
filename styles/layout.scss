@@ -32,6 +32,14 @@ $sidebar-width: 288px;
     order: 3;
   }
 
+  &_DetailsTrigger {
+    @apply hidden;
+  }
+
+  #BlogLayout_DetailsCheckbox {
+    @apply hidden;
+  }
+
   @media screen and (min-width: $ainou-breakpoint) {
     max-width: $ainou-breakpoint;
     &_Ainou {
@@ -57,11 +65,34 @@ $sidebar-width: 288px;
       width: 0;
     }
   }
+
+  @media screen and (max-width: 768px) {
+    max-width: 600px;
+    @apply flex-col;
+    &_Sidebar {
+      width: 100%;
+    }
+    &_DetailsTrigger {
+      @apply block;
+    }
+    &_SidebarDetails {
+      @apply hidden;
+    }
+    #BlogLayout_DetailsCheckbox:checked + &_SidebarDetails {
+      @apply block;
+    }
+  }
 }
 
 .BlogSidebar {
   @apply px-8 pr-2 pb-4;
   width: $sidebar-width;
+
+  @media screen and (max-width: 768px) {
+    position: relative !important;
+    transform: none !important;
+    width: 100%;
+  }
 }
 
 button.Button-Link {

@@ -10,4 +10,8 @@
   h2 {
     @apply text-sm font-normal text-gray-500;
   }
+
+  @media screen and (max-width: 768px) {
+    @apply text-center;
+  }
 }

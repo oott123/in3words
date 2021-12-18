@@ -174,23 +174,29 @@ function Layout({ children }: { children: React.ReactNode }) {
               <SideLinkItem to={pagePath({ slug: 'guestbook' })} title="留言" />
               <SideLinkItem to={pagePath({ slug: 'links' })} title="链接" />
               <SideLinkItem to={pagePath({ slug: 'about' })} title="关于" />
+              <li className="SideLinks_Item BlogLayout_DetailsTrigger">
+                <label htmlFor="BlogLayout_DetailsCheckbox">更多</label>
+              </li>
             </SideLinks>
-            <SideHeader>分类</SideHeader>
-            <SideLinks>
-              {categories
-                .filter((c) => c.count > 0)
-                .map((c) => (
-                  <SideLinkItem
-                    key={c.id}
-                    to={categoryPath(c)}
-                    title={`${c.name} (${c.count})`}
-                  />
-                ))}
-            </SideLinks>
-            <SideHeader>标签</SideHeader>
-            <TagCloud tags={tagCloud} />
-            <SideHeader>授权协议</SideHeader>
-            <CreativeCommons />
+            <input type="checkbox" id="BlogLayout_DetailsCheckbox"></input>
+            <div className="BlogLayout_SidebarDetails">
+              <SideHeader>分类</SideHeader>
+              <SideLinks>
+                {categories
+                  .filter((c) => c.count > 0)
+                  .map((c) => (
+                    <SideLinkItem
+                      key={c.id}
+                      to={categoryPath(c)}
+                      title={`${c.name} (${c.count})`}
+                    />
+                  ))}
+              </SideLinks>
+              <SideHeader>标签</SideHeader>
+              <TagCloud tags={tagCloud} />
+              <SideHeader>授权协议</SideHeader>
+              <CreativeCommons />
+            </div>
           </BlogSidebar>
         )}
       </aside>
