@@ -61,9 +61,20 @@ const BlogComment: React.FC<{
   const { state, location } = useTransition()
   const currentLocation = useLocation()
   const [replyTo, setReplyTo] = useState(0)
+  const [showCommentTip, setShowCommentTip] = useState(false)
 
   const switchingPage =
     state === 'loading' && currentLocation.pathname === location?.pathname
+
+  useEffect(() => {
+    const locationCommentId = currentLocation.hash.startsWith('#comment-')
+      ? Number(currentLocation.hash.substring('#comment-'.length))
+      : null
+    const showCommentTip =
+      locationCommentId !== null &&
+      !comments.some((c) => c.id === locationCommentId)
+    setShowCommentTip(showCommentTip)
+  }, [currentLocation.hash, comments])
 
   return (
     <section className="BlogComment">
@@ -117,6 +128,13 @@ const BlogComment: React.FC<{
           共 {total} 条
         </PageNavigation>
       ) : null}
+      {showCommentTip && (
+        <BlogCard>
+          <p>
+            如果你刚才提交的评论没有出现在此处，可能是因为评论需要审核或是缓存尚未刷新，无需重复提交。
+          </p>
+        </BlogCard>
+      )}
       <BlogCard>
         <CommentForm post={postId} />
       </BlogCard>
