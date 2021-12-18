@@ -50,17 +50,23 @@
   fieldset {
     @apply border-none;
   }
+
   textarea,
   input,
-  button {
+  button[type='submit'] {
     @apply block w-full my-2 px-4 py-2 text-base;
     line-height: 1.5;
   }
-  button {
+
+  button[type='submit'] {
     @apply mt-4;
   }
 
   &_Tip {
     @apply text-sm text-gray-500 mt-2;
+  }
+
+  &_Details-Hidden {
+    @apply hidden;
   }
 }

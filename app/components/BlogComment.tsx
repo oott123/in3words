@@ -5,6 +5,7 @@ import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 import PageNavigation from './PageNavigation'
 import { Form, useLocation, useTransition } from 'remix'
+import classNames from 'classnames'
 
 export const SingleComment: React.FC<{ comment: Comment }> = ({
   comment,
@@ -150,6 +151,18 @@ const CommentForm: React.FC<{
   const emailInput = useMemorizedInput('commenterEmail')
   const urlInput = useMemorizedInput('commenterUrl')
   const location = useLocation()
+  const [hasMemorized, setHasMemorized] = useState(false)
+
+  useEffect(() => {
+    if (nameInput.value && emailInput.value) {
+      setHasMemorized(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleExpandDetails = useCallback(() => {
+    setHasMemorized(false)
+  }, [])
 
   return (
     <form method="post" action="/comments" className="CommentForm">
@@ -164,29 +177,41 @@ const CommentForm: React.FC<{
         <input type="hidden" name="post" value={post} />
         <input type="hidden" name="return_path" value={location.pathname} />
         {parent && <input type="hidden" name="parent" value={parent} />}
-        <input
-          type="text"
-          name="author_name"
-          placeholder="昵称（公开显示）"
-          required
-          autoComplete="nickname"
-          {...nameInput}
-        />
-        <input
-          type="email"
-          name="author_email"
-          placeholder="邮箱（显示头像和接收回复邮件）"
-          required
-          autoComplete="email"
-          {...emailInput}
-        />
-        <input
-          type="url"
-          name="author_url"
-          placeholder="网站（显示在昵称旁边）"
-          autoComplete="url"
-          {...urlInput}
-        />
+        {hasMemorized && (
+          <p>
+            以 {nameInput.value} 的身份发表评论。
+            <button className="Button-Link" onClick={handleExpandDetails}>
+              修改
+            </button>
+          </p>
+        )}
+        <div
+          className={classNames({ 'CommentForm_Details-Hidden': hasMemorized })}
+        >
+          <input
+            type="text"
+            name="author_name"
+            placeholder="昵称（公开显示）"
+            required
+            autoComplete="nickname"
+            {...nameInput}
+          />
+          <input
+            type="email"
+            name="author_email"
+            placeholder="邮箱（显示头像和接收回复邮件）"
+            required
+            autoComplete="email"
+            {...emailInput}
+          />
+          <input
+            type="url"
+            name="author_url"
+            placeholder="网站（显示在昵称旁边）"
+            autoComplete="url"
+            {...urlInput}
+          />
+        </div>
         <button type="submit">提交</button>
       </fieldset>
       <p className="CommentForm_Tip">
