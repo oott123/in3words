@@ -43,7 +43,10 @@ body {
   line-height: 1.5;
   scrollbar-gutter: stable;
   overflow-wrap: break-word;
+}
 
+body,
+textarea {
   $normal-fonts: QuoteFont, 'Microsoft YaHei', '微软雅黑', 'Segoe UI', 'SimHei',
     '黑体';
   $modern-fonts: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',

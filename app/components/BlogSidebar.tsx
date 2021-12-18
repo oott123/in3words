@@ -46,7 +46,7 @@ const BlogSidebar: React.FC = ({ children }) => {
     handleResize()
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-    setTop(scrollTop)
+    setTop(Math.max(-scrollTop, screenHeight.current - sidebarHeight.current))
 
     return () => {
       window.removeEventListener('scroll', handleScroll)

@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 
 // React currently throws a warning when using useLayoutEffect on the server.
@@ -8,17 +8,11 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 const BlogDate: React.FC<{ date: Date | string }> = ({ date }) => {
-  const shortDate = format(new Date(date), 'yyyy-MM-dd HH:mm')
-  const [dateStr, setDateStr] = useState(shortDate)
-
-  useIsomorphicLayoutEffect(() => {
-    // local timezone
-    setDateStr(format(new Date(date), 'yyyy-MM-dd HH:mm'))
-  }, [date])
-
+  date = date instanceof Date ? date : parseISO(date)
+  const shortDate = format(date, 'yyyy-MM-dd HH:mm')
   return (
-    <time dateTime={date.toString()} title={date.toString()}>
-      {dateStr}
+    <time dateTime={date.toISOString()} title={date.toISOString()}>
+      {shortDate}
     </time>
   )
 }
