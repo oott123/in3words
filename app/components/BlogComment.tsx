@@ -4,7 +4,7 @@ import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 import PageNavigation from './PageNavigation'
-import { Form, useLocation, useTransition } from 'remix'
+import { Form, useActionData, useLocation, useTransition } from 'remix'
 import classNames from 'classnames'
 
 export const SingleComment: React.FC<{ comment: Comment }> = ({
@@ -153,6 +153,10 @@ const CommentForm: React.FC<{
   const location = useLocation()
   const [hasMemorized, setHasMemorized] = useState(false)
 
+  const transition = useTransition()
+
+  const isSubmitting = transition.state === 'submitting'
+
   useEffect(() => {
     if (nameInput.value && emailInput.value) {
       setHasMemorized(true)
@@ -165,9 +169,9 @@ const CommentForm: React.FC<{
   }, [])
 
   return (
-    <form method="post" action="/comments" className="CommentForm">
+    <Form method="post" action="/comments" className="CommentForm">
       <h2>{parent ? '回复评论' : '发表评论'}</h2>
-      <fieldset>
+      <fieldset disabled={isSubmitting}>
         <textarea
           name="content"
           rows={3}
@@ -212,7 +216,7 @@ const CommentForm: React.FC<{
             {...urlInput}
           />
         </div>
-        <button type="submit">提交</button>
+        <button type="submit">{isSubmitting ? '提交中……' : '提交'}</button>
       </fieldset>
       <p className="CommentForm_Tip">
         发表评论代表你授权本网站存储并在必要情况下使用你输入的邮箱地址、连接本站服务器使用的
@@ -235,7 +239,7 @@ const CommentForm: React.FC<{
         </a>
         ，用于显示头像和反垃圾。
       </p>
-    </form>
+    </Form>
   )
 }
 
