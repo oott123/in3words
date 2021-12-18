@@ -67,7 +67,6 @@ $sidebar-width: 288px;
   }
 
   @media screen and (max-width: 768px) {
-    max-width: 600px;
     @apply flex-col;
     &_Sidebar {
       width: 100%;
@@ -82,6 +81,15 @@ $sidebar-width: 288px;
       @apply block;
     }
   }
+
+  @media print {
+    &_Sidebar {
+      @apply hidden;
+    }
+    &_Ainou {
+      @apply hidden;
+    }
+  }
 }
 
 .BlogSidebar {
@@ -89,7 +97,7 @@ $sidebar-width: 288px;
   width: $sidebar-width;
 
   @media screen and (max-width: 768px) {
-    @apply px-0;
+    @apply px-4;
     position: relative !important;
     transform: none !important;
     width: 100%;
@@ -109,5 +117,9 @@ button.Button-Link {
   p {
     @apply text-sm text-gray-500 mx-auto;
     width: fit-content;
+  }
+
+  @media print {
+    @apply border-0 border-solid border-t border-gray-500;
   }
 }

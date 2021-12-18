@@ -136,7 +136,7 @@ const BlogComment: React.FC<{
           </p>
         </BlogCard>
       )}
-      <BlogCard>
+      <BlogCard className="BlogComment_CommentForm">
         <CommentForm post={postId} />
       </BlogCard>
     </section>

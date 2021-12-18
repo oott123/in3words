@@ -5,7 +5,7 @@
     }
   }
   &_H1 {
-    @apply bg-transparent;
+    @apply bg-transparent pb-0;
   }
   &_CommentHeader {
     @apply flex;
@@ -40,6 +40,12 @@
   }
   &_Actions {
     @apply ml-14 my-2;
+  }
+
+  @media print {
+    &_CommentForm {
+      @apply hidden;
+    }
   }
 }
 
