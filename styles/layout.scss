@@ -71,3 +71,11 @@ button.Button-Link {
     @apply text-yellow-600;
   }
 }
+
+.BlogFooter {
+  @apply bg-opacity-50;
+  p {
+    @apply text-sm text-gray-500 mx-auto;
+    width: fit-content;
+  }
+}

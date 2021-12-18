@@ -14,7 +14,7 @@ const CreativeCommons: React.FC = () => {
         </a>
       </p>
       <p>
-        如非特别说明，本站内容均为原创，并遵循{' '}
+        如非特别说明，本站所有文章均为原创，并遵循{' '}
         <a
           href="https://creativecommons.org/licenses/by-sa/4.0/"
           target="_blank"

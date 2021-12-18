@@ -25,6 +25,7 @@ import { getCategories, getSite, getTagCloud } from './data/site'
 import TagCloud from './components/TagCloud'
 import BlogSidebar from './components/BlogSidebar'
 import { categoryPath, pagePath } from './path'
+import BlogFooter from './components/BlogFooter'
 
 const loadData = async () => {
   const [site, categories, tagCloud] = await Promise.all([
@@ -160,7 +161,10 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="BlogLayout">
-      <main className="BlogLayout_Main BlogMain">{children}</main>
+      <main className="BlogLayout_Main BlogMain">
+        {children}
+        <BlogFooter />
+      </main>
       <aside className="BlogLayout_Sidebar">
         {data && (
           <BlogSidebar>
