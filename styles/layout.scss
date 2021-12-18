@@ -63,3 +63,11 @@ $sidebar-width: 288px;
   @apply px-8 pr-2 pb-4;
   width: $sidebar-width;
 }
+
+button.Button-Link {
+  @apply bg-transparent border-none cursor-pointer text-yellow-700;
+  font-size: 1em;
+  &:hover {
+    @apply text-yellow-600;
+  }
+}

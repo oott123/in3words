@@ -40,12 +40,6 @@
   }
   &_Actions {
     @apply ml-14 my-2;
-    button {
-      @apply bg-transparent border-none cursor-pointer text-yellow-700;
-      &:hover {
-        @apply text-yellow-600;
-      }
-    }
   }
 }
 

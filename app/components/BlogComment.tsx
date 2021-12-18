@@ -29,8 +29,8 @@ const BlogComment: React.FC<{
         <BlogCard>读取评论……</BlogCard>
       ) : comments.length > 0 ? (
         comments.map((comment) => (
-          <>
-            <BlogCard key={comment.id} data-indent={comment.indent}>
+          <React.Fragment key={comment.id}>
+            <BlogCard data-indent={comment.indent}>
               <article className="BlogComment_Comment">
                 <link href={`#comment-${comment.id}`} />
                 <a id={`comment-${comment.id}`} />
@@ -75,9 +75,19 @@ const BlogComment: React.FC<{
                 ></section>
                 <footer className="BlogComment_Actions">
                   {comment.id === replyTo ? (
-                    <button onClick={() => setReplyTo(0)}>取消回复</button>
+                    <button
+                      className="Button-Link"
+                      onClick={() => setReplyTo(0)}
+                    >
+                      取消回复
+                    </button>
                   ) : (
-                    <button onClick={() => setReplyTo(comment.id)}>回复</button>
+                    <button
+                      className="Button-Link"
+                      onClick={() => setReplyTo(comment.id)}
+                    >
+                      回复
+                    </button>
                   )}
                 </footer>
               </article>
@@ -87,7 +97,7 @@ const BlogComment: React.FC<{
                 <CommentForm post={postId} parent={comment.id} />
               </BlogCard>
             )}
-          </>
+          </React.Fragment>
         ))
       ) : (
         <BlogCard>
@@ -110,10 +120,10 @@ const BlogComment: React.FC<{
   )
 }
 
-const CommentForm: React.FC<{ post: number; parent?: number }> = ({
-  post,
-  parent,
-}) => {
+const CommentForm: React.FC<{
+  post: number
+  parent?: number
+}> = ({ post, parent }) => {
   return (
     <form method="post" action="/comments" className="CommentForm">
       <h2>{parent ? '回复评论' : '发表评论'}</h2>
@@ -149,13 +159,13 @@ const CommentForm: React.FC<{ post: number; parent?: number }> = ({
         <button type="submit">提交</button>
       </fieldset>
       <p className="CommentForm_Tip">
-        发表评论代表您授权本网站存储并在适当情况下使用您输入的邮箱地址、连接本站服务器使用的
+        发表评论代表您授权本网站存储并在必要情况下使用您输入的邮箱地址、连接本站服务器使用的
         IP 地址和用户代理字符串 (User Agent)
-        用于发送评论邮件，并将上述信息分享给{' '}
+        用于发送评论回复邮件，以及将上述信息分享给{' '}
         <a
           href="https://en.gravatar.com/site/terms-of-service"
           target="_blank"
-          rel="noopener noreferer"
+          rel="noopener noreferrer nofollow"
         >
           Gravatar
         </a>{' '}
@@ -163,13 +173,11 @@ const CommentForm: React.FC<{ post: number; parent?: number }> = ({
         <a
           href="https://akismet.com/privacy/"
           target="_blank"
-          rel="noopener noreferer"
+          rel="noopener noreferrer nofollow"
         >
           Akismet
         </a>
         ，用于显示头像和反垃圾。
-        <br />
-        如果您不想在被采集上述信息的情况下发表评论，您有责任在您所在地的法律允许的情况下使用匿名代理、浏览器插件、临时邮箱等工具避免本站收集上述信息。
       </p>
     </form>
   )

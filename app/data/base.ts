@@ -4,6 +4,25 @@ if (!globalThis.blogApiGetCache) {
 
 const BASE_URL = process.env.BASE_URL || 'https://best33.com/wp-json'
 
+export async function post<T = any>(
+  path: string,
+  body: any,
+  prefix = '/wp/v2',
+): Promise<T> {
+  const url = `${BASE_URL}${prefix}${path}`
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const result = await response(resp)
+
+  return result
+}
+
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,

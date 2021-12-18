@@ -50,7 +50,7 @@ export default function Page() {
   return (
     <BlogPage>
       <BlogPost post={post} postPath={path} />
-      <BlogComment {...comments} page={commentPage} />
+      <BlogComment {...comments} page={commentPage} postId={post.id} />
     </BlogPage>
   )
 }

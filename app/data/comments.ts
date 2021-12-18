@@ -5,6 +5,7 @@ import {
   encodeHtmlText,
   getList,
   parseGmt,
+  post,
   voidTags,
 } from './base'
 
@@ -19,6 +20,15 @@ export type Comment = {
   date: string
   content: string
   indent: number
+}
+
+export type NewComment = {
+  content: string
+  post: number
+  parent?: number
+  author_name: string
+  author_email: string
+  author_url?: string
 }
 
 export async function getComments(
@@ -77,6 +87,29 @@ export async function getComments(
   const sortedComments = sortedCommentsId.map((id) => commentMap.get(id)!)
 
   return { comments: sortedComments, total, totalPages }
+}
+
+export async function postComment(body: NewComment) {
+  const resp = await post('/comments', body)
+
+  // clear comments cache
+  const keys = globalThis.blogApiGetCache?.keys()
+  if (keys) {
+    for (const key of keys) {
+      if (!key.startsWith('list_')) {
+        continue
+      }
+      const url = new URL(key.substring('list_'.length))
+      if (
+        url.pathname.endsWith('/wp/v2/comments') &&
+        url.searchParams.get('post') === `${body.post}`
+      ) {
+        globalThis.blogApiGetCache?.delete(key)
+      }
+    }
+  }
+
+  return resp
 }
 
 function postProcessContent(html: string) {
