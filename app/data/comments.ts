@@ -25,10 +25,10 @@ export type Comment = {
 export type NewComment = {
   content: string
   post: number
-  parent?: number
+  parent?: number | null
   author_name: string
   author_email: string
-  author_url?: string
+  author_url?: string | null
 }
 
 export async function getComments(
@@ -46,23 +46,7 @@ export async function getComments(
     per_page: 100,
   })
 
-  const comments = commentsData
-    .map(
-      (comment: any) =>
-        ({
-          id: comment.id,
-          post: comment.post,
-          parent: comment.parent,
-          author: comment.author,
-          authorAvatar: comment.author_avatar_urls['96'],
-          authorUrl: comment.author_url,
-          authorName: comment.author_name,
-          date: parseGmt(comment.date_gmt),
-          content: postProcessContent(comment.content.rendered).content,
-          indent: 0,
-        } as Comment),
-    )
-    .sort((a, b) => a.id - b.id)
+  const comments = commentsData.map(mapComment).sort((a, b) => a.id - b.id)
 
   const unknownCommentsId: number[] = []
   const sortedCommentsId: number[] = []
@@ -89,6 +73,21 @@ export async function getComments(
   return { comments: sortedComments, total, totalPages }
 }
 
+function mapComment(comment: any): Comment {
+  return {
+    id: comment.id,
+    post: comment.post,
+    parent: comment.parent,
+    author: comment.author,
+    authorAvatar: comment.author_avatar_urls['96'],
+    authorUrl: comment.author_url,
+    authorName: comment.author_name,
+    date: parseGmt(comment.date_gmt),
+    content: postProcessContent(comment.content.rendered).content,
+    indent: 0,
+  }
+}
+
 export async function postComment(body: NewComment) {
   const resp = await post('/comments', body)
 
@@ -109,7 +108,7 @@ export async function postComment(body: NewComment) {
     }
   }
 
-  return resp
+  return mapComment(resp)
 }
 
 function postProcessContent(html: string) {
