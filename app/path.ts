@@ -2,7 +2,10 @@ export function postPath({ id }: { id: number }) {
   return `/${id}.moe`
 }
 
-export function authorPath({ slug }: { slug: string }) {
+export function authorPath({ slug }: { slug: string }, page = 1) {
+  if (page > 1) {
+    return `/author/${slug}/page/${page}`
+  }
   return `/author/${slug}`
 }
 

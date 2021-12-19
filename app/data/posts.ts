@@ -10,7 +10,7 @@ import {
 } from './base'
 import hljs from 'highlight.js'
 import classNames from 'classnames'
-import { getCategory, getTag } from './site'
+import { getCategory, getTag, getUser } from './site'
 
 export interface Author {
   name: string
@@ -76,6 +76,14 @@ export async function getTagPosts(slug: string, page = 1) {
   return {
     ...(await getPosts(page, { tags: tag.id })),
     tag,
+  }
+}
+
+export async function getAuthorPosts(slug: string, page = 1) {
+  const author = await getUser(slug)
+  return {
+    ...(await getPosts(page, { author: author.id })),
+    author,
   }
 }
 

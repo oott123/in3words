@@ -90,3 +90,19 @@ export async function getTag(slugInput: string) {
 
   return { id, name, slug, count } as TagMeta
 }
+
+export type UserMeta = {
+  name: string
+  slug: string
+  id: number
+}
+
+export async function getUser(slugInput: string) {
+  const resp = await get('/users', { slug: slugInput })
+  if (!resp[0]) {
+    throw new CmsError('请求的用户不存在', 'unknown_tag', 404)
+  }
+  const { name, slug, id } = resp[0]
+
+  return { name, slug, id } as UserMeta
+}
