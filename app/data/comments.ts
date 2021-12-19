@@ -6,6 +6,7 @@ import {
   getList,
   parseGmt,
   post,
+  replaceMediaUrl,
   voidTags,
 } from './base'
 
@@ -79,7 +80,7 @@ function mapComment(comment: any): Comment {
     post: comment.post,
     parent: comment.parent,
     author: comment.author,
-    authorAvatar: comment.author_avatar_urls['96'],
+    authorAvatar: replaceMediaUrl(comment.author_avatar_urls['96']),
     authorUrl: comment.author_url,
     authorName: comment.author_name,
     date: parseGmt(comment.date_gmt),

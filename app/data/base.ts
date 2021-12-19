@@ -4,12 +4,12 @@ if (!globalThis.blogApiGetCache) {
   globalThis.blogApiGetCache = new Map()
 }
 
-const BASE_URL = process.env.BASE_URL || 'https://best33.com/wp-json'
+const BASE_URL = process.env.BASE_URL || 'https://best33.com'
 
 export async function post<T = any>(
   path: string,
   body: any,
-  prefix = '/wp/v2',
+  prefix = '/wp-json/wp/v2',
 ): Promise<T> {
   const url = `${BASE_URL}${prefix}${path}`
 
@@ -28,7 +28,7 @@ export async function post<T = any>(
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,
-  prefix = '/wp/v2',
+  prefix = '/wp-json/wp/v2',
 ): Promise<T> {
   const url = buildUrl(query, path, prefix)
 
@@ -46,7 +46,7 @@ export async function get<T = any>(
 export async function getList<T = any[]>(
   path: string,
   query?: Record<string, any>,
-  prefix = '/wp/v2',
+  prefix = '/wp-json/wp/v2',
 ): Promise<{ items: T; total: number; totalPages: number }> {
   const url = buildUrl(query, path, prefix)
   const cacheKey = `list_${url}`
@@ -163,4 +163,19 @@ export function encodeHtmlText(str: string) {
 
 export function encodeHtmlAttr(str: string) {
   return encodeHtmlText(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
+export function replaceMediaUrl(url: string) {
+  const cdnUrl =
+    process.env.CDN_URL ||
+    process.env.BASE_URL ||
+    'https://cdn-best33-com.oott123.com/'
+
+  return url
+    .replace(/^https?:\/\/(www\.)?best33\.com\//, `${cdnUrl}/`)
+    .replace(/^https?:\/\/best33\.b0\.upaiyun\.com\//, `${cdnUrl}/`)
+    .replace(
+      /^https?:\/\/(\w+)\.gravatar\.com\/avatar\//,
+      'https://dn-qiniu-avatar.qbox.me/avatar/',
+    )
 }

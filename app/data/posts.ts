@@ -7,6 +7,7 @@ import {
   get,
   getList,
   parseGmt,
+  replaceMediaUrl,
   voidTags,
 } from './base'
 import hljs from 'highlight.js'
@@ -185,6 +186,10 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
         attribs.target = attribs.target || '_blank'
         attribs.rel = attribs.rel || 'noopener noreferrer'
         attribs.class = classNames(attribs.class, 'BlogLink-External')
+      }
+
+      if (name === 'img' && typeof attribs.src === 'string') {
+        attribs.src = replaceMediaUrl(attribs.src)
       }
 
       // SyntaxHighlighter 兼容
