@@ -4,8 +4,11 @@
   "description": "",
   "license": "",
   "scripts": {
-    "dev": "concurrently \"npm run dev:remix\" \"npm run dev:sass\" \"npm run dev:postcss\"",
-    "build": "remix build",
+    "dev": "concurrently \"yarn dev:remix\" \"yarn dev:sass\" \"yarn dev:postcss\"",
+    "build:remix": "remix build",
+    "build:postcss": "postcss temp/style.css -o app/styles/index.css",
+    "build:sass": "sass styles/index.scss temp/style.css",
+    "build": "yarn build:sass && yarn build:postcss && yarn build:sass",
     "postinstall": "remix setup node",
     "start": "remix-serve build",
     "dev:remix": "remix dev",
