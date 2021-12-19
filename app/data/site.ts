@@ -1,4 +1,4 @@
-import { CmsError, get } from './base'
+import { createErrorResponse, get } from './base'
 
 export interface SiteMeta {
   name: string
@@ -46,7 +46,7 @@ export async function getCategories(): Promise<CategoryMeta[]> {
 export async function getCategory(slugInput: string) {
   const resp = await get('/categories', { slug: slugInput })
   if (!resp[0]) {
-    throw new CmsError('请求的分类不存在', 'unknown_category', 404)
+    throw createErrorResponse('请求的分类不存在', 'unknown_category', 404)
   }
   const { id, name, count, slug } = resp[0]
 
@@ -84,7 +84,7 @@ export async function getTagCloud(): Promise<TagMeta[]> {
 export async function getTag(slugInput: string) {
   const resp = await get('/tags', { slug: slugInput })
   if (!resp[0]) {
-    throw new CmsError('请求的标签不存在', 'unknown_tag', 404)
+    throw createErrorResponse('请求的标签不存在', 'unknown_tag', 404)
   }
   const { id, name, count, slug } = resp[0]
 
@@ -100,7 +100,7 @@ export type UserMeta = {
 export async function getUser(slugInput: string) {
   const resp = await get('/users', { slug: slugInput })
   if (!resp[0]) {
-    throw new CmsError('请求的用户不存在', 'unknown_tag', 404)
+    throw createErrorResponse('请求的用户不存在', 'unknown_user', 404)
   }
   const { name, slug, id } = resp[0]
 

@@ -1,6 +1,7 @@
 import { Parser } from 'htmlparser2'
 import {
   CmsError,
+  createErrorResponse,
   encodeHtmlAttr,
   encodeHtmlText,
   get,
@@ -106,7 +107,7 @@ export async function getPage(slug: string): Promise<Post> {
   })
 
   if (!post[0]) {
-    throw new CmsError('请求的页面不存在', 'unknown_page', 404)
+    throw createErrorResponse('请求的页面不存在', 'unknown_page', 404)
   }
 
   const transformed = transformPost(post[0])

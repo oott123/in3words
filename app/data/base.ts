@@ -85,7 +85,7 @@ type CmsErrorResponse = Response & {
   url?: string
 }
 
-function createErrorResponse(
+export function createErrorResponse(
   message: string,
   code: string,
   status = 500,
