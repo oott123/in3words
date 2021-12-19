@@ -6,4 +6,8 @@
   @media screen and (max-width: 375px) {
     @apply px-4 mx-0;
   }
+
+  p:last-child {
+    @apply mb-0;
+  }
 }

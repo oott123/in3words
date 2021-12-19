@@ -1,3 +1,5 @@
+import { json } from 'remix'
+
 if (!globalThis.blogApiGetCache) {
   globalThis.blogApiGetCache = new Map()
 }
@@ -66,13 +68,40 @@ export async function getList<T = any[]>(
 async function response(resp: Response) {
   const data = await resp.json()
   if (!resp.ok && data) {
-    throw new CmsError(data.message, data.code, resp.status, resp.url)
+    throw createErrorResponse(data.message, data.code, resp.status, resp.url)
   }
   if (!resp.ok) {
     throw new CmsError('Unknown error', 'unknown', resp.status, resp.url)
   }
 
   return data
+}
+
+type CmsErrorResponse = Response & {
+  _isCmsError: true
+  message: string
+  code: string
+  status: number
+  url?: string
+}
+
+function createErrorResponse(
+  message: string,
+  code: string,
+  status = 500,
+  url?: string,
+) {
+  const resp = json(
+    { message, code, url, _isCmsError: true },
+    status,
+  ) as CmsErrorResponse
+  resp._isCmsError = true
+  resp.message = message
+  resp.code = code
+  resp.status = status
+  if (url) resp.url = url
+
+  return resp
 }
 
 export class CmsError extends Error {

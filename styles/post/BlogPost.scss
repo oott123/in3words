@@ -137,6 +137,10 @@
   &_ReadMore a {
     @apply text-base block py-1;
   }
+
+  &_Loading {
+    @apply mt-2;
+  }
 }
 
 .BlogMeta {

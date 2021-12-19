@@ -26,6 +26,8 @@ import TagCloud from './components/TagCloud'
 import BlogSidebar from './components/BlogSidebar'
 import { categoryPath, pagePath } from './path'
 import BlogFooter from './components/BlogFooter'
+import BlogCard from './components/BlogCard'
+import BlogPage from './components/BlogPage'
 
 const loadData = async () => {
   const [site, categories, tagCloud] = await Promise.all([
@@ -77,13 +79,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document title="Error!">
       <Layout>
-        <div>
-          <h1>出错了……</h1>
+        <BlogCard>
+          <h2>出错了……</h2>
           <p>{error.message}</p>
           <p>
             要不还是去<a href="/">首页</a>看看吧？
           </p>
-        </div>
+        </BlogCard>
       </Layout>
     </Document>
   )
@@ -113,17 +115,44 @@ export function CatchBoundary() {
       )
       break
 
+    case 400:
+      message = (
+        <div>
+          <p>你输入的内容不符合要求，请检查。</p>
+        </div>
+      )
+      break
+
+    case 500:
+      message = (
+        <div>
+          <p>由于服务器内部错误，这里暂时无法显示任何内容。</p>
+        </div>
+      )
+      break
+
     default:
-      throw new Error(caught.data || caught.statusText)
+      message = (
+        <div>
+          <p>由于某种原因，这里暂时无法显示任何内容。</p>
+        </div>
+      )
   }
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <Layout>
-        <h1>
-          {caught.status} {caught.statusText}
-        </h1>
-        {message}
+        <BlogPage>
+          <BlogCard>
+            <h1>
+              {caught.status} {caught.statusText}
+            </h1>
+            {message}
+            <div>
+              {caught.data?.code}: {caught.data?.message}
+            </div>
+          </BlogCard>
+        </BlogPage>
       </Layout>
     </Document>
   )

@@ -117,6 +117,10 @@ button.Button-Link {
   p {
     @apply text-sm text-gray-500 mx-auto;
     width: fit-content;
+
+    &:last-child {
+      @apply mb-0;
+    }
   }
 
   @media print {

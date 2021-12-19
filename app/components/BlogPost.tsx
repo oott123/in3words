@@ -81,7 +81,9 @@ const BlogPost: React.FC<{
         {summarized && (
           <footer className="BlogPost_ReadMore">
             {isLoadingFull ? (
-              <LoadingSvg />
+              <div className="BlogPost_Loading">
+                <LoadingSvg />
+              </div>
             ) : (
               <Link to={postPath}>阅读全文»</Link>
             )}

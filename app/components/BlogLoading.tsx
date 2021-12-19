@@ -41,7 +41,7 @@ export const LoadingSvg = () => (
         <rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
       </clipPath>
       <linearGradient id="fill">
-        <stop offset="0.599964" stop-color="#e6e6e6" stop-opacity="1">
+        <stop offset="0.599964" stopColor="#e6e6e6" stopOpacity="1">
           <animate
             attributeName="offset"
             values="-2; -2; 1"
@@ -50,7 +50,7 @@ export const LoadingSvg = () => (
             repeatCount="indefinite"
           ></animate>
         </stop>
-        <stop offset="1.59996" stop-color="#c6c4c4" stop-opacity="1">
+        <stop offset="1.59996" stopColor="#c6c4c4" stopOpacity="1">
           <animate
             attributeName="offset"
             values="-1; -1; 2"
@@ -59,7 +59,7 @@ export const LoadingSvg = () => (
             repeatCount="indefinite"
           ></animate>
         </stop>
-        <stop offset="2.59996" stop-color="#e6e6e6" stop-opacity="1">
+        <stop offset="2.59996" stopColor="#e6e6e6" stopOpacity="1">
           <animate
             attributeName="offset"
             values="0; 0; 3"

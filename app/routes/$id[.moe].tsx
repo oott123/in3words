@@ -7,6 +7,7 @@ import { postPath } from '~/path'
 import { blogTitle } from '~/utils/meta'
 import { getComments } from '~/data/comments'
 import BlogComment from '~/components/BlogComment'
+import BlogCard from '~/components/BlogCard'
 
 type PostData = {
   post: Post
@@ -28,10 +29,10 @@ export const loader: LoaderFunction<PostData> = async ({ params, request }) => {
 
 export const meta: MetaFunction<PostData> = ({
   parentsData: { root },
-  data: { post },
+  data,
 }) => {
   return {
-    title: blogTitle(post.title, root),
+    title: blogTitle(data?.post?.title || '', root),
   }
 }
 
