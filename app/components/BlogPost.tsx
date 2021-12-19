@@ -80,7 +80,7 @@ const BlogPost: React.FC<{
         {summarized && (
           <footer className="BlogPost_ReadMore">
             <Link to={postPath}>
-              {isLoadingFull ? '全文载入中……' : '阅读全文»'}
+              {isLoadingFull ? '全文加载中……' : '阅读全文»'}
             </Link>
           </footer>
         )}
