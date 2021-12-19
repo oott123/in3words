@@ -11,3 +11,4 @@
 - [x] 按作者归档
 - [ ] Pingback
 - [x] 移动端界面
+- [ ] Real Libravatar support

@@ -4,7 +4,7 @@ import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 import PageNavigation from './PageNavigation'
-import { Form, useActionData, useLocation, useTransition } from 'remix'
+import { Form, useLocation, useTransition } from 'remix'
 import classNames from 'classnames'
 
 export const SingleComment: React.FC<{ comment: Comment }> = ({
@@ -17,7 +17,11 @@ export const SingleComment: React.FC<{ comment: Comment }> = ({
       <a id={`comment-${comment.id}`} />
       <header className="BlogComment_CommentHeader">
         <div className="BlogComment_AuthorAvatar">
-          <img src={comment.authorAvatar} alt={comment.authorName} />
+          <img
+            src={comment.authorAvatar}
+            alt={comment.authorName}
+            referrerPolicy="no-referrer"
+          />
         </div>
         <div className="BlogComment_AuthorInfo">
           <span className="BlogComment_AuthorName">
@@ -223,11 +227,11 @@ const CommentForm: React.FC<{
         IP 地址和用户代理字符串 (User Agent)
         用于发送评论回复邮件，以及将上述信息分享给{' '}
         <a
-          href="https://en.gravatar.com/site/terms-of-service"
+          href="https://www.libravatar.org/privacy/"
           target="_blank"
           rel="noopener noreferrer nofollow"
         >
-          Gravatar
+          Libravatar
         </a>{' '}
         和{' '}
         <a

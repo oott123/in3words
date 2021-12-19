@@ -6,7 +6,7 @@ if (!globalThis.blogApiGetCache) {
 
 const BASE_URL = process.env.BASE_URL || 'https://best33.com'
 
-export async function forwardRequest(request: Request) {
+export async function forwardRequest(request: Request, baseUrl?: string) {
   const hopByHopHeaders = [
     'Keep-Alive',
     'Transfer-Encoding',
@@ -18,7 +18,10 @@ export async function forwardRequest(request: Request) {
     'Proxy-Authenticate',
   ]
   const oldUrl = new URL(request.url)
-  const newUrl = new URL(request.url.substring(oldUrl.origin.length), BASE_URL)
+  const newUrl = new URL(
+    request.url.substring(oldUrl.origin.length),
+    baseUrl || BASE_URL,
+  )
   const newHeaders = new Headers(request.headers)
 
   newHeaders.delete('Host')
@@ -213,11 +216,14 @@ export function replaceMediaUrl(url: string) {
     process.env.BASE_URL ||
     'https://cdn-best33-com.oott123.com/'
 
+  // const gravatarUrl = https://dn-qiniu-avatar.qbox.me/avatar/
+  // const gravatarUrl = 'https://gravatar.loli.net/avatar/'
+  // const gravatarUrl = 'https://cravatar.cn/avatar/'
+  // const gravatarUrl = '/avatar/'
+  const gravatarUrl = 'https://www.libravatar.org/avatar/'
+
   return url
     .replace(/^https?:\/\/(www\.)?best33\.com\//, `${cdnUrl}/`)
     .replace(/^https?:\/\/best33\.b0\.upaiyun\.com\//, `${cdnUrl}/`)
-    .replace(
-      /^https?:\/\/(\w+)\.gravatar\.com\/avatar\//,
-      'https://dn-qiniu-avatar.qbox.me/avatar/',
-    )
+    .replace(/^https?:\/\/(\w+)\.gravatar\.com\/avatar\//, gravatarUrl)
 }
