@@ -34,3 +34,20 @@ export function indexPath(page = 1, keyword?: string) {
     return `/${keyword ? `?s=${keyword}` : ''}`
   }
 }
+
+export function archivePath(
+  { year, month, day }: { year: number; month?: number; day?: number },
+  page = 1,
+) {
+  const segments = ['/date', year]
+  if (month) {
+    segments.push(month)
+    if (day) {
+      segments.push(day)
+    }
+  }
+  if (page > 1) {
+    segments.push(`page/${page}`)
+  }
+  return segments.join('/')
+}

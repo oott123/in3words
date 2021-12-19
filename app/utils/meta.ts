@@ -1,6 +1,9 @@
 import type { RootData } from '~/root'
 
-export function blogTitle(title: string | string[], rootData: RootData) {
+export function blogTitle(
+  title: string | Array<string | boolean | null | undefined | number>,
+  rootData: RootData,
+) {
   if (!title) {
     return rootData.site.name
   } else {
