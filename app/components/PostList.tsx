@@ -2,6 +2,7 @@ import React from 'react'
 import { useTransition } from 'remix'
 import { SummarizedPost } from '~/data/posts'
 import { postPath } from '~/path'
+import BlogCard from './BlogCard'
 import BlogLoading from './BlogLoading'
 import BlogPost from './BlogPost'
 
@@ -30,7 +31,9 @@ const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
           )
         })
       ) : (
-        <div>没有结果</div>
+        <BlogCard>
+          <p>没有结果</p>
+        </BlogCard>
       )}
     </section>
   )
