@@ -6,6 +6,44 @@ if (!globalThis.blogApiGetCache) {
 
 const BASE_URL = process.env.BASE_URL || 'https://best33.com'
 
+export async function forwardRequest(request: Request) {
+  const hopByHopHeaders = [
+    'Keep-Alive',
+    'Transfer-Encoding',
+    'TE',
+    'Connection',
+    'Trailer',
+    'Upgrade',
+    'Proxy-Authorization',
+    'Proxy-Authenticate',
+  ]
+  const oldUrl = new URL(request.url)
+  const newUrl = new URL(request.url.substring(oldUrl.origin.length), BASE_URL)
+  const newHeaders = new Headers(request.headers)
+
+  newHeaders.delete('Host')
+  newHeaders.delete('Cookie')
+
+  newHeaders.set('Host', newUrl.host)
+  for (const h of hopByHopHeaders) {
+    newHeaders.delete(h)
+  }
+
+  const resp = await fetch(newUrl.toString(), {
+    headers: newHeaders,
+    body: request.body,
+    method: request.method,
+  })
+
+  resp.headers.delete('Set-Cookie')
+
+  // if (resp.status === 404) {
+  //   throw createErrorResponse('找不到该页面', 'unknown_route', 404, request.url)
+  // }
+
+  return resp
+}
+
 export async function post<T = any>(
   path: string,
   body: any,
@@ -77,7 +115,7 @@ async function response(resp: Response) {
   return data
 }
 
-type CmsErrorResponse = Response & {
+export type CmsErrorResponse = Response & {
   _isCmsError: true
   message: string
   code: string
@@ -102,6 +140,10 @@ export function createErrorResponse(
   if (url) resp.url = url
 
   return resp
+}
+
+export function isErrorResponse(obj: any): obj is CmsErrorResponse {
+  return obj._isCmsError
 }
 
 export class CmsError extends Error {
