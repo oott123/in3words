@@ -201,9 +201,13 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
         if (currentLanguage === 'AUTO') {
           content.push(hljs.highlightAuto(text).value)
         } else {
-          content.push(
-            hljs.highlight(text, { language: currentLanguage }).value,
-          )
+          try {
+            content.push(
+              hljs.highlight(text, { language: currentLanguage }).value,
+            )
+          } catch {
+            content.push(hljs.highlightAuto(text).value)
+          }
         }
       } else {
         content.push(encodeHtmlText(text))

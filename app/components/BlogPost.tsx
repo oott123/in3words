@@ -6,6 +6,7 @@ import { authorPath, categoryPath, tagPath } from '~/path'
 import BlogCard from './BlogCard'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
+import { LoadingSvg } from './BlogLoading'
 
 const BlogPost: React.FC<{
   post: SummarizedPost | Post
@@ -79,9 +80,11 @@ const BlogPost: React.FC<{
         ></section>
         {summarized && (
           <footer className="BlogPost_ReadMore">
-            <Link to={postPath}>
-              {isLoadingFull ? '全文加载中……' : '阅读全文»'}
-            </Link>
+            {isLoadingFull ? (
+              <LoadingSvg />
+            ) : (
+              <Link to={postPath}>阅读全文»</Link>
+            )}
           </footer>
         )}
       </article>
