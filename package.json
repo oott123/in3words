@@ -5,10 +5,11 @@
   "license": "",
   "scripts": {
     "dev": "concurrently \"yarn dev:remix\" \"yarn dev:sass\" \"yarn dev:postcss\"",
+    "clean": "rimraf build && rimraf public/build",
     "build:remix": "remix build",
     "build:postcss": "postcss temp/style.css -o app/styles/index.css",
     "build:sass": "sass styles/index.scss temp/style.css",
-    "build": "yarn build:sass && yarn build:postcss && yarn build:sass",
+    "build": "yarn clean && yarn build:sass && yarn build:postcss && yarn build:sass",
     "postinstall": "remix setup node",
     "start": "remix-serve build",
     "dev:remix": "remix dev",
@@ -41,6 +42,7 @@
     "postcss": "^8.4.4",
     "postcss-cli": "^9.0.2",
     "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
     "sass": "^1.44.0",
     "tailwindcss": "^2.2.19",
     "typescript": "^4.1.2"
