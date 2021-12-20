@@ -1,0 +1,17 @@
+[Unit]
+Description=Service
+
+[Service]
+ExecStart=/usr/bin/yarn start
+EnvironmentFile=-/etc/in3words/env
+Restart=always
+RestartSec=10s
+Type=simple
+TimeoutStartSec=10
+TimeoutStopSec=15
+WorkingDirectory=/var/www/in3words
+User=www-data
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target
