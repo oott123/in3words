@@ -149,6 +149,9 @@
   &_Value {
     @apply inline text-gray-500;
     line-height: 18px;
+    a {
+      @apply inline-block;
+    }
   }
   &_Label {
     .BlogIcon {
