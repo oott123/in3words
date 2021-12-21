@@ -22,6 +22,7 @@ export async function forwardRequest(request: Request, baseUrl?: string) {
     request.url.substring(oldUrl.origin.length),
     baseUrl || BASE_URL,
   )
+  console.log(`Forwarding from ${oldUrl.toString()} to ${newUrl.toString()}`)
   const newHeaders = new Headers(request.headers)
 
   newHeaders.delete('Host')
