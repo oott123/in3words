@@ -47,7 +47,8 @@ body {
 
 body,
 textarea,
-button {
+button,
+input {
   $normal-fonts: QuoteFont, 'Microsoft YaHei', '微软雅黑', 'Segoe UI', 'SimHei',
     '黑体';
   $modern-fonts: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',
