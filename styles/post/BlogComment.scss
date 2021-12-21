@@ -1,7 +1,12 @@
 .BlogComment {
-  @for $i from 1 through 10 {
+  @for $i from 1 through 3 {
     [data-indent='#{$i}'] {
       margin-left: #{$i * 2}rem;
+    }
+  }
+  @for $i from 4 through 12 {
+    [data-indent='#{$i}'] {
+      margin-left: #{$i * 1}rem;
     }
   }
   &_H1 {
@@ -45,6 +50,37 @@
   @media print {
     &_CommentForm {
       @apply hidden;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    &_Content,
+    &_Actions {
+      @apply ml-0 my-2;
+    }
+    &_Actions {
+      @apply hidden;
+    }
+    &_Comment:hover {
+      .BlogComment_Actions {
+        @apply block;
+      }
+    }
+    [data-indent] {
+      @apply ml-0 my-0;
+    }
+    [data-indent='0'] {
+      @apply mt-4;
+    }
+    @for $i from 1 through 2 {
+      [data-indent='#{$i}'] {
+        margin-left: #{$i * 1}rem;
+      }
+    }
+    @for $i from 3 through 12 {
+      [data-indent='#{$i}'] {
+        margin-left: #{$i * 0.5}rem;
+      }
     }
   }
 }
