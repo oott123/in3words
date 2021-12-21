@@ -144,18 +144,19 @@
 }
 
 .BlogMeta {
-  @apply inline-block;
+  @apply inline-flex items-center;
   &_Label,
   &_Value {
     @apply inline text-gray-500;
-    line-height: 18px;
     a {
       @apply inline-block;
     }
   }
   &_Label {
-    .BlogIcon {
-      @apply align-middle;
+    @apply block;
+    .BlogIcon,
+    svg {
+      @apply block;
     }
   }
   &_Value {
