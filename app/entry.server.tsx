@@ -2,6 +2,9 @@ import { renderToString } from 'react-dom/server'
 import { RemixServer } from 'remix'
 import type { EntryContext } from 'remix'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
+
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
