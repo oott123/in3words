@@ -17,9 +17,15 @@
   }
   &_AuthorName {
     @apply text-base;
+    span {
+      @apply inline-block;
+    }
     .BlogIcon {
       @apply align-middle pl-1;
       line-height: 18px;
+      svg {
+        @apply inline-block;
+      }
     }
   }
   &_AuthorLink {
