@@ -172,6 +172,7 @@ function Document({
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         {title ? <title>{title}</title> : <Meta />}
         <Links />
+        <meta name="theme-color" content="#4285f4" />
       </head>
       <body>
         {children}
