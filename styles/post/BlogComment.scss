@@ -6,7 +6,7 @@
   }
   @for $i from 4 through 12 {
     [data-indent='#{$i}'] {
-      margin-left: #{$i * 1}rem;
+      margin-left: #{3 + $i * 1}rem;
     }
   }
   &_H1 {
@@ -79,7 +79,7 @@
     }
     @for $i from 3 through 12 {
       [data-indent='#{$i}'] {
-        margin-left: #{$i * 0.5}rem;
+        margin-left: #{1 + $i * 0.5}rem;
       }
     }
   }
