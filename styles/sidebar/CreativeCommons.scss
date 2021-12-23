@@ -2,5 +2,10 @@
   &_Icon {
     line-height: 1;
     @apply text-center mt-4;
+    img {
+      @apply inline-block mx-1;
+      width: 88px;
+      height: 31px;
+    }
   }
 }
