@@ -1,3 +1,5 @@
+@use '@fontsource/fira-code/scss/mixins' as FiraCode;
+
 :root {
   font-size: 16px;
 }
@@ -38,6 +40,12 @@ ol {
     unicode-range: U+4E00-9FFF;
   }
 }
+
+@include FiraCode.fontFace(
+  $weight: 400,
+  $display: fallback,
+  $fontDir: '/build/gulp/fonts/fira-code/files'
+);
 
 body {
   @apply text-gray-700 text-sm;
