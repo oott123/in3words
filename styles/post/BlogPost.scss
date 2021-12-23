@@ -85,8 +85,8 @@
     code {
       @apply whitespace-pre-wrap break-all bg-gray-100 text-gray-900;
 
-      font-family: 'Fira Code', 'JetBrains Mono', 'Consolas',
-        ChineseOnlySansSerif, monospace;
+      font-family: 'Fira Code', 'Fira CodeVariable', 'JetBrains Mono',
+        'Consolas', ChineseOnlySansSerif, monospace;
 
       // modern fonts are 125% screens only
       @media screen and (min-resolution: 120dpi) {
