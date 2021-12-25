@@ -23,7 +23,7 @@ function prefix(k: string) {
 
 export async function set<T = any>(key: string, value: T): Promise<void> {
   const redis = await getRedis()
-  await redis.setex(prefix(key), 3600, msgpack.encode(value))
+  await redis.setEx(prefix(key), 3600, msgpack.encode(value) as any)
 }
 
 export async function get<T = any>(key: string): Promise<T | null> {
@@ -38,4 +38,10 @@ export async function get<T = any>(key: string): Promise<T | null> {
 export async function del(key: string): Promise<void> {
   const redis = await getRedis()
   await redis.del(prefix(key))
+}
+
+export async function clear(group?: string): Promise<void> {
+  const redis = await getRedis()
+  const keys = await redis.keys(prefix(group ? `${group}:*` : '*'))
+  await redis.del(keys)
 }

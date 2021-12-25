@@ -82,11 +82,18 @@ export async function forwardRequest(
   }
 }
 
+export type RequestOptions = {
+  prefix?: string
+  cacheGroup?: string
+  cacheTtl?: number
+}
+
 export async function post<T = any>(
   path: string,
   body: any,
-  prefix = '/wp-json/wp/v2',
+  options?: RequestOptions,
 ): Promise<T> {
+  const prefix = options?.prefix ?? '/wp-json/wp/v2'
   const url = `${BASE_URL}${prefix}${path}`
 
   const resp = await fetch(url, {
@@ -104,11 +111,13 @@ export async function post<T = any>(
 async function cachedGet<T = any>(
   path: string,
   query?: Record<string, any>,
-  prefix = '/wp-json/wp/v2',
+  options?: RequestOptions,
 ): Promise<CmsData<T>> {
+  const prefix = options?.prefix ?? '/wp-json/wp/v2'
   const url = buildUrl(query, path, prefix)
+  const cacheKey = options?.cacheGroup ? `${options.cacheGroup}:${url}` : url
 
-  const cached = cache.get(url)
+  const cached = cache.get(cacheKey)
 
   const resp = fetch(url)
   const result = response<T>(resp)
@@ -121,7 +130,7 @@ async function cachedGet<T = any>(
     }, console.error)
 
     result.then((data) => {
-      cache.set(url, data).catch(console.error)
+      cache.set(cacheKey, data).catch(console.error)
       resolve(data)
     }, reject)
   })
@@ -132,17 +141,17 @@ async function cachedGet<T = any>(
 export async function get<T = any>(
   path: string,
   query?: Record<string, any>,
-  prefix = '/wp-json/wp/v2',
+  options?: RequestOptions,
 ): Promise<T> {
-  return (await cachedGet(path, query, prefix)).data
+  return (await cachedGet(path, query, options)).data
 }
 
 export async function getList<T = any[]>(
   path: string,
   query?: Record<string, any>,
-  prefix = '/wp-json/wp/v2',
+  options?: RequestOptions,
 ): Promise<{ items: T; total: number; totalPages: number }> {
-  const data = await cachedGet<T>(path, query, prefix)
+  const data = await cachedGet<T>(path, query, options)
   return {
     items: data.data,
     total: data.total,

@@ -9,6 +9,7 @@ import {
   replaceMediaUrl,
   voidTags,
 } from './base'
+import { clear as clearCache } from './cache'
 
 export type Comment = {
   id: number
@@ -32,6 +33,10 @@ export type NewComment = {
   author_url?: string | null
 }
 
+function getCacheGroup(postId: number) {
+  return `comments:post-${postId}`
+}
+
 export async function getComments(
   postId: number,
   page = 1,
@@ -40,12 +45,16 @@ export async function getComments(
     items: commentsData,
     totalPages,
     total,
-  } = await getList('/comments', {
-    post: postId,
-    page: page,
-    order: 'desc',
-    per_page: 100,
-  })
+  } = await getList(
+    '/comments',
+    {
+      post: postId,
+      page: page,
+      order: 'desc',
+      per_page: 100,
+    },
+    { cacheGroup: getCacheGroup(postId) },
+  )
 
   const comments = commentsData.map(mapComment).sort((a, b) => a.id - b.id)
 
@@ -92,22 +101,7 @@ function mapComment(comment: any): Comment {
 export async function postComment(body: NewComment) {
   const resp = await post('/comments', body)
 
-  // clear comments cache
-  const keys = globalThis.blogApiGetCache?.keys()
-  if (keys) {
-    for (const key of keys) {
-      if (!key.startsWith('list_')) {
-        continue
-      }
-      const url = new URL(key.substring('list_'.length))
-      if (
-        url.pathname.endsWith('/wp/v2/comments') &&
-        url.searchParams.get('post') === `${body.post}`
-      ) {
-        globalThis.blogApiGetCache?.delete(key)
-      }
-    }
-  }
+  await clearCache(getCacheGroup(body.post))
 
   return mapComment(resp)
 }

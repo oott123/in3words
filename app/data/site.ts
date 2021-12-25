@@ -17,7 +17,7 @@ export async function getSite(): Promise<SiteMeta> {
     {
       _fields: ['name', 'description', 'url'],
     },
-    '/wp-json',
+    { prefix: '/wp-json' },
   )
   return {
     name: data.name,

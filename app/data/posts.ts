@@ -1,6 +1,5 @@
 import { Parser } from 'htmlparser2'
 import {
-  CmsError,
   createErrorResponse,
   encodeHtmlAttr,
   encodeHtmlText,
@@ -91,9 +90,13 @@ export async function getAuthorPosts(slug: string, page = 1) {
 }
 
 export async function getPost(id: number): Promise<Post> {
-  const post = await get(`/posts/${id}`, {
-    _embed: 'author,wp:term',
-  })
+  const post = await get(
+    `/posts/${id}`,
+    {
+      _embed: 'author,wp:term',
+    },
+    { cacheGroup: `post:${id}` },
+  )
 
   const transformed = transformPost(post)
   const { content } = postProcessContent(transformed.content)
@@ -103,10 +106,14 @@ export async function getPost(id: number): Promise<Post> {
 }
 
 export async function getPage(slug: string): Promise<Post> {
-  const post = await get(`/pages`, {
-    _embed: 'author,wp:term',
-    slug,
-  })
+  const post = await get(
+    `/pages`,
+    {
+      _embed: 'author,wp:term',
+      slug,
+    },
+    { cacheGroup: `page:${slug}` },
+  )
 
   if (!post[0]) {
     throw createErrorResponse('请求的页面不存在', 'unknown_page', 404)
