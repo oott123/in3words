@@ -6,7 +6,7 @@ RUN yarn && yarn cache clean --all
 COPY . /app/
 RUN yarn build
 
-FROM node:16-slim
+FROM node:16-slim AS runner
 WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml setup.js /app/
 COPY .yarn /app/.yarn/
