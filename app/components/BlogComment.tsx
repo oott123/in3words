@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BlogCard from './BlogCard'
 import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
@@ -11,6 +11,8 @@ export const SingleComment: React.FC<{ comment: Comment }> = ({
   comment,
   children,
 }) => {
+  const preventClick = useCallback((e) => e.preventDefault(), [])
+
   return (
     <article className="BlogComment_Comment">
       <link href={`#comment-${comment.id}`} />
@@ -43,7 +45,11 @@ export const SingleComment: React.FC<{ comment: Comment }> = ({
               </a>
             ) : null}
           </span>
-          <a href={`#comment-${comment.id}`} className="BlogComment_Date">
+          <a
+            href={`#comment-${comment.id}`}
+            onClick={preventClick}
+            className="BlogComment_Date"
+          >
             <BlogDate date={comment.date} />
           </a>
         </div>
@@ -118,7 +124,11 @@ const BlogComment: React.FC<{
                 </BlogCard>
                 {replyTo === comment.id && (
                   <BlogCard>
-                    <CommentForm post={postId} parent={comment.id} />
+                    <CommentForm
+                      post={postId}
+                      parent={comment.id}
+                      onSuccess={() => setReplyTo(0)}
+                    />
                   </BlogCard>
                 )}
               </React.Fragment>
@@ -162,17 +172,34 @@ const BlogComment: React.FC<{
 const CommentForm: React.FC<{
   post: number
   parent?: number
-}> = ({ post, parent }) => {
+  onSuccess?: () => void
+}> = ({ post, parent, onSuccess }) => {
   const nameInput = useMemorizedInput('commenterName')
   const emailInput = useMemorizedInput('commenterEmail')
   const urlInput = useMemorizedInput('commenterUrl')
+  const commentInput = useMemorizedInput('comment')
   const location = useLocation()
   const [hasMemorized, setHasMemorized] = useState(false)
 
   const comment = useFetcher()
-  console.log(comment)
+  const commentSuccess = comment.data?.success
+  const commentError = comment.data?.error
 
-  const isSubmitting = comment.state === 'submitting'
+  const isSubmitting =
+    comment.state === 'submitting' || comment.state === 'loading'
+
+  useEffect(() => {
+    if (!isSubmitting && commentSuccess) {
+      commentInput.setValue('')
+      onSuccess && onSuccess()
+    }
+  }, [
+    isSubmitting,
+    commentSuccess,
+    commentInput,
+    commentInput.setValue,
+    onSuccess,
+  ])
 
   useEffect(() => {
     if (nameInput.value && emailInput.value) {
@@ -194,6 +221,7 @@ const CommentForm: React.FC<{
           rows={3}
           placeholder="评论内容"
           required
+          {...commentInput.dom}
         ></textarea>
         <input type="hidden" name="post" value={post} />
         <input type="hidden" name="return_path" value={location.pathname} />
@@ -215,7 +243,7 @@ const CommentForm: React.FC<{
             placeholder="昵称（公开显示）"
             required
             autoComplete="nickname"
-            {...nameInput}
+            {...nameInput.dom}
           />
           <input
             type="email"
@@ -223,16 +251,26 @@ const CommentForm: React.FC<{
             placeholder="邮箱（显示头像和接收回复邮件）"
             required
             autoComplete="email"
-            {...emailInput}
+            {...emailInput.dom}
           />
           <input
             type="url"
             name="author_url"
             placeholder="网站（显示在昵称旁边）"
             autoComplete="url"
-            {...urlInput}
+            {...urlInput.dom}
           />
         </div>
+        {commentSuccess && (
+          <div className="CommentForm_Status CommentForm_Status-Success">
+            评论发表成功。
+          </div>
+        )}
+        {commentError && (
+          <div className="CommentForm_Status CommentForm_Status-Error">
+            错误：{commentError}
+          </div>
+        )}
         <button type="submit">{isSubmitting ? '提交中……' : '提交'}</button>
       </fieldset>
       <p className="CommentForm_Tip">
@@ -273,11 +311,19 @@ function useMemorizedInput(key: string) {
     setValue((e.target as HTMLInputElement).value)
   }, [])
 
+  const mySetValue = useCallback(
+    (value: string) => {
+      setValue(value)
+      localStorage[lsKey] = value
+    },
+    [lsKey, localStorage],
+  )
+
   useEffect(() => {
     localStorage[lsKey] = value
   }, [value, lsKey, localStorage])
 
-  return { value, onChange }
+  return { dom: { value, onChange }, setValue: mySetValue, value }
 }
 
 export default BlogComment

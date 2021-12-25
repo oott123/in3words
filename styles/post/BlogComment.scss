@@ -117,4 +117,14 @@
   &_Details-Hidden {
     @apply hidden;
   }
+
+  &_Status {
+    @apply text-base text-center my-2 px-4 py-2;
+    &-Success {
+      @apply bg-green-200 text-green-800;
+    }
+    &-Error {
+      @apply bg-red-200 text-red-800;
+    }
+  }
 }

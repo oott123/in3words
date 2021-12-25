@@ -1,6 +1,5 @@
 import {
   json,
-  Link,
   Links,
   LiveReload,
   LoaderFunction,
@@ -15,7 +14,6 @@ import {
 import type { LinksFunction } from 'remix'
 
 import globalStylesUrl from '~/styles/index.css'
-import { useEffect } from 'react'
 import BlogTitle from './components/BlogTitle'
 import SideLinks, { SideLinkItem } from './components/SideLinks'
 import SideHeader from './components/SideHeader'
