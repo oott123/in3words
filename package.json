@@ -9,7 +9,7 @@
     "build:remix": "remix build",
     "build:gulp": "gulp build",
     "build": "yarn clean && yarn build:gulp && yarn build:remix",
-    "postinstall": "remix setup node",
+    "postinstall": "node ./setup.js",
     "start": "remix-serve build",
     "dev:remix": "remix dev",
     "dev:gulp": "gulp"
