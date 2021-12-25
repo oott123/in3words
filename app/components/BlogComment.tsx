@@ -183,6 +183,7 @@ const CommentForm: React.FC<{
 
   const comment = useFetcher()
   const commentSuccess = comment.data?.success
+  const commentApproved = commentSuccess && comment.data?.comment?.approved
   const commentError = comment.data?.error
 
   const isSubmitting =
@@ -191,7 +192,9 @@ const CommentForm: React.FC<{
   useEffect(() => {
     if (!isSubmitting && commentSuccess) {
       commentInput.setValue('')
-      onSuccess && onSuccess()
+      if (commentApproved) {
+        onSuccess && onSuccess()
+      }
     }
   }, [
     isSubmitting,
@@ -199,6 +202,7 @@ const CommentForm: React.FC<{
     commentInput,
     commentInput.setValue,
     onSuccess,
+    commentApproved,
   ])
 
   useEffect(() => {
@@ -263,7 +267,9 @@ const CommentForm: React.FC<{
         </div>
         {commentSuccess && (
           <div className="CommentForm_Status CommentForm_Status-Success">
-            评论发表成功。
+            {commentApproved
+              ? '评论发表成功。'
+              : '评论已提交，但审核后才会显示。'}
           </div>
         )}
         {commentError && (
