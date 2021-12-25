@@ -15,9 +15,10 @@ const BlogSidebar: React.FC = ({ children }) => {
   const lastHeight = useRef(0)
 
   useIsomorphicLayoutEffect(() => {
-    setIsFixed(true)
-
-    sidebarHeight.current = sidebar.current?.clientHeight ?? 0
+    function resizeSidebar() {
+      sidebarHeight.current = sidebar.current?.clientHeight ?? 0
+      document.body.style.minHeight = `${sidebarHeight.current}px`
+    }
 
     function setScroll() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -41,9 +42,16 @@ const BlogSidebar: React.FC = ({ children }) => {
       setScroll()
     }
 
+    const resizeObserver = new ResizeObserver(() => {
+      resizeSidebar()
+    })
+
+    setIsFixed(true)
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleResize, { passive: true })
+    resizeSidebar()
     handleResize()
+    resizeObserver.observe(sidebar.current!)
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
     setTop(Math.max(-scrollTop, screenHeight.current - sidebarHeight.current))
@@ -51,6 +59,7 @@ const BlogSidebar: React.FC = ({ children }) => {
     return () => {
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
     }
   }, [])
 
