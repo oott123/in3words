@@ -47,7 +47,7 @@ const BlogPost: React.FC<{
             <BlogMeta label={<BlogIcon>{BlogIcons.User}</BlogIcon>}>
               <Link to={authorPath(post.author)}>{post.author.name}</Link>
             </BlogMeta>
-            <BlogMeta label={<BlogIcon size={18}>{BlogIcons.Date}</BlogIcon>}>
+            <BlogMeta label={<BlogIcon>{BlogIcons.Date}</BlogIcon>}>
               <Link to={postPath}>
                 <BlogDate date={post.createdAt} />
               </Link>

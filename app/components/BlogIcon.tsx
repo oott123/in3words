@@ -1,4 +1,11 @@
-import { AllApplication, Calendar, Success, TagOne, User } from '@icon-park/svg'
+import {
+  AllApplication,
+  CalendarDot,
+  Time,
+  Success,
+  TagOne,
+  User,
+} from '@icon-park/svg'
 import type { Icon as IconPark } from '@icon-park/svg/lib/runtime'
 
 import React from 'react'
@@ -17,7 +24,7 @@ function getIcons(): Record<
 > {
   return {
     [BlogIcons.Category]: { icon: AllApplication, size: 18, strokeWidth: 3 },
-    [BlogIcons.Date]: { icon: Calendar, size: 18, strokeWidth: 3 },
+    [BlogIcons.Date]: { icon: Time, size: 18, strokeWidth: 3 },
     [BlogIcons.Tag]: { icon: TagOne, size: 18, strokeWidth: 3 },
     [BlogIcons.User]: { icon: User, size: 18, strokeWidth: 3 },
     [BlogIcons.Verified]: {
@@ -49,11 +56,17 @@ export const BlogIconsDef: React.FC = () => {
   )
 }
 
-const BlogIcon = ({ children }: { children: BlogIcons }) => {
-  const size = getIcons()[children].size
+const BlogIcon = ({
+  children,
+  size,
+}: {
+  children: BlogIcons
+  size?: number
+}) => {
+  const svgSize = size ?? getIcons()[children].size ?? 18
   return (
     <span className={`BlogIcon BlogIcon-${BlogIcons[children]}`}>
-      <svg width={size ?? 18} height={size ?? 18}>
+      <svg width={svgSize} height={svgSize}>
         <use xlinkHref={`#${symbolPrefix}${BlogIcons[children]}`} />
       </svg>
     </span>
