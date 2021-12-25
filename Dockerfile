@@ -9,4 +9,4 @@ RUN yarn --production --ignore-scripts
 FROM node:16-slim
 WORKDIR /app
 COPY --from=builder /app /app
-CMD [ "node" "node_modules/.bin/remix-serve" "build" ]
+CMD node node_modules/.bin/remix-serve build
