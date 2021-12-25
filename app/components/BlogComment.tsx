@@ -20,6 +20,7 @@ export const SingleComment: React.FC<{ comment: Comment }> = ({
           <img
             src={comment.authorAvatar}
             alt={comment.authorName}
+            loading="lazy"
             referrerPolicy="no-referrer"
           />
         </div>

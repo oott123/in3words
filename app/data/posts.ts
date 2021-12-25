@@ -190,6 +190,7 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
 
       if (name === 'img' && typeof attribs.src === 'string') {
         attribs.src = replaceMediaUrl(attribs.src)
+        attribs.loading = attribs.loading || 'lazy'
       }
 
       // SyntaxHighlighter 兼容
