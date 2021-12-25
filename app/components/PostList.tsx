@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTransition } from 'remix'
 import { SummarizedPost } from '~/data/posts'
+import { useScrollToTop } from '~/hooks/useScrollToTop'
 import { postPath } from '~/path'
 import BlogCard from './BlogCard'
 import BlogLoading from './BlogLoading'
@@ -11,6 +12,7 @@ const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
   const isLoading = transition.state === 'loading'
   const loadingPath = transition.location?.pathname
   const hasLoadingPost = posts.some((p) => postPath(p) === loadingPath)
+  useScrollToTop(isLoading)
 
   return (
     <section className="PostList">
