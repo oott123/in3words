@@ -1,6 +1,6 @@
 FROM node:16 AS builder
 WORKDIR /app
-COPY package.json yarn.lock .yarnrc.yml /app/
+COPY package.json yarn.lock .yarnrc.yml setup.js /app/
 COPY .yarn /app/.yarn/
 RUN yarn && yarn cache clean --all
 COPY . /app/
@@ -8,7 +8,7 @@ RUN yarn build
 
 FROM node:16-slim
 WORKDIR /app
-COPY package.json yarn.lock .yarnrc.yml /app/
+COPY package.json yarn.lock .yarnrc.yml setup.js /app/
 COPY .yarn /app/.yarn/
 ENV NODE_ENV production
 ARG DISABLE_POST_INSTALL yes
