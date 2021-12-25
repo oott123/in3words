@@ -2,7 +2,7 @@
   "private": true,
   "name": "in3words",
   "description": "",
-  "license": "",
+  "license": "BSD-3-Clause",
   "scripts": {
     "dev": "concurrently \"yarn dev:remix\" \"yarn dev:gulp\"",
     "clean": "rimraf build && rimraf public/build",
