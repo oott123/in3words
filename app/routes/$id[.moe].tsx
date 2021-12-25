@@ -43,7 +43,12 @@ export default function Post() {
   return (
     <BlogPage>
       <BlogPost post={post} postPath={path} />
-      <BlogComment {...comments} page={commentPage} postId={post.id} />
+      <BlogComment
+        {...comments}
+        page={commentPage}
+        postId={post.id}
+        newCommentsAllowed={post.newCommentsAllowed}
+      />
     </BlogPage>
   )
 }

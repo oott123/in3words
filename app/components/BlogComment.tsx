@@ -63,7 +63,8 @@ const BlogComment: React.FC<{
   page: number
   totalPages: number
   postId: number
-}> = ({ comments, page, totalPages, total, postId }) => {
+  newCommentsAllowed: boolean
+}> = ({ comments, page, totalPages, total, postId, newCommentsAllowed }) => {
   const { state, location } = useTransition()
   const currentLocation = useLocation()
   const [replyTo, setReplyTo] = useState(0)
@@ -84,66 +85,76 @@ const BlogComment: React.FC<{
 
   return (
     <section className="BlogComment">
-      <BlogCard className="BlogComment_H1">
-        <h1>评论</h1>
-      </BlogCard>
-      {switchingPage ? (
-        <BlogCard>读取评论……</BlogCard>
-      ) : comments.length > 0 ? (
-        comments.map((comment) => (
-          <React.Fragment key={comment.id}>
-            <BlogCard data-indent={comment.indent}>
-              <SingleComment comment={comment}>
-                <footer className="BlogComment_Actions">
-                  {comment.id === replyTo ? (
-                    <button
-                      className="Button-Link"
-                      onClick={() => setReplyTo(0)}
-                    >
-                      取消回复
-                    </button>
-                  ) : (
-                    <button
-                      className="Button-Link"
-                      onClick={() => setReplyTo(comment.id)}
-                    >
-                      回复
-                    </button>
-                  )}
-                </footer>
-              </SingleComment>
+      {comments.length < 1 && !newCommentsAllowed ? null : (
+        <>
+          <BlogCard className="BlogComment_H1">
+            <h1>评论</h1>
+          </BlogCard>
+          {switchingPage ? (
+            <BlogCard>读取评论……</BlogCard>
+          ) : comments.length > 0 ? (
+            comments.map((comment) => (
+              <React.Fragment key={comment.id}>
+                <BlogCard data-indent={comment.indent}>
+                  <SingleComment comment={comment}>
+                    <footer className="BlogComment_Actions">
+                      {comment.id === replyTo ? (
+                        <button
+                          className="Button-Link"
+                          onClick={() => setReplyTo(0)}
+                        >
+                          取消回复
+                        </button>
+                      ) : (
+                        <button
+                          className="Button-Link"
+                          onClick={() => setReplyTo(comment.id)}
+                        >
+                          回复
+                        </button>
+                      )}
+                    </footer>
+                  </SingleComment>
+                </BlogCard>
+                {replyTo === comment.id && (
+                  <BlogCard>
+                    <CommentForm post={postId} parent={comment.id} />
+                  </BlogCard>
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <BlogCard>
+              <p>还没有评论。</p>
             </BlogCard>
-            {replyTo === comment.id && (
-              <BlogCard>
-                <CommentForm post={postId} parent={comment.id} />
-              </BlogCard>
-            )}
-          </React.Fragment>
-        ))
-      ) : (
-        <BlogCard>
-          <p>还没有评论。</p>
-        </BlogCard>
+          )}
+          {totalPages > 1 ? (
+            <PageNavigation
+              page={page}
+              totalPages={totalPages}
+              path={(page) => `?comments_page=${page}`}
+            >
+              共 {total} 条
+            </PageNavigation>
+          ) : null}
+          {showCommentTip && (
+            <BlogCard>
+              <p>
+                如果你刚才提交的评论没有出现在此处，可能是因为评论需要审核或是缓存尚未刷新，无需重复提交。
+              </p>
+            </BlogCard>
+          )}
+          {newCommentsAllowed ? (
+            <BlogCard className="BlogComment_CommentForm">
+              <CommentForm post={postId} />
+            </BlogCard>
+          ) : (
+            <BlogCard>
+              <p>评论已关闭。</p>
+            </BlogCard>
+          )}
+        </>
       )}
-      {totalPages > 1 ? (
-        <PageNavigation
-          page={page}
-          totalPages={totalPages}
-          path={(page) => `?comments_page=${page}`}
-        >
-          共 {total} 条
-        </PageNavigation>
-      ) : null}
-      {showCommentTip && (
-        <BlogCard>
-          <p>
-            如果你刚才提交的评论没有出现在此处，可能是因为评论需要审核或是缓存尚未刷新，无需重复提交。
-          </p>
-        </BlogCard>
-      )}
-      <BlogCard className="BlogComment_CommentForm">
-        <CommentForm post={postId} />
-      </BlogCard>
     </section>
   )
 }

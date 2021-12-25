@@ -36,6 +36,7 @@ export interface Post {
     slug: string
     avatar: string
   }
+  newCommentsAllowed: boolean
   categories?: Term<'category'>[]
   tags?: Term<'post_tag'>[]
 }
@@ -138,6 +139,7 @@ function transformPost(post: any): Post {
     tags: post.tags?.map(
       mapTermsByTaxonomy(post._embedded['wp:term'], 'post_tag'),
     ),
+    newCommentsAllowed: post.comment_status === 'open',
   } as Post
 }
 
