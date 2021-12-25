@@ -1,4 +1,5 @@
 import { json } from 'remix'
+import * as cache from './cache'
 
 if (!globalThis.blogApiGetCache) {
   globalThis.blogApiGetCache = new Map()
@@ -14,7 +15,6 @@ export async function feed() {
       headers: {
         Host: BASE_HOST || newUrl.host,
       },
-      redirect: 'manual',
     })
 
     resp.headers.delete('Set-Cookie')
@@ -96,9 +96,37 @@ export async function post<T = any>(
     },
     body: JSON.stringify(body),
   })
-  const result = await response(resp)
+  const result = await response<T>(resp)
 
-  return result
+  return result.data
+}
+
+async function cachedGet<T = any>(
+  path: string,
+  query?: Record<string, any>,
+  prefix = '/wp-json/wp/v2',
+): Promise<CmsData<T>> {
+  const url = buildUrl(query, path, prefix)
+
+  const cached = cache.get(url)
+
+  const resp = fetch(url)
+  const result = response<T>(resp)
+
+  const got = await new Promise<CmsData<T>>((resolve, reject) => {
+    cached.then((data) => {
+      if (data !== null) {
+        resolve(data)
+      }
+    }, console.error)
+
+    result.then((data) => {
+      cache.set(url, data).catch(console.error)
+      resolve(data)
+    }, reject)
+  })
+
+  return got
 }
 
 export async function get<T = any>(
@@ -106,17 +134,7 @@ export async function get<T = any>(
   query?: Record<string, any>,
   prefix = '/wp-json/wp/v2',
 ): Promise<T> {
-  const url = buildUrl(query, path, prefix)
-
-  if (globalThis.blogApiGetCache!.has(url)) {
-    // await sleep(2000)
-    return globalThis.blogApiGetCache!.get(url)
-  }
-
-  const resp = await fetch(url)
-  const result = await response(resp)
-  globalThis.blogApiGetCache!.set(url, result)
-  return result
+  return (await cachedGet(path, query, prefix)).data
 }
 
 export async function getList<T = any[]>(
@@ -124,33 +142,36 @@ export async function getList<T = any[]>(
   query?: Record<string, any>,
   prefix = '/wp-json/wp/v2',
 ): Promise<{ items: T; total: number; totalPages: number }> {
-  const url = buildUrl(query, path, prefix)
-  const cacheKey = `list_${url}`
-
-  if (globalThis.blogApiGetCache!.has(cacheKey)) {
-    return globalThis.blogApiGetCache!.get(cacheKey)
+  const data = await cachedGet<T>(path, query, prefix)
+  return {
+    items: data.data,
+    total: data.total,
+    totalPages: data.totalPages,
   }
-
-  const resp = await fetch(url)
-  const items = await response(resp)
-  const total = Number(resp.headers.get('X-WP-Total'))
-  const totalPages = Number(resp.headers.get('X-WP-TotalPages'))
-  const data = { items, total, totalPages }
-
-  globalThis.blogApiGetCache!.set(cacheKey, data)
-  return data
 }
 
-async function response(resp: Response) {
+type CmsData<T> = {
+  data: T
+  total: number
+  totalPages: number
+}
+
+async function response<T = any>(
+  respInput: Response | Promise<Response>,
+): Promise<CmsData<T>> {
+  const resp = await respInput
   const data = await resp.json()
   if (!resp.ok && data) {
     throw createErrorResponse(data.message, data.code, resp.status, resp.url)
   }
   if (!resp.ok) {
-    throw new CmsError('Unknown error', 'unknown', resp.status, resp.url)
+    throw createErrorResponse('Unknown error', 'unknown', resp.status, resp.url)
   }
 
-  return data
+  const total = Number(resp.headers.get('X-WP-Total') || 0)
+  const totalPages = Number(resp.headers.get('X-WP-TotalPages') || 0)
+
+  return { data, total, totalPages }
 }
 
 export type CmsErrorResponse = Response & {
@@ -182,18 +203,6 @@ export function createErrorResponse(
 
 export function isErrorResponse(obj: any): obj is CmsErrorResponse {
   return obj._isCmsError
-}
-
-export class CmsError extends Error {
-  public constructor(
-    message: string,
-    public readonly code: string,
-    public readonly status?: number,
-    public readonly url?: string,
-  ) {
-    super(message)
-    this.name = 'CmsError'
-  }
 }
 
 function buildUrl(
