@@ -5,7 +5,7 @@ const postcss = require('gulp-postcss')
 function fonts() {
   return gulp
     .src('node_modules/@fontsource/*/files/*.{ttf,woff,woff2,eot,svg}')
-    .pipe(gulp.dest('public/build/gulp/fonts'))
+    .pipe(gulp.dest('public/_i3w_remix/gulp/fonts'))
 }
 
 function styles() {

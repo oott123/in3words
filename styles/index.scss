@@ -44,7 +44,7 @@ ol {
 @include FiraCode.fontFace(
   $weight: 400,
   $display: fallback,
-  $fontDir: '/build/gulp/fonts/fira-code/files'
+  $fontDir: '/_i3w_remix/gulp/fonts/fira-code/files'
 );
 
 body {
