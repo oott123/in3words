@@ -23,7 +23,7 @@ const CreativeCommons: React.FC = () => {
         </a>
       </p>
       <p>
-        如非特别说明，本站所有文章均为原创，并以 CC BY-SA 和/或 BY-NC-SA 4.0
+        如非特别说明，本站所有文章均为原创，并以 CC BY-SA 或 BY-NC-SA 4.0
         授权你使用，具体请参考本站的
         <Link to="/license">内容使用许可协议</Link>。
       </p>
