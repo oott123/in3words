@@ -26,7 +26,7 @@ export const LoadingSvg = () => (
       y="0"
       width="100%"
       height="100%"
-      clip-path="url(#clip-path)"
+      clipPath="url(#clip-path)"
       style={{ fill: 'url("#fill")' }}
     ></rect>
     <defs>
