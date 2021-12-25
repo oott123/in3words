@@ -4,7 +4,7 @@ import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 import PageNavigation from './PageNavigation'
-import { Form, useLocation, useTransition } from 'remix'
+import { Form, useFetcher, useLocation, useTransition } from 'remix'
 import classNames from 'classnames'
 
 export const SingleComment: React.FC<{ comment: Comment }> = ({
@@ -169,9 +169,10 @@ const CommentForm: React.FC<{
   const location = useLocation()
   const [hasMemorized, setHasMemorized] = useState(false)
 
-  const transition = useTransition()
+  const comment = useFetcher()
+  console.log(comment)
 
-  const isSubmitting = transition.state === 'submitting'
+  const isSubmitting = comment.state === 'submitting'
 
   useEffect(() => {
     if (nameInput.value && emailInput.value) {
@@ -185,7 +186,7 @@ const CommentForm: React.FC<{
   }, [])
 
   return (
-    <Form method="post" action="/comments" className="CommentForm">
+    <comment.Form method="post" action="/comments" className="CommentForm">
       <h2>{parent ? '回复评论' : '发表评论'}</h2>
       <fieldset disabled={isSubmitting}>
         <textarea
@@ -255,7 +256,7 @@ const CommentForm: React.FC<{
         </a>
         ，用于显示头像和反垃圾。
       </p>
-    </Form>
+    </comment.Form>
   )
 }
 

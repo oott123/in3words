@@ -1,17 +1,21 @@
 import * as yup from 'yup'
-import { ActionFunction, redirect, useLoaderData } from 'remix'
-import { postComment } from '~/data/comments'
+import React from 'react'
+import { ActionFunction, json, Link, useActionData } from 'remix'
+import { postComment, Comment } from '~/data/comments'
 import { blogTitle } from '~/utils/meta'
 import { MetaFunction } from '~/types'
-import React, { useCallback } from 'react'
-import BlogCard from '~/components/BlogCard'
 import BlogPage from '~/components/BlogPage'
-import { SingleComment } from '~/components/BlogComment'
+import BlogCard from '~/components/BlogCard'
 
 export const meta: MetaFunction = ({ parentsData: { root } }) => {
   return {
     title: blogTitle('提交评论', root),
   }
+}
+
+type CommentResult = {
+  returnPath: string
+  comment: Comment
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -51,5 +55,37 @@ export const action: ActionFunction = async ({ request }) => {
 
   const created = await postComment(postBody)
 
-  return redirect(`${returnPath || '/'}#comment-${created.id}`)
+  return {
+    returnPath,
+    comment: created,
+  } as CommentResult
 }
+
+const CommentPosted: React.FC = () => {
+  const data = useActionData<CommentResult>()
+
+  return (
+    <BlogPage>
+      <BlogCard>
+        <h1>评论已提交</h1>
+        <p>我已收到你的评论。</p>
+        {data?.comment?.approved ? (
+          <p>由于缓存问题，评论可能不会立即显示，请不要担心。</p>
+        ) : (
+          <p>
+            你的邮箱可能是第一次评论，或者评论未能通过本站的自动审核系统。因此，该评论无法立即可见。
+          </p>
+        )}
+        <Link
+          to={`${data?.returnPath || '/'}#comment-${
+            data?.comment?.id || 'new'
+          }`}
+        >
+          返回文章
+        </Link>
+      </BlogCard>
+    </BlogPage>
+  )
+}
+
+export default CommentPosted

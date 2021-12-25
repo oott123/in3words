@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTransition } from 'remix'
+import { useIsPageLoading } from '~/hooks/useIsPageLoading'
 import { useScrollToTop } from '~/hooks/useScrollToTop'
 import BlogLoading from './BlogLoading'
 
@@ -7,8 +7,7 @@ const BlogPage: React.FC<{ className?: string }> = ({
   className,
   children,
 }) => {
-  const transition = useTransition()
-  const isLoading = transition.state === 'loading'
+  const isLoading = useIsPageLoading()
   useScrollToTop(isLoading)
 
   return (

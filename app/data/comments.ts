@@ -22,6 +22,7 @@ export type Comment = {
   date: string
   content: string
   indent: number
+  approved: boolean
 }
 
 export type NewComment = {
@@ -95,6 +96,7 @@ function mapComment(comment: any): Comment {
     date: parseGmt(comment.date_gmt),
     content: postProcessContent(comment.content.rendered).content,
     indent: 0,
+    approved: comment.status === 'approved',
   }
 }
 
