@@ -4,7 +4,7 @@ COPY package.json yarn.lock /app/
 RUN yarn
 COPY . /app/
 RUN yarn build
-RUN yarn --production
+RUN yarn --production --ignore-scripts
 
 FROM node:16-slim
 WORKDIR /app
