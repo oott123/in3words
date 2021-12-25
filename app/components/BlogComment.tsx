@@ -274,7 +274,7 @@ const CommentForm: React.FC<{
         )}
         {commentError && (
           <div className="CommentForm_Status CommentForm_Status-Error">
-            错误：{commentError}
+            评论失败：{commentError}
           </div>
         )}
         <button type="submit">{isSubmitting ? '提交中……' : '提交'}</button>
