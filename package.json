@@ -5,7 +5,7 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "dev": "concurrently \"yarn dev:remix\" \"yarn dev:gulp\"",
-    "clean": "rimraf build && rimraf public/build",
+    "clean": "rimraf build && rimraf public/_i3w_remix",
     "build:remix": "remix build",
     "build:gulp": "gulp build",
     "build": "yarn clean && yarn build:gulp && yarn build:remix",
