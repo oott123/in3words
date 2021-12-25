@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'remix'
 import BlogCard from './BlogCard'
+import ExternalLink from './ExternalLink'
 
 const BlogFooter: React.FC = () => {
   return (
@@ -8,40 +9,19 @@ const BlogFooter: React.FC = () => {
       <BlogCard>
         <p>
           <Link to="/">三言三语</Link>，由{' '}
-          <a href="https://www.oott123.com" target="_blank">
-            oott123
-          </a>{' '}
-          设计与创作，并使用{' '}
-          <a
-            href="https://wordpress.org"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            WordPress
-          </a>
-          ，
-          <a
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            React
-          </a>{' '}
-          和{' '}
-          <a
-            href="https://remix.run"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            Remix
-          </a>{' '}
-          构建。
+          <ExternalLink href="https://oott123.com">oott123</ExternalLink>{' '}
+          设计与创作，
+          <ExternalLink href="https://www.upyun.com/">又拍云</ExternalLink>
+          提供 CDN 服务。
         </p>
         <p>
-          <a href="https://ainou.com" target="_blank">
-            Ainou
-          </a>{' '}
-          是由 Ashley 绘制的原创角色，受独立版权条款保护，不适用于 CC 协议。
+          <ExternalLink href="https://github.com/oott123/in3words">
+            in3words
+          </ExternalLink>
+          ，使用{' '}
+          <ExternalLink href="https://wordpress.org">WordPress</ExternalLink>，
+          <ExternalLink href="https://reactjs.org">React</ExternalLink> 和{' '}
+          <ExternalLink href="https://remix.run">Remix</ExternalLink> 构建。
         </p>
       </BlogCard>
     </footer>
