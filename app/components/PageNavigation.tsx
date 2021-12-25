@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import React from 'react'
-import { Link, useTransition } from 'remix'
+import React, { useEffect, useRef } from 'react'
+import { Link, PrefetchPageLinks, useTransition } from 'remix'
 
 const PageNavigation: React.FC<{
   totalPages: number
@@ -10,11 +10,29 @@ const PageNavigation: React.FC<{
   const transition = useTransition()
   const isLoading = transition.state === 'loading'
   const showPages = getShowPages(page, totalPages)
+  const hasNextPage = page + 1 <= totalPages
+  const nextPagePath = path(page + 1)
+  const [prefetchNextPage, setPrefetchNextPage] = React.useState(false)
+  const navRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!navRef.current || !hasNextPage || prefetchNextPage) {
+      return
+    }
+    const intersectionObserver = new IntersectionObserver(function (entries) {
+      if (entries[0].intersectionRatio <= 0) {
+        return
+      }
+      setPrefetchNextPage(true)
+    })
+    intersectionObserver.observe(navRef.current)
+    return () => intersectionObserver.disconnect()
+  }, [hasNextPage, prefetchNextPage])
 
   return isLoading ? null : (
     <div className="PageNavigation">
       {children}
-      <nav className="PageNavigation_Nav">
+      <nav className="PageNavigation_Nav" ref={navRef}>
         {showPages.map((p) => (
           <Link
             key={p}
@@ -35,6 +53,9 @@ const PageNavigation: React.FC<{
           </Link>
         ))}
       </nav>
+      {hasNextPage && prefetchNextPage && (
+        <PrefetchPageLinks page={nextPagePath} />
+      )}
     </div>
   )
 }

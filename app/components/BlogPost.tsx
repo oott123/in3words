@@ -40,6 +40,7 @@ const BlogPost: React.FC<{
             <Link
               to={postPath}
               dangerouslySetInnerHTML={{ __html: post.title }}
+              prefetch={summarized ? 'intent' : 'none'}
             />
           </h1>
           <div className="BlogPost_Meta">
@@ -85,7 +86,9 @@ const BlogPost: React.FC<{
                 <LoadingSvg />
               </div>
             ) : (
-              <Link to={postPath}>阅读全文»</Link>
+              <Link to={postPath} prefetch="intent">
+                阅读全文»
+              </Link>
             )}
           </footer>
         )}

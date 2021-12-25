@@ -42,6 +42,7 @@ export const SideLinkItem: React.FC<SideLink> = ({
         to={to}
         className={classNames(className, active && 'SideLinks_Item-Active')}
         aria-current={active ? 'page' : undefined}
+        prefetch="intent"
       >
         {title}
       </Link>

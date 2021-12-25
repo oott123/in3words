@@ -8,7 +8,9 @@ const BlogTitle: React.FC<{ title: string; headline: string }> = ({
   return (
     <div className="BlogTitle">
       <h1>
-        <Link to="/">{title}</Link>
+        <Link to="/" prefetch="render">
+          {title}
+        </Link>
       </h1>
       <h2>{headline}</h2>
     </div>
