@@ -23,7 +23,7 @@ function prefix(k: string) {
 
 export async function set<T = any>(key: string, value: T): Promise<void> {
   const redis = await getRedis()
-  await redis.setEx(prefix(key), 3600, msgpack.encode(value) as any)
+  await redis.setEx(prefix(key), 86400, msgpack.encode(value) as any)
 }
 
 export async function get<T = any>(key: string): Promise<T | null> {
