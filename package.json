@@ -24,6 +24,7 @@
     "dotenv": "^10.0.0",
     "highlight.js": "^11.3.1",
     "htmlparser2": "^7.2.0",
+    "jsesc": "^3.0.2",
     "msgpack-lite": "^0.1.26",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@ainou/code-style": "0.0.11",
     "@remix-run/dev": "^1.0.6",
+    "@types/jsesc": "^3",
     "@types/msgpack-lite": "^0.1.8",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",

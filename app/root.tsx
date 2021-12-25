@@ -12,7 +12,6 @@ import {
   useLoaderData,
 } from 'remix'
 import type { LinksFunction } from 'remix'
-
 import globalStylesUrl from '~/styles/index.css'
 import BlogTitle from './components/BlogTitle'
 import SideLinks, { SideLinkItem } from './components/SideLinks'
