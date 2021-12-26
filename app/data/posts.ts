@@ -208,10 +208,14 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
         attribs.target = attribs.target || '_blank'
         attribs.rel = attribs.rel || 'noopener noreferrer'
         attribs.class = classNames(attribs.class, 'BlogLink-External')
+        attribs.href = replaceMediaUrl(attribs.href)
       }
 
       if (name === 'img' && typeof attribs.src === 'string') {
         attribs.src = replaceMediaUrl(attribs.src)
+        if (attribs.srcset) {
+          attribs.srcset = replaceMediaUrl(attribs.srcset)
+        }
         attribs.loading = attribs.loading || 'lazy'
       }
 
