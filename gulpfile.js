@@ -12,11 +12,9 @@ function styles() {
   return gulp
     .src('styles/index.scss')
     .pipe(
-      sass
-        .sync({
-          includePaths: ['node_modules'],
-        })
-        .on('error', sass.logError),
+      sass({
+        includePaths: ['node_modules'],
+      }).on('error', sass.logError),
     )
     .pipe(
       postcss({
