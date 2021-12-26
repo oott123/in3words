@@ -12,6 +12,7 @@ import {
 import hljs from 'highlight.js'
 import classNames from 'classnames'
 import { getCategory, getTag, getUser } from './site'
+import { postPath } from '~/path'
 
 export interface Author {
   name: string
@@ -26,6 +27,7 @@ export interface Term<T extends string> {
 
 export interface Post {
   id: number
+  canonicalUrl: string
   createdAt: string
   updatedAt: string
   title: string
@@ -36,6 +38,7 @@ export interface Post {
     avatar: string
   }
   newCommentsAllowed: boolean
+  summaryText: string
   categories?: Term<'category'>[]
   tags?: Term<'post_tag'>[]
 }
@@ -54,10 +57,14 @@ export async function getPosts(
 
   const posts = items.map((post: any) => {
     const transformed = transformPost(post)
-    const { summary } = postProcessContent(transformed.content, true)
+    const { summary, summaryText } = postProcessContent(
+      transformed.content,
+      true,
+    )
     return {
       ...transformed,
       summary,
+      summaryText,
       content: undefined,
     } as SummarizedPost
   })
@@ -99,8 +106,9 @@ export async function getPost(id: number): Promise<Post> {
   )
 
   const transformed = transformPost(post)
-  const { content } = postProcessContent(transformed.content)
+  const { content, summaryText } = postProcessContent(transformed.content)
   transformed.content = content
+  transformed.summaryText = summaryText
 
   return transformed
 }
@@ -120,8 +128,9 @@ export async function getPage(slug: string): Promise<Post> {
   }
 
   const transformed = transformPost(post[0])
-  const { content } = postProcessContent(transformed.content)
+  const { content, summaryText } = postProcessContent(transformed.content)
   transformed.content = content
+  transformed.summaryText = summaryText
 
   return transformed
 }
@@ -129,6 +138,9 @@ export async function getPage(slug: string): Promise<Post> {
 function transformPost(post: any): Post {
   return {
     id: post.id,
+    canonicalUrl: `${process.env.PUBLIC_URL || ''}${
+      post ? postPath(post) : '/'
+    }`,
     createdAt: parseGmt(post.date_gmt),
     updatedAt: parseGmt(post.modified_gmt),
     title: post.title.rendered,
@@ -177,6 +189,7 @@ function mapTermsByTaxonomy(terms: any, taxonomy: string) {
 
 function postProcessContent(html: string, summaryOnly?: boolean) {
   const content: string[] = []
+  const contentText: string[] = []
   let summary = ''
   let currentTag = ''
   let currentLanguage = ''
@@ -236,6 +249,9 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
       } else {
         content.push(encodeHtmlText(text))
       }
+      if (currentTag !== 'script' && currentTag !== 'style') {
+        contentText.push(text)
+      }
     },
     onclosetag(name) {
       currentTag = ''
@@ -266,5 +282,6 @@ function postProcessContent(html: string, summaryOnly?: boolean) {
   return {
     content: content.join(''),
     summary: summary,
+    summaryText: contentText.join('').substring(0, 200),
   }
 }

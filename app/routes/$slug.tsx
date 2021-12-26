@@ -7,6 +7,7 @@ import { pagePath, postPath } from '~/path'
 import { blogTitle } from '~/utils/meta'
 import { getComments } from '~/data/comments'
 import BlogComment from '~/components/BlogComment'
+import { meta as postMeta } from './$id[.moe]'
 
 type PostData = {
   post: Post
@@ -34,13 +35,8 @@ export const loader: LoaderFunction<PostData, keyof PageParam> = async ({
   return { post, comments, commentPage, slug: params.slug }
 }
 
-export const meta: MetaFunction<PostData> = ({
-  parentsData: { root },
-  data: { post },
-}) => {
-  return {
-    title: blogTitle(post.title, root),
-  }
+export const meta: MetaFunction<PostData> = (arg) => {
+  return postMeta(arg)
 }
 
 export default function Page() {

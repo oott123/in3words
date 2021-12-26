@@ -1,5 +1,5 @@
 import type { MetaFunction, LoaderFunction } from '~/types'
-import { useLoaderData } from 'remix'
+import { LinksFunction, useLoaderData } from 'remix'
 import BlogPage from '~/components/BlogPage'
 import BlogPost from '~/components/BlogPost'
 import { getPost, Post } from '~/data/posts'
@@ -33,6 +33,23 @@ export const meta: MetaFunction<PostData> = ({
 }) => {
   return {
     title: blogTitle(data?.post?.title || '', root),
+    ...(data?.post
+      ? {
+          'og:url': data.post.canonicalUrl,
+          'og:type': 'article',
+          'og:article:published_time': new Date(
+            data.post.createdAt,
+          ).toISOString(),
+          'og:article:modified_time': new Date(
+            data.post.updatedAt,
+          ).toISOString(),
+          'og:article:section':
+            data.post.categories && data.post.categories[0].name,
+          'og:updated_time': new Date(data.post.updatedAt).toISOString(),
+          'og:title': data.post.title,
+          'og:description': data.post.summaryText,
+        }
+      : {}),
   }
 }
 

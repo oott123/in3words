@@ -45,7 +45,12 @@ export const meta: MetaFunction = ({ data }: { data: RootData }) => {
   if (data) {
     return {
       title: data.site.name,
-    }
+      'og:type': 'website',
+      'og:locale': 'zh_CN',
+      'og:site_name': data.site.name,
+      'og:title': data.site.name,
+      'og:description': data.site.description,
+    } as Record<string, string>
   } else {
     return {
       title: 'Error',
@@ -55,7 +60,14 @@ export const meta: MetaFunction = ({ data }: { data: RootData }) => {
 
 // https://remix.run/api/app#links
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: globalStylesUrl }]
+  return [
+    { rel: 'stylesheet', href: globalStylesUrl },
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      href: `/feed/`,
+    },
+  ]
 }
 
 // https://remix.run/api/conventions#default-export
@@ -167,8 +179,8 @@ function Document({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {title ? <title>{title}</title> : <Meta />}
         <Links />
+        {title ? <title>{title}</title> : <Meta />}
         <meta name="theme-color" content="#fef2f2" />
       </head>
       <body>

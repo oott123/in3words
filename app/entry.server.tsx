@@ -32,6 +32,18 @@ export default function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html')
+  if (process.env.CDN_URL) {
+    responseHeaders.append('Link', `<${process.env.CDN_URL}>; rel=preconnect`)
+  }
+  if (process.env.PUBLIC_URL) {
+    responseHeaders.append(
+      'Link',
+      `<${process.env.PUBLIC_URL}>; rel=alternate; type=application/rss+xml`,
+    )
+  }
+  if (request.method === 'GET') {
+    responseHeaders.append('Cache-Control', 'public, max-age=60, s-maxage=3600')
+  }
 
   return new Response('<!DOCTYPE html>' + markup, {
     status: responseStatusCode,

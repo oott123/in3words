@@ -276,7 +276,7 @@ export function replaceMediaUrl(url: string) {
   const gravatarUrl = 'https://www.libravatar.org/avatar/'
 
   return url
-    .replace(/^https?:\/\/(www\.)?best33\.com\//, `${cdnUrl}/`)
-    .replace(/^https?:\/\/best33\.b0\.upaiyun\.com\//, `${cdnUrl}/`)
-    .replace(/^https?:\/\/(\w+)\.gravatar\.com\/avatar\//, gravatarUrl)
+    .replace(/^(https?:)?\/\/(www\.)?best33\.com\//, `${cdnUrl}/`)
+    .replace(/^(https?:)?\/\/best33\.b0\.upaiyun\.com\//, `${cdnUrl}/`)
+    .replace(/^(https?:)?\/\/(\w+)\.gravatar\.com\/avatar\//, gravatarUrl)
 }
