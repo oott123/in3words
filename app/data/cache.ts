@@ -43,5 +43,5 @@ export async function del(key: string): Promise<void> {
 export async function clear(group?: string): Promise<void> {
   const redis = await getRedis()
   const keys = await redis.keys(prefix(group ? `${group}:*` : '*'))
-  await redis.del(keys)
+  if (keys.length) await redis.del(keys)
 }
