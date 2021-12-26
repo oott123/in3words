@@ -24,12 +24,14 @@ const BlogSidebar: React.FC = ({ children }) => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
       const scrollDiff = lastHeight.current - scrollTop
 
-      setTop((t) =>
-        Math.max(
-          Math.min((t ?? 0) + scrollDiff, 0),
-          screenHeight.current - sidebarHeight.current,
-        ),
-      )
+      if (screenHeight.current < sidebarHeight.current) {
+        setTop((t) =>
+          Math.max(
+            Math.min((t ?? 0) + scrollDiff, 0),
+            screenHeight.current - sidebarHeight.current,
+          ),
+        )
+      }
       lastHeight.current = scrollTop
     }
 
@@ -39,7 +41,11 @@ const BlogSidebar: React.FC = ({ children }) => {
 
     const handleResize = () => {
       screenHeight.current = window.innerHeight
+
       setScroll()
+      if (screenHeight.current >= sidebarHeight.current) {
+        setTop(0)
+      }
     }
 
     const resizeObserver = new ResizeObserver(() => {
@@ -54,7 +60,9 @@ const BlogSidebar: React.FC = ({ children }) => {
     resizeObserver.observe(sidebar.current!)
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-    setTop(Math.max(-scrollTop, screenHeight.current - sidebarHeight.current))
+    if (screenHeight.current < sidebarHeight.current) {
+      setTop(Math.max(-scrollTop, screenHeight.current - sidebarHeight.current))
+    }
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
