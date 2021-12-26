@@ -86,6 +86,8 @@ export type RequestOptions = {
   prefix?: string
   cacheGroup?: string
   cacheTtl?: number
+  realIp?: string
+  userAgent?: string
 }
 
 export async function post<T = any>(
@@ -100,6 +102,8 @@ export async function post<T = any>(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...(options?.realIp ? { 'X-Real-IP': options.realIp } : {}),
+      ...(options?.userAgent ? { 'User-Agent': options.userAgent } : {}),
     },
     body: JSON.stringify(body),
   })

@@ -55,7 +55,10 @@ export const action: ActionFunction = async ({ request }) => {
       author_email: comment.authorEmail,
       author_url: comment.authorUrl,
     }
-    const created = await postComment(postBody)
+    const created = await postComment(postBody, {
+      realIp: request.headers.get('X-Real-IP') || '0.0.0.0',
+      userAgent: request.headers.get('User-Agent') || 'Mozilla/5.0',
+    })
 
     return {
       returnPath,

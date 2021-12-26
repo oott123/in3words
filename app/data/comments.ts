@@ -7,6 +7,7 @@ import {
   parseGmt,
   post,
   replaceMediaUrl,
+  RequestOptions,
   voidTags,
 } from './base'
 import { clear as clearCache } from './cache'
@@ -23,6 +24,7 @@ export type Comment = {
   content: string
   indent: number
   approved: boolean
+  isSpam: boolean
 }
 
 export type NewComment = {
@@ -97,11 +99,12 @@ function mapComment(comment: any): Comment {
     content: postProcessContent(comment.content.rendered).content,
     indent: 0,
     approved: comment.status === 'approved',
+    isSpam: comment.status === 'spam',
   }
 }
 
-export async function postComment(body: NewComment) {
-  const resp = await post('/comments', body)
+export async function postComment(body: NewComment, options?: RequestOptions) {
+  const resp = await post('/comments', body, options)
 
   await clearCache(getCacheGroup(body.post))
 
