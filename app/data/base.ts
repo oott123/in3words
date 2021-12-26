@@ -102,6 +102,7 @@ export async function post<T = any>(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Commented-With': 'remix',
       ...(options?.realIp ? { 'X-Real-IP': options.realIp } : {}),
       ...(options?.userAgent ? { 'User-Agent': options.userAgent } : {}),
     },

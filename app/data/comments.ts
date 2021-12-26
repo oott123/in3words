@@ -36,7 +36,7 @@ export type NewComment = {
   author_url?: string | null
 }
 
-function getCacheGroup(postId: number) {
+export function commentCacheGroup(postId: number) {
   return `comments:post-${postId}`
 }
 
@@ -56,7 +56,7 @@ export async function getComments(
       order: 'desc',
       per_page: 100,
     },
-    { cacheGroup: getCacheGroup(postId) },
+    { cacheGroup: commentCacheGroup(postId) },
   )
 
   const comments = commentsData.map(mapComment).sort((a, b) => a.id - b.id)
@@ -106,7 +106,7 @@ function mapComment(comment: any): Comment {
 export async function postComment(body: NewComment, options?: RequestOptions) {
   const resp = await post('/comments', body, options)
 
-  await clearCache(getCacheGroup(body.post))
+  await clearCache(commentCacheGroup(body.post))
 
   return mapComment(resp)
 }
