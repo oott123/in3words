@@ -271,8 +271,8 @@ const CommentForm: React.FC<{
             {commentApproved
               ? '评论发表成功。'
               : commentIsSpam
-              ? '评论已提交，但被系统判定为无用评论。这应该是误判，人工复核后很快就能显示。'
-              : '评论已提交，但审核后才会显示。'}
+              ? '评论已提交，人工检查后才能显示。'
+              : '评论已提交，人工审核后很快就能显示。'}
           </div>
         )}
         {commentError && (
