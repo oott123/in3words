@@ -270,9 +270,7 @@ export function encodeHtmlAttr(str: string) {
 
 export function replaceMediaUrl(url: string) {
   const cdnUrl =
-    process.env.CDN_URL ||
-    process.env.BASE_URL ||
-    'https://cdn-best33-com.oott123.com/'
+    process.env.CDN_URL || process.env.BASE_URL || 'https://best33.com/'
 
   // const gravatarUrl = https://dn-qiniu-avatar.qbox.me/avatar/
   // const gravatarUrl = 'https://gravatar.loli.net/avatar/'

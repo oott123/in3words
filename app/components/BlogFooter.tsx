@@ -10,9 +10,7 @@ const BlogFooter: React.FC = () => {
         <p>
           <Link to="/">三言三语</Link>，由{' '}
           <ExternalLink href="https://oott123.com">oott123</ExternalLink>{' '}
-          设计与创作，
-          <ExternalLink href="https://www.upyun.com/">又拍云</ExternalLink>
-          提供 CDN 服务。
+          设计与创作。
         </p>
         <p>
           <ExternalLink href="https://github.com/oott123/in3words">
