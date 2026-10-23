@@ -61,12 +61,13 @@ type PostEmbedded struct {
 	Terms  [][]EmbedTerm `json:"wp:term,omitempty"`
 }
 
-// embedParam 识别 _embed 参数是否出现（WP 只看是否存在，值可以为空）。
-type embedParam struct {
+// EmbedParam 识别 _embed 参数是否出现（WP 只看是否存在，值可以为空）。
+// 与 Pagination 同时嵌入时 Resolve 方法有歧义、不会被提升，必须是导出类型 huma 才会解析。
+type EmbedParam struct {
 	Embed bool
 }
 
-func (e *embedParam) Resolve(ctx huma.Context) []error {
+func (e *EmbedParam) Resolve(ctx huma.Context) []error {
 	u := ctx.URL()
 	e.Embed = u.Query().Has("_embed")
 	return nil
@@ -103,7 +104,7 @@ func (p *Pagination) totalPages(total int64) int64 {
 }
 
 type listPostsInput struct {
-	embedParam
+	EmbedParam
 	Pagination
 
 	Search     string   `query:"search"     doc:"搜索关键词"`
@@ -116,7 +117,7 @@ type listPostsInput struct {
 }
 
 type listPagesInput struct {
-	embedParam
+	EmbedParam
 	Pagination
 
 	Search string   `query:"search" doc:"搜索关键词"`
@@ -131,7 +132,7 @@ type listPostsOutput struct {
 }
 
 type getPostInput struct {
-	embedParam
+	EmbedParam
 
 	ID string `path:"id"`
 }
@@ -365,7 +366,8 @@ func (s *Server) preparePosts(ctx context.Context, st *site, rows []wpdb.WpPost,
 			p.Sticky = &isSticky
 			attachTerms(&p, termsByPost[row.ID], embed)
 		}
-		if embed {
+		// WP 只在 post_author 非空时添加 author 链接，没有作者也没有分类时不输出 _embedded。
+		if embed && row.PostAuthor != 0 {
 			if p.Embedded == nil {
 				p.Embedded = &PostEmbedded{}
 			}
