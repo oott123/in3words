@@ -91,7 +91,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         run: >-
-          ko build . --bare
+          ko build . --bare --sbom=none
           --push=${{ github.event_name != 'pull_request' }}
           --tags=${{ join(fromJSON(steps.meta.outputs.json).tags, ',') }}
           --image-label=org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
