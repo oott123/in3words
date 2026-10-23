@@ -16,6 +16,12 @@ go run . serve -c config.yaml
 
 配置项也可以用环境变量覆盖，例如 `I3W_DB_PASSWORD`。
 
+CI 用 [ko](https://ko.build) 构建镜像 `ghcr.io/oott123/in3words-server`，镜像没有默认参数，运行时需要传入子命令：
+
+```sh
+docker run -e I3W_DB_PASSWORD=... ghcr.io/oott123/in3words-server serve
+```
+
 ## 开源许可
 
 程序代码，含 ts, tsx, js, css, scss 等纯文本文件，以 BSD-3-Clause 授权：
