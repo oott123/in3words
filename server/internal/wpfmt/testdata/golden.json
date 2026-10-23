@@ -1,0 +1,1222 @@
+{
+    "wp_version": "7.1.3",
+    "home": "http://127.0.0.1:37179",
+    "siteurl": "http://127.0.0.1:37179",
+    "html5_caption": true,
+    "use_smilies": true,
+    "content": [
+        {
+            "name": "empty",
+            "input": "",
+            "expected": ""
+        },
+        {
+            "name": "whitespace",
+            "input": "  \n\n  ",
+            "expected": ""
+        },
+        {
+            "name": "single_line",
+            "input": "Hello world",
+            "expected": "<p>Hello world</p>\n"
+        },
+        {
+            "name": "chinese_paragraphs",
+            "input": "这是第一段，包含中文标点。\n\n这是第二段。\n第二段的第二行。",
+            "expected": "<p>这是第一段，包含中文标点。</p>\n<p>这是第二段。<br />\n第二段的第二行。</p>\n"
+        },
+        {
+            "name": "crlf",
+            "input": "第一段\r\n\r\n第二段\r\n第二行",
+            "expected": "<p>第一段</p>\n<p>第二段<br />\n第二行</p>\n"
+        },
+        {
+            "name": "multi_br",
+            "input": "line one<br><br>line two<br/>\nline three<br />\nline four",
+            "expected": "<p>line one</p>\n<p>line two<br />\nline three<br />\nline four</p>\n"
+        },
+        {
+            "name": "triple_newlines",
+            "input": "a\n\n\n\nb\n\n\n",
+            "expected": "<p>a</p>\n<p>b</p>\n"
+        },
+        {
+            "name": "quotes_basic",
+            "input": "\"Hello,\" she said. It's John's book. 'single quoted' text.",
+            "expected": "<p>&#8220;Hello,&#8221; she said. It&#8217;s John&#8217;s book. &#8216;single quoted&#8217; text.</p>\n"
+        },
+        {
+            "name": "quotes_numbers",
+            "input": "The '90s were great. He was 6'2\" tall. Quoted \"42\" and '0.42' here. Year '99.",
+            "expected": "<p>The &#8217;90s were great. He was 6&#8217;2&#8243; tall. Quoted &#8220;42&#8221; and &#8216;0.42&#8217; here. Year &#8217;99.</p>\n"
+        },
+        {
+            "name": "quotes_cockney",
+            "input": "'tis the season 'cause we rock 'n' roll 'til 'em drop.",
+            "expected": "<p>&#8217;tis the season &#8217;cause we rock &#8216;n&#8217; roll &#8217;til &#8217;em drop.</p>\n"
+        },
+        {
+            "name": "quotes_nested",
+            "input": "He said \"she said 'hello' to me\" yesterday.",
+            "expected": "<p>He said &#8220;she said &#8216;hello&#8217; to me&#8221; yesterday.</p>\n"
+        },
+        {
+            "name": "quotes_primes",
+            "input": "It's 5' long and 3\" wide. 'Twas 12'. \"Quote 9\" ends\" here.",
+            "expected": "<p>It&#8217;s 5&#8242; long and 3&#8243; wide. &#8216;Twas 12&#8217;. &#8220;Quote 9&#8243; ends&#8221; here.</p>\n"
+        },
+        {
+            "name": "dashes",
+            "input": "a -- b --- c - d xn--fsqu00a.xn--3lr804guic\nfoo--bar\n-- start",
+            "expected": "<p>a &#8212; b &#8212; c &#8211; d xn--fsqu00a.xn--3lr804guic<br />\nfoo&#8211;bar<br />\n&#8212; start</p>\n"
+        },
+        {
+            "name": "ellipsis_tm",
+            "input": "Wait... really (tm) ``quoted'' text",
+            "expected": "<p>Wait&#8230; really &#8482; &#8220;quoted&#8221; text</p>\n"
+        },
+        {
+            "name": "times",
+            "input": "A 9x9 grid, 1920x1080 screen, 0x1234 hex, 0.5x2 scale, 中9x9中.",
+            "expected": "<p>A 9&#215;9 grid, 1920&#215;1080 screen, 0x1234 hex, 0.5&#215;2 scale, 中9&#215;9中.</p>\n"
+        },
+        {
+            "name": "ampersands",
+            "input": "Tom & Jerry &amp; friends &copy; &#169; &#x1F600; &notanentityatall; AT&T",
+            "expected": "<p>Tom &#038; Jerry &amp; friends &copy; &#169; &#x1F600; &#038;notanentityatall; AT&#038;T</p>\n"
+        },
+        {
+            "name": "pre_code",
+            "input": "Before \"quote\"\n\n<pre>\nif (a -- b) { \"x\" }\n\nkeep...\n</pre>\n\nAfter 'quote'\n\n<code>\"no\" -- change</code> and \"yes\"",
+            "expected": "<p>Before &#8220;quote&#8221;</p>\n<pre>\nif (a -- b) { \"x\" }\n\nkeep...\n</pre>\n<p>After &#8216;quote&#8217;</p>\n<p><code>\"no\" -- change</code> and &#8220;yes&#8221;</p>\n"
+        },
+        {
+            "name": "pre_attrs",
+            "input": "<pre class=\"brush: php\">\n$a = \"b\";\n\n$c = 'd';\n</pre>\n\nText",
+            "expected": "<pre class=\"brush: php\">\n$a = \"b\";\n\n$c = 'd';\n</pre>\n<p>Text</p>\n"
+        },
+        {
+            "name": "pre_code_lang",
+            "input": "<pre><code class=\"language-js\">const a = \"b\"; // it's\n\nconsole.log(a)</code></pre>",
+            "expected": "<pre><code class=\"language-js\">const a = \"b\"; // it's\n\nconsole.log(a)</code></pre>\n"
+        },
+        {
+            "name": "script_style",
+            "input": "<script>\nvar a = \"b\" -- 1;\n\nvar c = 'd';\n</script>\n\n<style>\na::before { content: \"x\"; }\n\n</style>\n\nAfter \"x\"",
+            "expected": "<p><script>\nvar a = \"b\" -- 1;</p>\n<p>var c = 'd';\n</script></p>\n<style>\na::before { content: \"x\"; }</p>\n</style>\n<p>After &#8220;x&#8221;</p>\n"
+        },
+        {
+            "name": "kbd_tt",
+            "input": "Press <kbd>\"Ctrl\"--C</kbd> and <tt>'x'</tt> then \"y\".",
+            "expected": "<p>Press <kbd>\"Ctrl\"--C</kbd> and <tt>'x'</tt> then &#8220;y&#8221;.</p>\n"
+        },
+        {
+            "name": "more_tag",
+            "input": "Intro paragraph.\n\n<!--more-->\n\nRest of the post.",
+            "expected": "<p>Intro paragraph.</p>\n<p><!--more--></p>\n<p>Rest of the post.</p>\n"
+        },
+        {
+            "name": "more_inline",
+            "input": "Intro paragraph.<!--more-->Rest of the post.",
+            "expected": "<p>Intro paragraph.<!--more-->Rest of the post.</p>\n"
+        },
+        {
+            "name": "html_comment",
+            "input": "Text <!-- a \"comment\" -- here --> after.\n\n<!-- standalone -->\n\nNext.",
+            "expected": "<p>Text <!-- a \"comment\" -- here --> after.</p>\n<p><!-- standalone --></p>\n<p>Next.</p>\n"
+        },
+        {
+            "name": "block_mix",
+            "input": "<div class=\"box\">Inside div\nwith newline</div>\nText after div\n\n<h2>Heading \"two\"</h2>\nSome text\n<hr>\nAfter hr",
+            "expected": "<div class=\"box\">Inside div<br />\nwith newline</div>\n<p>Text after div</p>\n<h2>Heading &#8220;two&#8221;</h2>\n<p>Some text</p>\n<hr>\n<p>After hr</p>\n"
+        },
+        {
+            "name": "div_unclosed_p",
+            "input": "<div>Para in div</div>\n\n<address>Addr</address>",
+            "expected": "<div>Para in div</div>\n<address>Addr</address>\n"
+        },
+        {
+            "name": "lists",
+            "input": "<ul>\n<li>One \"1\"</li>\n<li>Two</li>\n</ul>\n\n<ol><li>A</li><li>B</li></ol>",
+            "expected": "<ul>\n<li>One &#8220;1&#8221;</li>\n<li>Two</li>\n</ul>\n<ol>\n<li>A</li>\n<li>B</li>\n</ol>\n"
+        },
+        {
+            "name": "blockquote",
+            "input": "<blockquote>Quoted \"text\"\n\nSecond para</blockquote>\n\nAfter",
+            "expected": "<blockquote><p>Quoted &#8220;text&#8221;</p>\n<p>Second para</p></blockquote>\n<p>After</p>\n"
+        },
+        {
+            "name": "blockquote_attr",
+            "input": "<blockquote class=\"x\" cite='y'>Line one\nLine two</blockquote>",
+            "expected": "<blockquote class=\"x\" cite='y'><p>Line one<br />\nLine two</p></blockquote>\n"
+        },
+        {
+            "name": "table",
+            "input": "<table>\n<tr>\n<td>Cell \"1\"</td>\n<td>Cell 2</td>\n</tr>\n</table>",
+            "expected": "<table>\n<tr>\n<td>Cell &#8220;1&#8221;</td>\n<td>Cell 2</td>\n</tr>\n</table>\n"
+        },
+        {
+            "name": "inline_tags",
+            "input": "Some <strong>bold \"text\"</strong> and <em>it's</em> <a href=\"http://example.com/?a=1&b=2\">link's</a>.",
+            "expected": "<p>Some <strong>bold &#8220;text&#8221;</strong> and <em>it&#8217;s</em> <a href=\"http://example.com/?a=1&#038;b=2\">link&#8217;s</a>.</p>\n"
+        },
+        {
+            "name": "attr_newline",
+            "input": "<a href=\"http://example.com\"\ntitle=\"x\">link</a> text\n\nmore",
+            "expected": "<p><a href=\"http://example.com\"\ntitle=\"x\">link</a> text</p>\n<p>more</p>\n"
+        },
+        {
+            "name": "option_select",
+            "input": "<select>\n<option>1</option>\n<option>2</option>\n</select>",
+            "expected": "<p><select><option>1</option><option>2</option></select></p>\n"
+        },
+        {
+            "name": "object_embed",
+            "input": "<object width=\"1\">\n<param name=\"a\" value=\"b\">\n<embed src=\"x.swf\">\n</object>",
+            "expected": "<p><object width=\"1\"><param name=\"a\" value=\"b\"><embed src=\"x.swf\"></object></p>\n"
+        },
+        {
+            "name": "figure_figcaption",
+            "input": "<figure>\n<img src=\"http://example.com/a.jpg\" alt=\"a\">\n<figcaption>Cap \"x\"</figcaption>\n</figure>",
+            "expected": "<figure>\n<img decoding=\"async\" src=\"http://example.com/a.jpg\" alt=\"a\"><figcaption>Cap &#8220;x&#8221;</figcaption></figure>\n"
+        },
+        {
+            "name": "svg_math",
+            "input": "<svg>\n<path d=\"M0 0\"/>\n</svg>\n\ntext",
+            "expected": "<p><svg>\n<path d=\"M0 0\"/>\n</svg></p>\n<p>text</p>\n"
+        },
+        {
+            "name": "img_plain",
+            "input": "<img src=\"http://example.com/a.jpg\" alt=\"x\">",
+            "expected": "<p><img decoding=\"async\" src=\"http://example.com/a.jpg\" alt=\"x\"></p>\n"
+        },
+        {
+            "name": "img_dims",
+            "input": "<img src=\"http://example.com/b.jpg\" width=\"300\" height=\"200\" alt=\"y\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/b.jpg\" width=\"300\" height=\"200\" alt=\"y\"></p>\n"
+        },
+        {
+            "name": "img_dims_class",
+            "input": "<img class=\"alignnone size-full wp-image-12345\" src=\"http://example.com/c.jpg\" width=\"300\" height=\"200\" alt=\"\" />",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"alignnone size-full wp-image-12345\" src=\"http://example.com/c.jpg\" width=\"300\" height=\"200\" alt=\"\" /></p>\n"
+        },
+        {
+            "name": "img_loading_given",
+            "input": "<img src=\"http://example.com/d.jpg\" width=\"300\" height=\"200\" loading=\"lazy\" decoding=\"sync\">",
+            "expected": "<p><img src=\"http://example.com/d.jpg\" width=\"300\" height=\"200\" loading=\"lazy\" decoding=\"sync\"></p>\n"
+        },
+        {
+            "name": "img_percent",
+            "input": "<img src=\"http://example.com/e.jpg\" width=\"100%\" height=\"200\">",
+            "expected": "<p><img decoding=\"async\" src=\"http://example.com/e.jpg\" width=\"100%\" height=\"200\"></p>\n"
+        },
+        {
+            "name": "img_no_src",
+            "input": "<img data-src=\"x.jpg\" width=\"10\" height=\"10\">",
+            "expected": "<p><img data-src=\"x.jpg\" width=\"10\" height=\"10\"></p>\n"
+        },
+        {
+            "name": "img_dup",
+            "input": "<img src=\"http://example.com/f.jpg\" width=\"1\" height=\"1\"> and <img src=\"http://example.com/f.jpg\" width=\"1\" height=\"1\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/f.jpg\" width=\"1\" height=\"1\"> and <img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/f.jpg\" width=\"1\" height=\"1\"></p>\n"
+        },
+        {
+            "name": "img_fetch_low",
+            "input": "<img src=\"http://example.com/g.jpg\" width=\"300\" height=\"200\" fetchpriority=\"low\">",
+            "expected": "<p><img decoding=\"async\" src=\"http://example.com/g.jpg\" width=\"300\" height=\"200\" fetchpriority=\"low\"></p>\n"
+        },
+        {
+            "name": "iframe",
+            "input": "<iframe src=\"https://example.com/embed\" width=\"560\" height=\"315\"></iframe>\n\n<iframe src=\"https://example.com/x\"></iframe>",
+            "expected": "<p><iframe loading=\"lazy\" src=\"https://example.com/embed\" width=\"560\" height=\"315\"></iframe></p>\n<p><iframe src=\"https://example.com/x\"></iframe></p>\n"
+        },
+        {
+            "name": "caption_old",
+            "input": "[caption id=\"attachment_101\" align=\"alignleft\" width=\"300\" caption=\"An old \"caption\"\"]<img src=\"http://example.com/h.jpg\" width=\"300\" height=\"200\" />[/caption]",
+            "expected": "<img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/h.jpg\" width=\"300\" height=\"200\" />\n"
+        },
+        {
+            "name": "caption_new",
+            "input": "[caption id=\"attachment_102\" align=\"aligncenter\" width=\"640\"]<a href=\"http://example.com/full.jpg\"><img class=\"size-large wp-image-102\" src=\"http://example.com/i.jpg\" alt=\"\" width=\"640\" height=\"480\" /></a> The caption's text[/caption]\n\nAfter caption.",
+            "expected": "<figure id=\"attachment_102\" aria-describedby=\"caption-attachment-102\" style=\"width: 640px\" class=\"wp-caption aligncenter\"><a href=\"http://example.com/full.jpg\"><img loading=\"lazy\" decoding=\"async\" class=\"size-large wp-image-102\" src=\"http://example.com/i.jpg\" alt=\"\" width=\"640\" height=\"480\" /></a><figcaption id=\"caption-attachment-102\" class=\"wp-caption-text\">The caption&#8217;s text</figcaption></figure>\n<p>After caption.</p>\n"
+        },
+        {
+            "name": "caption_no_width",
+            "input": "[caption id=\"attachment_103\"]<img src=\"http://example.com/j.jpg\" /> no width[/caption]",
+            "expected": "<img decoding=\"async\" src=\"http://example.com/j.jpg\" />\n"
+        },
+        {
+            "name": "caption_in_para",
+            "input": "Text before\n[caption id=\"attachment_104\" width=\"100\"]<img src=\"http://example.com/k.jpg\" /> cap[/caption]\nText after",
+            "expected": "<p>Text before<br />\n<figure id=\"attachment_104\" aria-describedby=\"caption-attachment-104\" style=\"width: 100px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/k.jpg\" /><figcaption id=\"caption-attachment-104\" class=\"wp-caption-text\">cap</figcaption></figure><br />\nText after</p>\n"
+        },
+        {
+            "name": "caption_class_wp",
+            "input": "[wp_caption id=\"attachment_105\" align=\"alignright\" width=\"200\" class=\"extra\" caption_id=\"my_cap\"]<img src=\"http://example.com/l.jpg\" /> cap[/wp_caption]",
+            "expected": "<figure id=\"attachment_105\" aria-describedby=\"my_cap\" style=\"width: 200px\" class=\"wp-caption alignright extra\"><img decoding=\"async\" src=\"http://example.com/l.jpg\" /><figcaption id=\"my_cap\" class=\"wp-caption-text\">cap</figcaption></figure>\n"
+        },
+        {
+            "name": "caption_no_id",
+            "input": "[caption width=\"50\" caption=\"plain\"]<img src=\"http://example.com/m.jpg\" />[/caption]",
+            "expected": "<figure style=\"width: 50px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/m.jpg\" /><figcaption class=\"wp-caption-text\">plain</figcaption></figure>\n"
+        },
+        {
+            "name": "shortcode_unknown",
+            "input": "[foo bar=\"baz\"]content \"quoted\"[/foo]\n\n[unknown]",
+            "expected": "<p>[foo bar=&#8221;baz&#8221;]content &#8220;quoted&#8221;[/foo]</p>\n<p>[unknown]</p>\n"
+        },
+        {
+            "name": "shortcode_escaped",
+            "input": "[[caption]] and [[foo]] and [[caption width=\"1\"]x[/caption]]",
+            "expected": "<p>[caption]] and [[foo]] and [[caption width=\"1\"]x[/caption]</p>\n"
+        },
+        {
+            "name": "shortcode_standalone",
+            "input": "Para one.\n\n[caption id=\"attachment_106\" width=\"10\"]<img src=\"http://example.com/n.jpg\" /> x[/caption]\n\nPara two.",
+            "expected": "<p>Para one.</p>\n<figure id=\"attachment_106\" aria-describedby=\"caption-attachment-106\" style=\"width: 10px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/n.jpg\" /><figcaption id=\"caption-attachment-106\" class=\"wp-caption-text\">x</figcaption></figure>\n<p>Para two.</p>\n"
+        },
+        {
+            "name": "brackets_in_html",
+            "input": "<a href=\"http://example.com/[x]\" title=\"[caption]\">link</a> &#91;not&#93; [b]",
+            "expected": "<p><a href=\"http://example.com/[x]\" title=\"\">link</a> &#091;not&#093; [b]</p>\n"
+        },
+        {
+            "name": "embed_shortcode",
+            "input": "[embed]http://localhost/no-oembed-here[/embed]",
+            "expected": "<p><a href=\"http://localhost/no-oembed-here\">http://localhost/no-oembed-here</a></p>\n"
+        },
+        {
+            "name": "smilies",
+            "input": "Happy :) sad :( wink ;) grin :-D cool 8-) green :mrgreen: :???: x:)y\n\n<code>:)</code> and <pre>:-)</pre> :!:",
+            "expected": "<p>Happy 🙂 sad 🙁 wink 😉 grin 😀 cool 😎 green <img src=\"http://127.0.0.1:37179/wp-includes/images/smilies/mrgreen.png\" alt=\":mrgreen:\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /> 😕 x:)y</p>\n<p><code>:)</code> and </p>\n<pre>:-)</pre>\n<p> ❗</p>\n"
+        },
+        {
+            "name": "smilies_edge",
+            "input": ":) at start and end :)\n:D\n(:) not",
+            "expected": "<p>🙂 at start and end 🙂<br />\n😀<br />\n(:) not</p>\n"
+        },
+        {
+            "name": "wordpress_spelling",
+            "input": "I love Wordpress. (Wordpress) \"Wordpress\" 'Wordpress' >Wordpress Wordpress.",
+            "expected": "<p>I love WordPress. (WordPress) &#8220;WordPress&#8221; &#8216;WordPress&#8217; >WordPress WordPress.</p>\n"
+        },
+        {
+            "name": "autoembed_amp_para",
+            "input": "<blockquote>\n\t<p>\n\t\thttp://www.example.invalid/func/req?lc={语言，中文为zh}&amp;msg={utf-8编码的请求文字}</p>\n</blockquote>",
+            "expected": "<blockquote>\n<p>\n\t\thttp://www.example.invalid/func/req?lc={语言，中文为zh}&#038;msg={utf-8编码的请求文字}</p>\n</blockquote>\n"
+        },
+        {
+            "name": "autoembed_amp_line",
+            "input": "Text\nhttp://www.example.invalid/a?x=1&amp;y=2\nMore &amp; more",
+            "expected": "<p>Text<br />\nhttp://www.example.invalid/a?x=1&#038;y=2<br />\nMore &amp; more</p>\n"
+        },
+        {
+            "name": "autoembed_amp_pre",
+            "input": "<pre>\nhttp://www.example.invalid/a?x=1&amp;msg=2\nfoo &amp; bar &#39;q&#39; it's\n</pre>\n\n<pre class=\"brush: php\">$a = 'b'; // &amp;msg</pre>",
+            "expected": "<pre>\nhttp://www.example.invalid/a?x=1&msg=2\nfoo &amp; bar &#39;q&#39; it's\n</pre>\n<pre class=\"brush: php\">$a = 'b'; // &amp;msg</pre>\n"
+        },
+        {
+            "name": "autoembed_tag_newline",
+            "input": "<a\nhref=\"http://www.example.invalid/x?a=1&amp;b=2\">\nhttp://www.example.invalid/y?a=1&amp;b=2\n</a>",
+            "expected": "<p><a\nhref=\"http://www.example.invalid/x?a=1&amp;b=2\"><br />\nhttp://www.example.invalid/y?a=1&#038;b=2<br />\n</a></p>\n"
+        },
+        {
+            "name": "url_alone",
+            "input": "Look:\n\nhttp://localhost/some/path\n\nEnd.",
+            "expected": "<p>Look:</p>\n<p>http://localhost/some/path</p>\n<p>End.</p>\n"
+        },
+        {
+            "name": "gutenberg_paragraph",
+            "input": "<!-- wp:paragraph -->\n<p>Block \"paragraph\" it's -- here</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph {\"align\":\"center\"} -->\n<p class=\"has-text-align-center\">Centered</p>\n<!-- /wp:paragraph -->",
+            "expected": "\n<p class=\"wp-block-paragraph\">Block &#8220;paragraph&#8221; it&#8217;s &#8212; here</p>\n\n\n\n<p class=\"has-text-align-center wp-block-paragraph\">Centered</p>\n"
+        },
+        {
+            "name": "gutenberg_heading",
+            "input": "<!-- wp:heading -->\n<h2>Heading</h2>\n<!-- /wp:heading -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\" id=\"x\">Third</h3>\n<!-- /wp:heading -->",
+            "expected": "\n<h2 class=\"wp-block-heading\">Heading</h2>\n\n\n\n<h3 class=\"wp-block-heading\" id=\"x\">Third</h3>\n"
+        },
+        {
+            "name": "gutenberg_list",
+            "input": "<!-- wp:list -->\n<ul><!-- wp:list-item -->\n<li>One</li>\n<!-- /wp:list-item -->\n\n<!-- wp:list-item -->\n<li>Two</li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list -->",
+            "expected": "\n<ul class=\"wp-block-list\">\n<li>One</li>\n\n\n\n<li>Two</li>\n</ul>\n"
+        },
+        {
+            "name": "gutenberg_code",
+            "input": "<!-- wp:code -->\n<pre class=\"wp-block-code\"><code>const a = \"b\";\n\nreturn a -- 1;</code></pre>\n<!-- /wp:code -->",
+            "expected": "\n<pre class=\"wp-block-code\"><code>const a = \"b\";\n\nreturn a -- 1;</code></pre>\n"
+        },
+        {
+            "name": "gutenberg_quote",
+            "input": "<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->\n<p>Quote text</p>\n<!-- /wp:paragraph --><cite>Someone</cite></blockquote>\n<!-- /wp:quote -->",
+            "expected": "\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\">\n<p class=\"wp-block-paragraph\">Quote text</p>\n<cite>Someone</cite></blockquote>\n"
+        },
+        {
+            "name": "gutenberg_image",
+            "input": "<!-- wp:image {\"id\":55,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"http://example.com/o.jpg\" alt=\"\" class=\"wp-image-55\"/><figcaption class=\"wp-element-caption\">Img caption</figcaption></figure>\n<!-- /wp:image -->",
+            "expected": "\n<figure class=\"wp-block-image size-large\"><img decoding=\"async\" src=\"http://example.com/o.jpg\" alt=\"\" class=\"wp-image-55\"/><figcaption class=\"wp-element-caption\">Img caption</figcaption></figure>\n"
+        },
+        {
+            "name": "gutenberg_group",
+            "input": "<!-- wp:group -->\n<div class=\"wp-block-group\"><!-- wp:paragraph -->\n<p>In group</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:group -->",
+            "expected": "\n<div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\">\n<p class=\"wp-block-paragraph\">In group</p>\n</div>\n"
+        },
+        {
+            "name": "gutenberg_separator",
+            "input": "<!-- wp:separator -->\n<hr class=\"wp-block-separator has-alpha-channel-opacity\"/>\n<!-- /wp:separator -->",
+            "expected": "\n<hr class=\"wp-block-separator has-alpha-channel-opacity\"/>\n"
+        },
+        {
+            "name": "gutenberg_html",
+            "input": "<!-- wp:html -->\n<div>Raw \"html\"\n\nhere</div>\n<!-- /wp:html -->",
+            "expected": "\n<div>Raw &#8220;html&#8221;\n\nhere</div>\n"
+        },
+        {
+            "name": "gutenberg_shortcode",
+            "input": "<!-- wp:shortcode -->\n[caption id=\"attachment_107\" width=\"10\"]<img src=\"http://example.com/p.jpg\" /> c[/caption]\n<!-- /wp:shortcode -->",
+            "expected": "<figure id=\"attachment_107\" aria-describedby=\"caption-attachment-107\" style=\"width: 10px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/p.jpg\" /><figcaption id=\"caption-attachment-107\" class=\"wp-caption-text\">c</figcaption></figure>\n"
+        },
+        {
+            "name": "gutenberg_freeform",
+            "input": "Some classic text\n\n<!-- wp:paragraph -->\n<p>Block</p>\n<!-- /wp:paragraph -->\n\nTrailing classic \"text\"",
+            "expected": "Some classic text\n\n\n<p class=\"wp-block-paragraph\">Block</p>\n\n\nTrailing classic &#8220;text&#8221;"
+        },
+        {
+            "name": "gutenberg_void",
+            "input": "<!-- wp:spacer {\"height\":\"20px\"} /-->\n<!-- wp:paragraph --><p>x</p><!-- /wp:paragraph -->",
+            "expected": "\n<p class=\"wp-block-paragraph\">x</p>"
+        },
+        {
+            "name": "gutenberg_unknown",
+            "input": "<!-- wp:myplugin/thing {\"a\":1} -->\n<div class=\"thing\">Plugin block</div>\n<!-- /wp:myplugin/thing -->",
+            "expected": "\n<div class=\"thing\">Plugin block</div>\n"
+        },
+        {
+            "name": "gutenberg_preformat",
+            "input": "<!-- wp:preformatted -->\n<pre class=\"wp-block-preformatted\">Pre \"formatted\"\n\ntext</pre>\n<!-- /wp:preformatted -->",
+            "expected": "\n<pre class=\"wp-block-preformatted\">Pre \"formatted\"\n\ntext</pre>\n"
+        },
+        {
+            "name": "gutenberg_table",
+            "input": "<!-- wp:table -->\n<figure class=\"wp-block-table\"><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></figure>\n<!-- /wp:table -->",
+            "expected": "\n<figure class=\"wp-block-table\"><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></figure>\n"
+        },
+        {
+            "name": "gutenberg_columns",
+            "input": "<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:paragraph -->\n<p>Col 1</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column --></div>\n<!-- /wp:columns -->",
+            "expected": "\n<div class=\"wp-block-columns is-layout-flex wp-container-core-columns-is-layout-794e3cfa wp-block-columns-is-layout-flex\">\n<div class=\"wp-block-column is-layout-flow wp-block-column-is-layout-flow\">\n<p class=\"wp-block-paragraph\">Col 1</p>\n</div>\n</div>\n"
+        },
+        {
+            "name": "long_chinese",
+            "input": "## 不是 Markdown\n\n“中文引号”和「直角引号」，以及 \"英文引号\"。\n\n第一行\n第二行\n\n<p>已有 p 标签</p>\n\n结尾。",
+            "expected": "<p>## 不是 Markdown</p>\n<p>“中文引号”和「直角引号」，以及 &#8220;英文引号&#8221;。</p>\n<p>第一行<br />\n第二行</p>\n<p>已有 p 标签</p>\n<p>结尾。</p>\n"
+        },
+        {
+            "name": "nbsp_spaces",
+            "input": "a&nbsp;-&nbsp;b and \"x\"&nbsp;y",
+            "expected": "<p>a&nbsp;&#8211;&nbsp;b and &#8220;x&#8221;&nbsp;y</p>\n"
+        },
+        {
+            "name": "stray_lt",
+            "input": "a < b and c > d, x <3 y",
+            "expected": "<p>a < b and c > d, x <3 y\n</p>\n"
+        },
+        {
+            "name": "p_already",
+            "input": "<p>One</p>\n<p>Two</p>",
+            "expected": "<p>One</p>\n<p>Two</p>\n"
+        },
+        {
+            "name": "br_before_block",
+            "input": "text<br />\n<div>x</div>",
+            "expected": "<p>text</p>\n<div>x</div>\n"
+        },
+        {
+            "name": "audio_video_source",
+            "input": "<video controls>\n<source src=\"a.mp4\">\n<track src=\"a.vtt\">\n</video>",
+            "expected": "<p><video controls><source src=\"a.mp4\"><track src=\"a.vtt\"></video></p>\n"
+        },
+        {
+            "name": "details_summary",
+            "input": "<details>\n<summary>Sum</summary>\nBody\n</details>",
+            "expected": "<details>\n<summary>Sum</summary>\n<p>Body<br />\n</details>\n"
+        },
+        {
+            "name": "textarea",
+            "input": "<textarea>\n:)\n\nline\n</textarea>",
+            "expected": "<p><textarea><br />\n:)</p>\n<p>line<br />\n</textarea></p>\n"
+        }
+    ],
+    "content_after_blocks": [
+        {
+            "name": "caption_standalone",
+            "input": "Para one.\n\n[caption id=\"attachment_201\" width=\"10\"]<img src=\"http://example.com/q.jpg\" /> x[/caption]\n\nPara two.",
+            "expected": "<p>Para one.</p>\n<p><figure id=\"attachment_201\" aria-describedby=\"caption-attachment-201\" style=\"width: 10px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/q.jpg\" /><figcaption id=\"caption-attachment-201\" class=\"wp-caption-text\">x</figcaption></figure></p>\n<p>Para two.</p>\n"
+        },
+        {
+            "name": "caption_only",
+            "input": "[caption id=\"attachment_202\" align=\"alignleft\" width=\"20\"]<img src=\"http://example.com/r.jpg\" /> y[/caption]",
+            "expected": "<p><figure id=\"attachment_202\" aria-describedby=\"caption-attachment-202\" style=\"width: 20px\" class=\"wp-caption alignleft\"><img decoding=\"async\" src=\"http://example.com/r.jpg\" /><figcaption id=\"caption-attachment-202\" class=\"wp-caption-text\">y</figcaption></figure></p>\n"
+        },
+        {
+            "name": "caption_in_para",
+            "input": "Before\n[caption id=\"attachment_203\" width=\"30\"]<img src=\"http://example.com/s.jpg\" /> z[/caption]\nAfter",
+            "expected": "<p>Before<br />\n<figure id=\"attachment_203\" aria-describedby=\"caption-attachment-203\" style=\"width: 30px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/s.jpg\" /><figcaption id=\"caption-attachment-203\" class=\"wp-caption-text\">z</figcaption></figure><br />\nAfter</p>\n"
+        },
+        {
+            "name": "unknown_standalone",
+            "input": "Text.\n\n[foo bar=\"baz\"]\n\n[unknown]content[/unknown]",
+            "expected": "<p>Text.</p>\n<p>[foo bar=&#8221;baz&#8221;]</p>\n<p>[unknown]content[/unknown]</p>\n"
+        },
+        {
+            "name": "escaped_standalone",
+            "input": "[[caption]]\n\nNext",
+            "expected": "<p>[caption]</p>\n<p>Next</p>\n"
+        },
+        {
+            "name": "embed_standalone",
+            "input": "Look\n\n[embed]http://localhost/no-oembed-there[/embed]\n\nEnd",
+            "expected": "<p>Look</p>\n<p><a href=\"http://localhost/no-oembed-there\">http://localhost/no-oembed-there</a></p>\n<p>End</p>\n"
+        },
+        {
+            "name": "plain_paragraphs",
+            "input": "第一段 \"quote\"\n\n第二段\n第二行",
+            "expected": "<p>第一段 &#8220;quote&#8221;</p>\n<p>第二段<br />\n第二行</p>\n"
+        },
+        {
+            "name": "blocks_again",
+            "input": "<!-- wp:paragraph -->\n<p>Block</p>\n<!-- /wp:paragraph -->",
+            "expected": "\n<p class=\"wp-block-paragraph\">Block</p>\n"
+        }
+    ],
+    "title": [
+        {
+            "name": "plain",
+            "input": "Hello World",
+            "expected": "Hello World"
+        },
+        {
+            "name": "quotes",
+            "input": "\"Quoted\" title's here -- yes...",
+            "expected": "&#8220;Quoted&#8221; title&#8217;s here &#8212; yes&#8230;"
+        },
+        {
+            "name": "chinese",
+            "input": "中文标题：“测试”",
+            "expected": "中文标题：“测试”"
+        },
+        {
+            "name": "amp",
+            "input": "Tom & Jerry &amp; Co &#169; AT&T",
+            "expected": "Tom &#038; Jerry &amp; Co &#169; AT&#038;T"
+        },
+        {
+            "name": "wordpress",
+            "input": "Why Wordpress is great",
+            "expected": "Why WordPress is great"
+        },
+        {
+            "name": "html",
+            "input": "Title with <em>\"em\"</em> tag",
+            "expected": "Title with <em>&#8220;em&#8221;</em> tag"
+        },
+        {
+            "name": "spaces",
+            "input": "padded title",
+            "expected": "padded title"
+        },
+        {
+            "name": "times",
+            "input": "1920x1080 wallpapers",
+            "expected": "1920&#215;1080 wallpapers"
+        },
+        {
+            "name": "numbers",
+            "input": "The '90s and 6'2\"",
+            "expected": "The &#8217;90s and 6&#8217;2&#8243;"
+        }
+    ],
+    "sanitize": [
+        {
+            "input": "中文标签",
+            "expected": "%e4%b8%ad%e6%96%87%e6%a0%87%e7%ad%be"
+        },
+        {
+            "input": "Hello World",
+            "expected": "hello-world"
+        },
+        {
+            "input": "  Mixed CASE Slug  ",
+            "expected": "mixed-case-slug"
+        },
+        {
+            "input": "already-a-slug",
+            "expected": "already-a-slug"
+        },
+        {
+            "input": "%e4%b8%ad%e6%96%87",
+            "expected": "%e4%b8%ad%e6%96%87"
+        },
+        {
+            "input": "%E4%B8%AD",
+            "expected": "%e4%b8%ad"
+        },
+        {
+            "input": "100% sure",
+            "expected": "100-sure"
+        },
+        {
+            "input": "Café Crème brûlée",
+            "expected": "cafe-creme-brulee"
+        },
+        {
+            "input": "Ångström Ærø Øre straße",
+            "expected": "angstrom-aero-ore-strase"
+        },
+        {
+            "input": "a.b.c",
+            "expected": "a-b-c"
+        },
+        {
+            "input": "a/b/c",
+            "expected": "a-b-c"
+        },
+        {
+            "input": "tag_with_underscore",
+            "expected": "tag_with_underscore"
+        },
+        {
+            "input": "emoji 🎉 party",
+            "expected": "emoji-%f0%9f%8e%89-party"
+        },
+        {
+            "input": "quote \"x\" and 'y'",
+            "expected": "quote-x-and-y"
+        },
+        {
+            "input": "em—dash en–dash",
+            "expected": "em-dash-en-dash"
+        },
+        {
+            "input": "<b>bold</b> tag",
+            "expected": "bold-tag"
+        },
+        {
+            "input": "&amp; entity &nbsp; space",
+            "expected": "entity-space"
+        },
+        {
+            "input": "中文 English 混合",
+            "expected": "%e4%b8%ad%e6%96%87-english-%e6%b7%b7%e5%90%88"
+        },
+        {
+            "input": "---dashes---",
+            "expected": "dashes"
+        },
+        {
+            "input": "C++ & C#",
+            "expected": "c-c"
+        },
+        {
+            "input": "ÀÉÎÕÜ àéîõü",
+            "expected": "aeiou-aeiou"
+        },
+        {
+            "input": "x × y",
+            "expected": "x-x-y"
+        }
+    ],
+    "comment": [
+        {
+            "name": "plain",
+            "input": "Just a comment.",
+            "expected": "<p>Just a comment.</p>\n"
+        },
+        {
+            "name": "bare_url",
+            "input": "See http://example.com/path?a=1&b=2 for details.",
+            "expected": "<p>See <a href=\"http://example.com/path?a=1&#038;b=2\" rel=\"nofollow ugc\">http://example.com/path?a=1&#038;b=2</a> for details.</p>\n"
+        },
+        {
+            "name": "https_url",
+            "input": "Visit https://example.org/foo_(bar) now.\nAnd (https://example.org/x) too.",
+            "expected": "<p>Visit <a href=\"https://example.org/foo_(bar)\" rel=\"nofollow ugc\">https://example.org/foo_(bar)</a> now.<br />\nAnd (<a href=\"https://example.org/x\" rel=\"nofollow ugc\">https://example.org/x</a>) too.</p>\n"
+        },
+        {
+            "name": "url_trailing",
+            "input": "Check http://example.com/a.jpg, http://example.com/b. and http://example.com/c!",
+            "expected": "<p>Check <a href=\"http://example.com/a.jpg\" rel=\"nofollow ugc\">http://example.com/a.jpg</a>, <a href=\"http://example.com/b\" rel=\"nofollow ugc\">http://example.com/b</a>. and <a href=\"http://example.com/c\" rel=\"nofollow ugc\">http://example.com/c</a>!</p>\n"
+        },
+        {
+            "name": "www_url",
+            "input": "Go to www.example.com/page. Or ftp.example.com.",
+            "expected": "<p>Go to <a href=\"http://www.example.com/page\" rel=\"nofollow ugc\">http://www.example.com/page</a>. Or <a href=\"http://ftp.example.com\" rel=\"nofollow ugc\">http://ftp.example.com</a>.</p>\n"
+        },
+        {
+            "name": "email",
+            "input": "Mail me at foo.bar+baz@example.co.uk please.",
+            "expected": "<p>Mail me at <a href=\"mailto:foo.bar+baz@example.co.uk\">foo.bar+baz@example.co.uk</a> please.</p>\n"
+        },
+        {
+            "name": "internal_url",
+            "input": "Internal: http://127.0.0.1:37179/hello/ link.",
+            "expected": "<p>Internal: <a href=\"http://127.0.0.1:37179/hello/\" rel=\"ugc\">http://127.0.0.1:37179/hello/</a> link.</p>\n"
+        },
+        {
+            "name": "existing_link",
+            "input": "An <a href=\"http://example.com\">existing http://example.com</a> link.",
+            "expected": "<p>An <a href=\"http://example.com\">existing </a><a href=\"http://example.com\" rel=\"nofollow ugc\">http://example.com</a> link.</p>\n"
+        },
+        {
+            "name": "link_in_code",
+            "input": "<code>http://example.com/code</code> and <pre>www.example.com</pre>",
+            "expected": "<p><code>http://example.com/code</code> and </p>\n<pre>www.example.com</pre>\n"
+        },
+        {
+            "name": "unclosed",
+            "input": "<strong>bold <em>both</strong> text <b>open",
+            "expected": "<p><strong>bold <em>both</em></strong> text <b>open</b></p>\n"
+        },
+        {
+            "name": "stray_close",
+            "input": "text</div> more</em>",
+            "expected": "<p>text more</p>\n"
+        },
+        {
+            "name": "self_closing",
+            "input": "line<br>break<br/>and<img src=\"x.jpg\">",
+            "expected": "<p>line<br />break<br />and<img src=\"x.jpg\"/></p>\n"
+        },
+        {
+            "name": "nested_same",
+            "input": "<p>one<p>two",
+            "expected": "<p>one</p>\n<p>two</p>\n"
+        },
+        {
+            "name": "love",
+            "input": "I <3 you and 1<2",
+            "expected": "<p>I &lt;3 you and 1&lt;2</p>\n"
+        },
+        {
+            "name": "comment_tag",
+            "input": "a < !-- b --> c",
+            "expected": "<p>a < !-- b --> c</p>\n"
+        },
+        {
+            "name": "multi_para",
+            "input": "第一段评论。\n\n第二段评论，有 \"引号\" 和 -- 破折号。\n第三行",
+            "expected": "<p>第一段评论。</p>\n<p>第二段评论，有 &#8220;引号&#8221; 和 &#8212; 破折号。<br />\n第三行</p>\n"
+        },
+        {
+            "name": "chinese_url",
+            "input": "链接 http://example.com/中文路径 后面",
+            "expected": "<p>链接 <a href=\"http://example.com/中文路径\" rel=\"nofollow ugc\">http://example.com/中文路径</a> 后面</p>\n"
+        },
+        {
+            "name": "chinese_url2",
+            "input": "看这里：http://example.com/abc 。",
+            "expected": "<p>看这里：http://example.com/abc 。</p>\n"
+        },
+        {
+            "name": "smilies",
+            "input": "Nice :) and :D",
+            "expected": "<p>Nice 🙂 and 😀</p>\n"
+        },
+        {
+            "name": "wordpress",
+            "input": "I use Wordpress daily.",
+            "expected": "<p>I use WordPress daily.</p>\n"
+        },
+        {
+            "name": "custom_element",
+            "input": "<my-element foo=\"bar\">x</my-element> <x-y>z",
+            "expected": "<p><my-element foo=\"bar\">x</my-element> <x-y>z</x-y></p>\n"
+        },
+        {
+            "name": "scheme_unknown",
+            "input": "odd foo://bar.baz thing",
+            "expected": "<p>odd foo://bar.baz thing</p>\n"
+        },
+        {
+            "name": "quote_in_url",
+            "input": "it's http://example.com/it's here",
+            "expected": "<p>it&#8217;s <a href=\"http://example.com/it&#039;s\" rel=\"nofollow ugc\">http://example.com/it&#039;s</a> here</p>\n"
+        },
+        {
+            "name": "long_para",
+            "input": "Line one\nLine two\n\n<blockquote>Quoted\nreply</blockquote>\nafter",
+            "expected": "<p>Line one<br />\nLine two</p>\n<blockquote><p>Quoted<br />\nreply</p></blockquote>\n<p>after</p>\n"
+        }
+    ],
+    "feed": {
+        "description_input": "A &amp; B &lt;b&gt;bold&lt;/b&gt; &quot;quoted&quot; it&#039;s © x|y",
+        "description": "A &#38; B &#60;b&#62;bold&#60;/b&#62; &#34;quoted&#34; it&#039;s © x&#124;y",
+        "items": [
+            {
+                "name": "images_first",
+                "id": 115,
+                "input": "<p>Intro</p>\n<img src=\"http://example.com/f0.jpg\" width=\"10\" height=\"10\">\n<img src=\"http://example.com/f1.jpg\" width=\"600\" height=\"400\" alt=\"\">\n<img src=\"http://example.com/f2.jpg\" width=\"600\" height=\"400\">\n<img src=\"http://example.com/f3.jpg\" width=\"10\" height=\"10\">",
+                "expected": "<p>Intro</p>\n<p><img decoding=\"async\" src=\"http://example.com/f0.jpg\" width=\"10\" height=\"10\"><br />\n<img fetchpriority=\"high\" decoding=\"async\" src=\"http://example.com/f1.jpg\" width=\"600\" height=\"400\" alt=\"\"><br />\n<img decoding=\"async\" src=\"http://example.com/f2.jpg\" width=\"600\" height=\"400\"><br />\n<img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/f3.jpg\" width=\"10\" height=\"10\"></p>\n",
+                "title_input": "Tom & Jerry <em>\"loves\"</em> it's",
+                "title": "Tom &#038; Jerry &#8220;loves&#8221; it&#8217;s",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "images_more",
+                "id": 116,
+                "input": "<iframe src=\"https://example.com/v\" width=\"560\" height=\"315\"></iframe>\n<img src=\"http://example.com/f4.jpg\" width=\"10\" height=\"10\">\n<img src=\"http://example.com/f5.jpg\" width=\"600\" height=\"400\">\n<img src=\"http://example.com/f6.jpg\">\n<img src=\"http://example.com/f7.jpg\" width=\"600\" height=\"400\" loading=\"eager\">",
+                "expected": "<p><iframe loading=\"lazy\" src=\"https://example.com/v\" width=\"560\" height=\"315\"></iframe><br />\n<img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/f4.jpg\" width=\"10\" height=\"10\"><br />\n<img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/f5.jpg\" width=\"600\" height=\"400\"><br />\n<img decoding=\"async\" src=\"http://example.com/f6.jpg\"><br />\n<img decoding=\"async\" src=\"http://example.com/f7.jpg\" width=\"600\" height=\"400\" loading=\"eager\"></p>\n",
+                "title_input": "More images",
+                "title": "More images",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "emoji",
+                "id": 117,
+                "input": "Smile :) and 😀 and 👍🏽 and ©️ text ❤️\n\n<code>😀</code>\n\n<img src=\"http://example.com/e.png\" alt=\"😀\">",
+                "expected": "<p>Smile <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/1f642.png\" alt=\"🙂\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /> and <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/1f600.png\" alt=\"😀\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /> and <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/1f44d-1f3fd.png\" alt=\"👍🏽\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /> and © text <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/2764.png\" alt=\"❤\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /></p>\n<p><code>&#x1f600;</code></p>\n<p><img decoding=\"async\" src=\"http://example.com/e.png\" alt=\"&#x1f600;\"></p>\n",
+                "title_input": "Emoji 😀 title",
+                "title": "Emoji 😀 title",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "more",
+                "id": 118,
+                "input": "Teaser text\n\n<!--more-->\n\nAfter more",
+                "expected": "<p>Teaser text</p>\n<p><span id=\"more-118\"></span></p>\n<p>After more</p>\n",
+                "title_input": "More",
+                "title": "More",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "more_custom",
+                "id": 119,
+                "input": "Teaser<!--more Read on-->Rest",
+                "expected": "<p>Teaser<span id=\"more-119\"></span>Rest</p>\n",
+                "title_input": "More custom",
+                "title": "More custom",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "nextpage",
+                "id": 120,
+                "input": "Page one\n<!--nextpage-->\nPage two\n\n<!--nextpage-->Page three",
+                "expected": "<p>Page one</p>\n",
+                "title_input": "Next page",
+                "title": "Next page",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "noteaser",
+                "id": 121,
+                "input": "Teaser\n<!--more-->\n<!--noteaser-->\nBody",
+                "expected": "<p><span id=\"more-121\"></span><br />\n<!--noteaser--><br />\nBody</p>\n",
+                "title_input": "No teaser",
+                "title": "No teaser",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "caption_before",
+                "id": 122,
+                "input": "Before\n\n[caption id=\"attachment_301\" width=\"100\"]<img src=\"http://example.com/c1.jpg\" width=\"100\" height=\"50\" /> cap one[/caption]\n\nAfter",
+                "expected": "<p>Before</p>\n<figure id=\"attachment_301\" aria-describedby=\"caption-attachment-301\" style=\"width: 100px\" class=\"wp-caption alignnone\"><img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/c1.jpg\" width=\"100\" height=\"50\" /><figcaption id=\"caption-attachment-301\" class=\"wp-caption-text\">cap one</figcaption></figure>\n<p>After</p>\n",
+                "title_input": "Caption before",
+                "title": "Caption before",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "blocks",
+                "id": 123,
+                "input": "<!-- wp:paragraph -->\n<p>Block :)</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:image -->\n<figure class=\"wp-block-image\"><img src=\"http://example.com/b.jpg\" width=\"600\" height=\"400\" alt=\"\"/></figure>\n<!-- /wp:image -->",
+                "expected": "\n<p class=\"wp-block-paragraph\">Block <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/1f642.png\" alt=\"🙂\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /></p>\n\n\n\n<figure class=\"wp-block-image\"><img loading=\"lazy\" decoding=\"async\" src=\"http://example.com/b.jpg\" width=\"600\" height=\"400\" alt=\"\"/></figure>\n",
+                "title_input": "Blocks",
+                "title": "Blocks",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "caption_after",
+                "id": 124,
+                "input": "[caption id=\"attachment_301\" width=\"100\"]<img src=\"http://example.com/c2.jpg\" /> cap two[/caption]\n\nTail",
+                "expected": "<p><figure id=\"attachment_301-2\" aria-describedby=\"caption-attachment-301-2\" style=\"width: 100px\" class=\"wp-caption alignnone\"><img decoding=\"async\" src=\"http://example.com/c2.jpg\" /><figcaption id=\"caption-attachment-301-2\" class=\"wp-caption-text\">cap two</figcaption></figure></p>\n<p>Tail</p>\n",
+                "title_input": "Caption after",
+                "title": "Caption after",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "block_more",
+                "id": 125,
+                "input": "<!-- wp:paragraph -->\n<p>Lead</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:more -->\n<!--more-->\n<!-- /wp:more -->\n\n<!-- wp:paragraph -->\n<p>Rest</p>\n<!-- /wp:paragraph -->",
+                "expected": "\n<p class=\"wp-block-paragraph\">Lead</p>\n\n\n\n<span id=\"more-125\"></span>\n\n\n\n<p class=\"wp-block-paragraph\">Rest</p>\n",
+                "title_input": "Block more",
+                "title": "Block more",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "cdata",
+                "id": 126,
+                "input": "Code: <code>a]]>b</code> end ]]>",
+                "expected": "<p>Code: <code>a]]&gt;b</code> end ]]&gt;</p>\n",
+                "title_input": "CDATA ]]> & more",
+                "title": "CDATA ]]&gt; &#038; more",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "attachments",
+                "id": 127,
+                "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\">\n<img src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" width=\"640\" height=\"255\" class=\"alignnone size-large wp-image-111\" />",
+                "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"120\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /><br />\n<img loading=\"lazy\" decoding=\"async\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" width=\"640\" height=\"255\" class=\"alignnone size-large wp-image-111\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 640px) 100vw, 640px\" /></p>\n",
+                "title_input": "Attachments",
+                "title": "Attachments",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            },
+            {
+                "name": "embedded",
+                "id": 128,
+                "input": "<iframe class=\"wp-embedded-content\" style=\"position: absolute;\" src=\"https://example.com/embed/\" width=\"600\" height=\"400\"></iframe>",
+                "expected": "<p><iframe loading=\"lazy\" class=\"wp-embedded-content\"  src=\"https://example.com/embed/\" width=\"600\" height=\"400\"></iframe></p>\n",
+                "title_input": "Embedded",
+                "title": "Embedded",
+                "categories_input": [
+                    "Feed &amp; Test",
+                    "C&amp;D \"tag\"",
+                    "it's x"
+                ],
+                "categories": [
+                    "Feed & Test",
+                    "C&D \"tag\"",
+                    "it's x"
+                ]
+            }
+        ]
+    },
+    "uploads_baseurl": "http://127.0.0.1:37179/wp-content/uploads",
+    "attachments_meta": {
+        "111": "a:4:{s:5:\"width\";i:2560;s:6:\"height\";i:1020;s:4:\"file\";s:21:\"2024/05/router-id.jpg\";s:5:\"sizes\";a:7:{s:9:\"thumbnail\";a:4:{s:4:\"file\";s:21:\"router-id-150x150.jpg\";s:5:\"width\";i:150;s:6:\"height\";i:150;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:6:\"medium\";a:4:{s:4:\"file\";s:21:\"router-id-300x120.jpg\";s:5:\"width\";i:300;s:6:\"height\";i:120;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:12:\"medium_large\";a:4:{s:4:\"file\";s:21:\"router-id-768x306.jpg\";s:5:\"width\";i:768;s:6:\"height\";i:306;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:5:\"large\";a:4:{s:4:\"file\";s:22:\"router-id-1024x408.jpg\";s:5:\"width\";i:1024;s:6:\"height\";i:408;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:9:\"1536x1536\";a:4:{s:4:\"file\";s:22:\"router-id-1536x612.jpg\";s:5:\"width\";i:1536;s:6:\"height\";i:612;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:9:\"2048x2048\";a:4:{s:4:\"file\";s:22:\"router-id-2048x816.jpg\";s:5:\"width\";i:2048;s:6:\"height\";i:816;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:3:\"odd\";a:4:{s:4:\"file\";s:22:\"router-id-1237x493.jpg\";s:5:\"width\";i:1237;s:6:\"height\";i:493;s:9:\"mime-type\";s:10:\"image/jpeg\";}}}",
+        "112": "a:4:{s:5:\"width\";i:600;s:6:\"height\";i:400;s:4:\"file\";s:16:\"2024/06/anim.gif\";s:5:\"sizes\";a:2:{s:9:\"thumbnail\";a:4:{s:4:\"file\";s:16:\"anim-150x150.gif\";s:5:\"width\";i:150;s:6:\"height\";i:150;s:9:\"mime-type\";s:9:\"image/gif\";}s:6:\"medium\";a:4:{s:4:\"file\";s:16:\"anim-300x200.gif\";s:5:\"width\";i:300;s:6:\"height\";i:200;s:9:\"mime-type\";s:9:\"image/gif\";}}}",
+        "113": "a:4:{s:5:\"width\";i:800;s:6:\"height\";i:600;s:4:\"file\";s:32:\"2024/07/photo-e1600000000000.jpg\";s:5:\"sizes\";a:2:{s:6:\"medium\";a:4:{s:4:\"file\";s:32:\"photo-e1600000000000-300x225.jpg\";s:5:\"width\";i:300;s:6:\"height\";i:225;s:9:\"mime-type\";s:10:\"image/jpeg\";}s:3:\"old\";a:4:{s:4:\"file\";s:17:\"photo-400x300.jpg\";s:5:\"width\";i:400;s:6:\"height\";i:300;s:9:\"mime-type\";s:10:\"image/jpeg\";}}}",
+        "114": "a:4:{s:5:\"width\";i:500;s:6:\"height\";i:250;s:4:\"file\";s:37:\"wp-content/uploads/2009/01/legacy.jpg\";s:5:\"sizes\";a:1:{s:6:\"medium\";a:4:{s:4:\"file\";s:18:\"legacy-300x150.jpg\";s:5:\"width\";i:300;s:6:\"height\";i:150;s:9:\"mime-type\";s:10:\"image/jpeg\";}}}"
+    },
+    "feed_funcs": [
+        {
+            "input": "Tom & Jerry &amp; Co &copy; &#169; &nbsp; AT&T",
+            "ent2ncr": "Tom & Jerry &#38; Co &#169; &#169; &#160; AT&T",
+            "title_rss": "Tom &#038; Jerry &#038; Co &#169; &#169; &#160; AT&#038;T",
+            "bloginfo": "Tom &#038; Jerry &#38; Co &#169; &#169; &#160; AT&#038;T",
+            "document_title": "Tom &#038; Jerry &amp; Co &copy; &#169; &nbsp; AT&#038;T",
+            "term_name": "Tom & Jerry & Co © ©   AT&T"
+        },
+        {
+            "input": "<b>bold</b> \"quoted\" it's -- dash...",
+            "ent2ncr": "<b>bold</b> \"quoted\" it's -- dash...",
+            "title_rss": "bold &#8220;quoted&#8221; it&#8217;s &#8212; dash&#8230;",
+            "bloginfo": "bold \"quoted\" it's -- dash...",
+            "document_title": "&lt;b&gt;bold&lt;/b&gt; &#8220;quoted&#8221; it&#8217;s &#8212; dash&#8230;",
+            "term_name": "<b>bold</b> \"quoted\" it's -- dash..."
+        },
+        {
+            "input": "中文 & “引号” <em>强调</em>",
+            "ent2ncr": "中文 & “引号” <em>强调</em>",
+            "title_rss": "中文 &#038; “引号” 强调",
+            "bloginfo": "中文 &#038; “引号” 强调",
+            "document_title": "中文 &#038; “引号” &lt;em&gt;强调&lt;/em&gt;",
+            "term_name": "中文 & “引号” <em>强调</em>"
+        },
+        {
+            "input": "a|b &lt;tag&gt; &quot;q&quot; &#039;s&#039; &apos;",
+            "ent2ncr": "a&#124;b &#60;tag&#62; &#34;q&#34; &#039;s&#039; &apos;",
+            "title_rss": "a&#124;b &#060;tag&#062; &#034;q&#034; &#039;s&#039; &amp;apos;",
+            "bloginfo": "a&#124;b &#60;tag&#62; &#34;q&#34; &#039;s&#039; &apos;",
+            "document_title": "a|b &lt;tag&gt; &quot;q&quot; &#039;s&#039; &amp;apos;",
+            "term_name": "a|b <tag> \"q\" &#039;s&#039; &apos;"
+        },
+        {
+            "input": "Wordpress & 1920x1080",
+            "ent2ncr": "Wordpress & 1920x1080",
+            "title_rss": "WordPress &#038; 1920&#215;1080",
+            "bloginfo": "Wordpress &#038; 1920x1080",
+            "document_title": "Wordpress &#038; 1920&#215;1080",
+            "term_name": "Wordpress & 1920x1080"
+        },
+        {
+            "input": "&eacute;t&eacute; &hearts; &unknown;",
+            "ent2ncr": "&#233;t&#233; &#9829; &unknown;",
+            "title_rss": "&#233;t&#233; &#9829; &amp;unknown;",
+            "bloginfo": "&#233;t&#233; &#9829; &unknown;",
+            "document_title": "&eacute;t&eacute; &hearts; &amp;unknown;",
+            "term_name": "été ♥ &unknown;"
+        },
+        {
+            "input": "\"Wordpress\" (Wordpress) >Wordpress Wordpress",
+            "ent2ncr": "\"Wordpress\" (Wordpress) >Wordpress Wordpress",
+            "title_rss": "&#8220;WordPress&#8221; (WordPress) &gt;WordPress WordPress",
+            "bloginfo": "\"Wordpress\" (Wordpress) >Wordpress Wordpress",
+            "document_title": "&#8220;WordPress&#8221; (WordPress) &gt;Wordpress WordPress",
+            "term_name": "\"Wordpress\" (Wordpress) >Wordpress Wordpress"
+        },
+        {
+            "input": "",
+            "ent2ncr": "",
+            "title_rss": "",
+            "bloginfo": "",
+            "document_title": "",
+            "term_name": ""
+        }
+    ],
+    "esc_url": [
+        {
+            "input": "http://example.com/a b?x=1&y=2",
+            "expected": "http://example.com/a%20b?x=1&#038;y=2"
+        },
+        {
+            "input": "http://example.com/it's",
+            "expected": "http://example.com/it&#039;s"
+        },
+        {
+            "input": "example.com/path",
+            "expected": "http://example.com/path"
+        },
+        {
+            "input": "javascript:alert(1)",
+            "expected": ""
+        },
+        {
+            "input": "/relative/[x]",
+            "expected": "/relative/%5Bx%5D"
+        },
+        {
+            "input": "http://example.com/中文",
+            "expected": "http://example.com/中文"
+        },
+        {
+            "input": "mailto:a@b.c",
+            "expected": "mailto:a@b.c"
+        },
+        {
+            "input": "http://example.com/a%0d%0ab",
+            "expected": "http://example.com/ab"
+        }
+    ],
+    "attachments": [
+        {
+            "name": "att_large",
+            "input": "<img src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" width=\"640\" height=\"255\" class=\"alignnone size-large wp-image-111\" />",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" width=\"640\" height=\"255\" class=\"alignnone size-large wp-image-111\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 640px) 100vw, 640px\" /></p>\n"
+        },
+        {
+            "name": "att_no_dims",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"120\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></p>\n"
+        },
+        {
+            "name": "att_full",
+            "input": "<img class=\"size-full wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"2560\" height=\"1020\" class=\"size-full wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg 2560w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 2560px) 100vw, 2560px\" /></p>\n"
+        },
+        {
+            "name": "att_style_width",
+            "input": "<img class=\"wp-image-111\" style=\"width: 200px;\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"200\" height=\"80\" class=\"wp-image-111\" style=\"width: 200px;\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 200px) 100vw, 200px\" /></p>\n"
+        },
+        {
+            "name": "att_mismatch",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/other.jpg\" width=\"300\" height=\"120\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/other.jpg\" width=\"300\" height=\"120\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_mismatch_nodims",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/other.jpg\" alt=\"\">",
+            "expected": "<p><img decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/other.jpg\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_has_srcset",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" srcset=\"a.jpg 1x\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" srcset=\"a.jpg 1x\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_has_sizes",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" sizes=\"100px\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" sizes=\"auto, 100px\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" /></p>\n"
+        },
+        {
+            "name": "att_missing",
+            "input": "<img class=\"wp-image-999999\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-999999\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" width=\"300\" height=\"120\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_huge_src",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg\" width=\"2560\" height=\"1020\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg\" width=\"2560\" height=\"1020\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id.jpg 2560w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 2560px) 100vw, 2560px\" /></p>\n"
+        },
+        {
+            "name": "att_ratio_odd",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg\" width=\"1237\" height=\"493\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg\" width=\"1237\" height=\"493\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w\" sizes=\"auto, (max-width: 1237px) 100vw, 1237px\" /></p>\n"
+        },
+        {
+            "name": "att_query",
+            "input": "<img class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg?ver=1\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"768\" height=\"306\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg?ver=1\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 768px) 100vw, 768px\" /></p>\n"
+        },
+        {
+            "name": "att_eager",
+            "input": "<img loading=\"eager\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg\" width=\"768\" height=\"306\" alt=\"\">",
+            "expected": "<p><img fetchpriority=\"high\" decoding=\"async\" loading=\"eager\" class=\"wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg\" width=\"768\" height=\"306\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"(max-width: 768px) 100vw, 768px\" /></p>\n"
+        },
+        {
+            "name": "att_gif_full",
+            "input": "<img class=\"wp-image-112\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/06/anim.gif\" width=\"600\" height=\"400\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-112\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/06/anim.gif\" width=\"600\" height=\"400\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_gif_medium",
+            "input": "<img class=\"wp-image-112\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/06/anim-300x200.gif\" width=\"300\" height=\"200\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-112\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/06/anim-300x200.gif\" width=\"300\" height=\"200\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_edited_ok",
+            "input": "<img class=\"wp-image-113\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-e1600000000000-300x225.jpg\" width=\"300\" height=\"225\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-113\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-e1600000000000-300x225.jpg\" width=\"300\" height=\"225\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-e1600000000000-300x225.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-e1600000000000.jpg 800w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></p>\n"
+        },
+        {
+            "name": "att_edited_old",
+            "input": "<img class=\"wp-image-113\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-400x300.jpg\" width=\"400\" height=\"300\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-113\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/07/photo-400x300.jpg\" width=\"400\" height=\"300\" alt=\"\"></p>\n"
+        },
+        {
+            "name": "att_legacy_path",
+            "input": "<img class=\"wp-image-114\" src=\"http://127.0.0.1:37179/wp-content/uploads/2009/01/legacy-300x150.jpg\" width=\"300\" height=\"150\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" class=\"wp-image-114\" src=\"http://127.0.0.1:37179/wp-content/uploads/2009/01/legacy-300x150.jpg\" width=\"300\" height=\"150\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2009/01/legacy-300x150.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2009/01/legacy.jpg 500w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></p>\n"
+        },
+        {
+            "name": "att_caption",
+            "input": "[caption id=\"attachment_111\" align=\"alignnone\" width=\"300\"]<img class=\"size-medium wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\" width=\"300\" height=\"120\" /> Router[/caption]",
+            "expected": "<figure id=\"attachment_111\" aria-describedby=\"caption-attachment-111\" style=\"width: 300px\" class=\"wp-caption alignnone\"><img loading=\"lazy\" decoding=\"async\" class=\"size-medium wp-image-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\" width=\"300\" height=\"120\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /><figcaption id=\"caption-attachment-111\" class=\"wp-caption-text\">Router</figcaption></figure>\n"
+        },
+        {
+            "name": "att_block",
+            "input": "<!-- wp:image {\"id\":111,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" class=\"wp-image-111\"/></figure>\n<!-- /wp:image -->",
+            "expected": "\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" decoding=\"async\" width=\"1024\" height=\"408\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg\" alt=\"\" class=\"wp-image-111\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 1024px) 100vw, 1024px\" /></figure>\n"
+        },
+        {
+            "name": "att_upper_class",
+            "input": "<img class=\"WP-IMAGE-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\">",
+            "expected": "<p><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"120\" class=\"WP-IMAGE-111\" src=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg\" alt=\"\" srcset=\"http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-300x120.jpg 300w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-768x306.jpg 768w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1024x408.jpg 1024w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1536x612.jpg 1536w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-2048x816.jpg 2048w, http://127.0.0.1:37179/wp-content/uploads/2024/05/router-id-1237x493.jpg 1237w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></p>\n"
+        }
+    ]
+}

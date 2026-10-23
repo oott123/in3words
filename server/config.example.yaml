@@ -1,0 +1,23 @@
+# 监听地址
+listen: ":8080"
+
+log:
+  level: info # trace/debug/info/warn/error
+  format: text # text 或 json
+
+# 与 wp-config.php 中的设置对应
+db:
+  host: "localhost:3306" # DB_HOST，也支持 "localhost:/run/mysqld/mysqld.sock"
+  user: wordpress # DB_USER
+  password: "" # DB_PASSWORD
+  name: wordpress # DB_NAME
+  charset: utf8mb4 # DB_CHARSET
+  table_prefix: wp_ # $table_prefix
+
+render:
+  # 主题是否声明了 add_theme_support('html5', ['caption'])，影响 [caption] 的输出结构
+  html5_caption: true
+  # 上传目录的 URL，留空按 WordPress 默认规则推算；wp-config.php 定义了 WP_CONTENT_URL 或 UPLOADS 时需要填写
+  uploads_base_url: ""
+  # 渲染结果缓存条目数，0 表示不缓存
+  cache_size: 1024

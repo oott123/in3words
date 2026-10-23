@@ -1,3 +1,6 @@
 [tools]
 node = "24"
 pnpm = "12"
+go = "1.26"
+sqlc = "1.31.1"
+golangci-lint = "2.15.0"

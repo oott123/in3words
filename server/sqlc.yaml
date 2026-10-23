@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - engine: mysql
+    schema: internal/wpdb/schema.sql
+    queries: internal/wpdb/queries
+    gen:
+      go:
+        package: wpdb
+        out: internal/wpdb
+        emit_interface: false
+        emit_json_tags: false

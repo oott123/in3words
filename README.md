@@ -4,6 +4,18 @@ in3words 是[三言三语](https://best33.com)的前端项目。
 
 in3words 使用 React Router（framework 模式）用于 SSR，后端使用 WordPress 作为 headless CMS，并希望在将来移除 WordPress，成为一个独立的 CMS 项目。
 
+## server
+
+`server/` 是用 Go 编写的 WordPress REST API 只读替代实现，直接读取 WordPress 的 MySQL 数据库，提供前端用到的站点信息、文章、页面、分类、标签、用户与评论读取接口（路径与 `/wp-json/` 一致），以及全文 RSS（`/feed/`）。发表评论仍需 WordPress。
+
+```sh
+cd server
+cp config.example.yaml config.yaml # 按 wp-config.php 填写数据库信息
+go run . serve -c config.yaml
+```
+
+配置项也可以用环境变量覆盖，例如 `I3W_DB_PASSWORD`。
+
 ## 开源许可
 
 程序代码，含 ts, tsx, js, css, scss 等纯文本文件，以 BSD-3-Clause 授权：
