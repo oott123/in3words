@@ -1,9 +1,9 @@
-import { ActionFunction } from 'remix'
 import { clear as clearCache } from '~/data/cache'
 import { commentCacheGroup } from '~/data/comments'
 import * as yup from 'yup'
+import type { Route } from './+types/comment.$postId'
 
-export const action: ActionFunction = async ({ params }) => {
+export async function action({ params }: Route.ActionArgs) {
   const id = await yup
     .number()
     .positive()

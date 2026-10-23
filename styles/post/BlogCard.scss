@@ -1,7 +1,7 @@
 .BlogCard {
-  @apply bg-gray-50 bg-opacity-75;
+  @apply bg-slate-50/75;
   // @apply bg-red-50;
-  @apply px-6 py-4 m-4 rounded-sm;
+  @apply px-6 py-4 m-4 rounded-xs;
 
   @media screen and (max-width: 425px) {
     @apply px-4 mx-0;

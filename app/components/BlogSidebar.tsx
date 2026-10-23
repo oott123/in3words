@@ -6,7 +6,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-const BlogSidebar: React.FC = ({ children }) => {
+const BlogSidebar: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [isFixed, setIsFixed] = useState(false)
   const [top, setTop] = useState<number | undefined>(undefined)
   const sidebar = useRef<HTMLDivElement>(null)

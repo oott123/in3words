@@ -1,4 +1,8 @@
-@use '@fontsource/fira-code/scss/mixins' as FiraCode;
+@use 'sass:meta';
+@use '@fontsource-utils/scss' as fontsource;
+@use '../node_modules/@fontsource/fira-code/scss/metadata' as firaCode;
+
+@reference 'tailwindcss';
 
 :root {
   font-size: 16px;
@@ -41,14 +45,15 @@ ol {
   }
 }
 
-@include FiraCode.fontFace(
-  $weight: 400,
+@include fontsource.faces(
+  $metadata: firaCode.$metadata,
+  $weights: 400,
   $display: fallback,
-  $fontDir: '/_i3w_remix/gulp/fonts/fira-code/files'
+  $directory: '@fontsource/fira-code/files'
 );
 
 body {
-  @apply text-gray-700 text-sm;
+  @apply text-slate-700 text-sm;
   line-height: 1.5;
   scrollbar-gutter: stable;
   overflow-wrap: break-word;
@@ -82,23 +87,23 @@ small {
 }
 
 a {
-  @apply no-underline text-yellow-700;
+  @apply no-underline text-amber-700;
   &:hover {
-    @apply text-yellow-600;
+    @apply text-amber-600;
   }
 }
 
-@import '../node_modules/highlight.js/scss/base16/tomorrow.scss';
+@include meta.load-css('../node_modules/highlight.js/scss/base16/tomorrow');
 
-@import './layout.scss';
+@include meta.load-css('layout');
 
-@import './sidebar/BlogTitle.scss';
-@import './sidebar/SideLinks.scss';
-@import './sidebar/SideHeader.scss';
-@import './sidebar/CreativeCommons.scss';
-@import './sidebar/TagCloud.scss';
+@include meta.load-css('sidebar/BlogTitle');
+@include meta.load-css('sidebar/SideLinks');
+@include meta.load-css('sidebar/SideHeader');
+@include meta.load-css('sidebar/CreativeCommons');
+@include meta.load-css('sidebar/TagCloud');
 
-@import './post/BlogCard.scss';
-@import './post/BlogPost.scss';
-@import './post/PageNavigation.scss';
-@import './post/BlogComment.scss';
+@include meta.load-css('post/BlogCard');
+@include meta.load-css('post/BlogPost');
+@include meta.load-css('post/PageNavigation');
+@include meta.load-css('post/BlogComment');

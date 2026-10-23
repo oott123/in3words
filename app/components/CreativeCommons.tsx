@@ -1,7 +1,7 @@
 import React from 'react'
 import ccBySaIcon from '../assets/cc-by-sa.svg'
 import ccByNcSaIcon from '../assets/cc-by-nc-sa.svg'
-import { Link } from 'remix'
+import { Link } from 'react-router'
 
 const CreativeCommons: React.FC = () => {
   return (

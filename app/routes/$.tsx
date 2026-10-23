@@ -1,6 +1,6 @@
 import { forwardRequest } from '~/data/base'
-import { LoaderFunction } from '~/types'
+import type { Route } from './+types/$'
 
-export const loader: LoaderFunction = async ({ request }) => {
-  return forwardRequest(request)
+export async function loader({ request, url }: Route.LoaderArgs) {
+  return forwardRequest(request, url)
 }

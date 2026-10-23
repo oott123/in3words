@@ -3,7 +3,7 @@ import { useIsPageLoading } from '~/hooks/useIsPageLoading'
 import { useScrollToTop } from '~/hooks/useScrollToTop'
 import BlogLoading from './BlogLoading'
 
-const BlogPage: React.FC<{ className?: string }> = ({
+const BlogPage: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
   className,
   children,
 }) => {

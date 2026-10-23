@@ -1,6 +1,5 @@
-import { feed, forwardRequest } from '~/data/base'
-import { LoaderFunction } from '~/types'
+import { feed } from '~/data/base'
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader() {
   return feed()
 }

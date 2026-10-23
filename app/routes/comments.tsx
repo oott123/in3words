@@ -1,27 +1,28 @@
 import * as yup from 'yup'
-import React from 'react'
-import { ActionFunction, json, Link, useActionData } from 'remix'
-import { postComment, Comment } from '~/data/comments'
-import { blogTitle } from '~/utils/meta'
-import { MetaFunction } from '~/types'
+import { Link } from 'react-router'
+import type { Route } from './+types/comments'
+import { postComment, type Comment } from '~/data/comments'
+import { blogTitle, getRootData, mergeRootMeta } from '~/utils/meta'
 import BlogPage from '~/components/BlogPage'
 import BlogCard from '~/components/BlogCard'
 import { isErrorResponse } from '~/data/base'
 
-export const meta: MetaFunction = ({ parentsData: { root } }) => {
-  return {
-    title: blogTitle('提交评论', root),
-  }
+export function meta({ matches }: Route.MetaArgs) {
+  return mergeRootMeta(matches, {
+    title: blogTitle('提交评论', getRootData(matches)),
+  })
 }
 
-type CommentResult = {
-  returnPath: string
+export type CommentResult = {
+  returnPath?: string
   success: boolean
   error?: string
   comment?: Comment
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({
+  request,
+}: Route.ActionArgs): Promise<CommentResult> {
   const formData = await request.formData()
   const returnPath = await yup.string().validate(formData.get('return_path'))
   try {
@@ -64,18 +65,18 @@ export const action: ActionFunction = async ({ request }) => {
       returnPath,
       success: true,
       comment: created,
-    } as CommentResult
+    }
   } catch (e) {
     return {
       returnPath,
       success: false,
       error: isErrorResponse(e) ? e.message : '未知错误',
-    } as CommentResult
+    }
   }
 }
 
-const CommentPosted: React.FC = () => {
-  const data = useActionData<CommentResult>()
+export default function CommentPosted({ actionData }: Route.ComponentProps) {
+  const data = actionData
 
   return (
     <BlogPage>
@@ -112,5 +113,3 @@ const CommentPosted: React.FC = () => {
     </BlogPage>
   )
 }
-
-export default CommentPosted

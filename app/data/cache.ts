@@ -1,16 +1,24 @@
-import { createClient } from 'redis'
+import { createClient, RESP_TYPES } from 'redis'
 import * as msgpack from 'msgpack-lite'
 
-async function connectRedis() {
-  const client = createClient({
+function createRedisClient() {
+  return createClient({
     url: process.env.REDIS_URL,
+  }).withTypeMapping({
+    [RESP_TYPES.BLOB_STRING]: Buffer,
   })
+}
+
+type RedisClient = ReturnType<typeof createRedisClient>
+
+async function connectRedis() {
+  const client = createRedisClient()
   await client.connect()
   globalThis.blogRedisClient = client
   return client
 }
 
-function getRedis(): Promise<ReturnType<typeof createClient>> {
+function getRedis(): Promise<RedisClient> {
   if (!globalThis.blogRedisClient) {
     globalThis.blogRedisClient = connectRedis()
   }
@@ -23,12 +31,12 @@ function prefix(k: string) {
 
 export async function set<T = any>(key: string, value: T): Promise<void> {
   const redis = await getRedis()
-  await redis.setEx(prefix(key), 86400, msgpack.encode(value) as any)
+  await redis.setEx(prefix(key), 86400, msgpack.encode(value))
 }
 
 export async function get<T = any>(key: string): Promise<T | null> {
   const redis = await getRedis()
-  const value = await redis.getBuffer(prefix(key))
+  const value = await redis.get(prefix(key))
   if (!value) {
     return null
   }

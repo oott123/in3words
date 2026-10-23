@@ -151,7 +151,7 @@ function transformPost(post: any): Post {
       avatar: findEmbedded(post._embedded, 'author', post.author).avatar_urls[
         '96'
       ],
-    } as Author,
+    },
     categories: post.categories?.map(
       mapTermsByTaxonomy(post._embedded['wp:term'], 'category'),
     ),

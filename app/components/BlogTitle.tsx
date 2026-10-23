@@ -1,4 +1,4 @@
-import { Link } from 'remix'
+import { Link } from 'react-router'
 import React from 'react'
 
 const BlogTitle: React.FC<{ title: string; headline: string }> = ({

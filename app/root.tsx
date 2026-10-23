@@ -1,18 +1,14 @@
 import {
-  json,
+  isRouteErrorResponse,
   Links,
-  LiveReload,
-  LoaderFunction,
   Meta,
-  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
-  useLoaderData,
-} from 'remix'
-import type { LinksFunction } from 'remix'
-import globalStylesUrl from '~/styles/index.css'
+  useRouteLoaderData,
+} from 'react-router'
+import type { Route } from './+types/root'
+import globalStylesUrl from '../styles/index.scss?url'
 import BlogTitle from './components/BlogTitle'
 import SideLinks, { SideLinkItem } from './components/SideLinks'
 import SideHeader from './components/SideHeader'
@@ -25,6 +21,7 @@ import { categoryPath, pagePath } from './path'
 import BlogFooter from './components/BlogFooter'
 import BlogCard from './components/BlogCard'
 import BlogPage from './components/BlogPage'
+import { toMetaDescriptors } from './utils/meta'
 
 const loadData = async () => {
   const [site, categories, tagCloud] = await Promise.all([
@@ -37,29 +34,26 @@ const loadData = async () => {
 
 export type RootData = Awaited<ReturnType<typeof loadData>>
 
-export const loader: LoaderFunction = async () => {
-  return json(await loadData())
+export async function loader() {
+  return loadData()
 }
 
-export const meta: MetaFunction = ({ data }: { data: RootData }) => {
-  if (data) {
-    return {
-      title: data.site.name,
+export function meta({ loaderData }: Route.MetaArgs) {
+  if (loaderData) {
+    return toMetaDescriptors({
+      title: loaderData.site.name,
       'og:type': 'website',
       'og:locale': 'zh_CN',
-      'og:site_name': data.site.name,
-      'og:title': data.site.name,
-      'og:description': data.site.description,
-    } as Record<string, string>
+      'og:site_name': loaderData.site.name,
+      'og:title': loaderData.site.name,
+      'og:description': loaderData.site.description,
+    })
   } else {
-    return {
-      title: 'Error',
-    }
+    return [{ title: 'Error' }]
   }
 }
 
-// https://remix.run/api/app#links
-export const links: LinksFunction = () => {
+export const links: Route.LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: globalStylesUrl },
     {
@@ -70,8 +64,6 @@ export const links: LinksFunction = () => {
   ]
 }
 
-// https://remix.run/api/conventions#default-export
-// https://remix.run/api/conventions#route-filenames
 export default function App() {
   return (
     <Document>
@@ -82,30 +74,26 @@ export default function App() {
   )
 }
 
-// https://remix.run/docs/en/v1/api/conventions#errorboundary
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error)
-  return (
-    <Document title="Error!">
-      <Layout>
-        <BlogCard>
-          <h2>出错了……</h2>
-          <p>{error.message}</p>
-          <p>
-            要不还是去<a href="/">首页</a>看看吧？
-          </p>
-        </BlogCard>
-      </Layout>
-    </Document>
-  )
-}
-
-// https://remix.run/docs/en/v1/api/conventions#catchboundary
-export function CatchBoundary() {
-  const caught = useCatch()
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (!isRouteErrorResponse(error)) {
+    console.error(error)
+    return (
+      <Document title="Error!">
+        <Layout>
+          <BlogCard>
+            <h2>出错了……</h2>
+            <p>{error instanceof Error ? error.message : String(error)}</p>
+            <p>
+              要不还是去<a href="/">首页</a>看看吧？
+            </p>
+          </BlogCard>
+        </Layout>
+      </Document>
+    )
+  }
 
   let message
-  switch (caught.status) {
+  switch (error.status) {
     case 404:
       message = (
         <div>
@@ -149,16 +137,16 @@ export function CatchBoundary() {
   }
 
   return (
-    <Document title={`${caught.status} ${caught.statusText}`}>
+    <Document title={`${error.status} ${error.statusText}`}>
       <Layout>
         <BlogPage>
           <BlogCard>
             <h1>
-              {caught.status} {caught.statusText}
+              {error.status} {error.statusText}
             </h1>
             {message}
             <div>
-              {caught.data?.code}: {caught.data?.message}
+              {error.data?.code}: {error.data?.message}
             </div>
           </BlogCard>
         </BlogPage>
@@ -188,15 +176,13 @@ function Document({
         <ScrollRestoration />
         <BlogIconsDef />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   )
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData<RootData>()
-  const { site, categories, tagCloud } = data || {}
+  const data = useRouteLoaderData<typeof loader>('root')
 
   return (
     <div className="BlogLayout">
@@ -207,7 +193,10 @@ function Layout({ children }: { children: React.ReactNode }) {
       <aside className="BlogLayout_Sidebar">
         {data && (
           <BlogSidebar>
-            <BlogTitle title={site.name} headline={site.description} />
+            <BlogTitle
+              title={data.site.name}
+              headline={data.site.description}
+            />
             <SideLinks>
               <SideLinkItem to="/" title="文章" />
               <SideLinkItem to={pagePath({ slug: 'guestbook' })} title="留言" />
@@ -221,7 +210,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <div className="BlogLayout_SidebarDetails">
               <SideHeader>分类</SideHeader>
               <SideLinks>
-                {categories
+                {data.categories
                   .filter((c) => c.count > 0)
                   .map((c) => (
                     <SideLinkItem
@@ -232,7 +221,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                   ))}
               </SideLinks>
               <SideHeader>标签</SideHeader>
-              <TagCloud tags={tagCloud} />
+              <TagCloud tags={data.tagCloud} />
               <SideHeader>授权协议</SideHeader>
               <CreativeCommons />
             </div>

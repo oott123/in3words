@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import React from 'react'
 
-const BlogCard: React.FC<{ className?: string }> = ({
+const BlogCard: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
   children,
   className,
   ...props

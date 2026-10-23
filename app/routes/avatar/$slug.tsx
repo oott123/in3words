@@ -1,11 +1,10 @@
-import { LoaderFunction } from '~/types'
+import { proxyResponse } from '~/data/base'
+import type { Route } from './+types/$slug'
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url)
+export async function loader({ url }: Route.LoaderArgs) {
   const newUrl = `https://seccdn.libravatar.org/${url.pathname}${url.search}`
 
   const resp = await fetch(newUrl)
-  resp.headers.delete('Access-Control-Allow-Origin')
 
-  return resp
+  return proxyResponse(resp, ['Access-Control-Allow-Origin'])
 }

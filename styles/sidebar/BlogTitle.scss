@@ -1,14 +1,14 @@
 .BlogTitle {
   @apply py-4 pt-8;
   h1 a {
-    @apply block text-3xl font-semibold text-gray-700;
+    @apply block text-3xl font-semibold text-slate-700;
     @apply mb-2;
     &:hover {
-      @apply text-yellow-600;
+      @apply text-amber-600;
     }
   }
   h2 {
-    @apply text-sm font-normal text-gray-500;
+    @apply text-sm font-normal text-slate-500;
   }
 
   @media screen and (max-width: 768px) {

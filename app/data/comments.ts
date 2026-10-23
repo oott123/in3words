@@ -7,7 +7,7 @@ import {
   parseGmt,
   post,
   replaceMediaUrl,
-  RequestOptions,
+  type RequestOptions,
   voidTags,
 } from './base'
 import { clear as clearCache } from './cache'

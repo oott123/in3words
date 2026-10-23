@@ -17,7 +17,7 @@ $sidebar-width: 288px;
   max-width: $max-width;
 
   &_Sidebar {
-    @apply flex-shrink-0;
+    @apply shrink-0;
     width: $sidebar-width;
     order: 1;
   }
@@ -28,7 +28,7 @@ $sidebar-width: 288px;
   }
 
   &_Ainou {
-    @apply hidden flex-shrink-0;
+    @apply hidden shrink-0;
     order: 3;
   }
 
@@ -49,7 +49,7 @@ $sidebar-width: 288px;
       &::before {
         content: ' ';
         @apply block fixed pointer-events-none;
-        @apply bottom-0 bg-no-repeat bg-left-bottom;
+        @apply bottom-0 bg-no-repeat bg-bottom-left;
         width: $ainou-width;
         height: 600px;
         margin-left: -24px;
@@ -105,17 +105,16 @@ $sidebar-width: 288px;
 }
 
 button.Button-Link {
-  @apply bg-transparent border-none cursor-pointer text-yellow-700;
+  @apply bg-transparent border-none cursor-pointer text-amber-700;
   font-size: 1em;
   &:hover {
-    @apply text-yellow-600;
+    @apply text-amber-600;
   }
 }
 
 .BlogFooter {
-  @apply bg-opacity-50;
   p {
-    @apply text-sm text-gray-500 mx-auto;
+    @apply text-sm text-slate-500 mx-auto;
     width: fit-content;
 
     &:last-child {
@@ -124,6 +123,6 @@ button.Button-Link {
   }
 
   @media print {
-    @apply border-0 border-solid border-t border-gray-500;
+    @apply border-0 border-solid border-t border-slate-500;
   }
 }

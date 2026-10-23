@@ -67,7 +67,7 @@ const BlogIcon = ({
   return (
     <span className={`BlogIcon BlogIcon-${BlogIcons[children]}`}>
       <svg width={svgSize} height={svgSize}>
-        <use xlinkHref={`#${symbolPrefix}${BlogIcons[children]}`} />
+        <use href={`#${symbolPrefix}${BlogIcons[children]}`} />
       </svg>
     </span>
   )

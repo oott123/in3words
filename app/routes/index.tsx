@@ -1,30 +1,13 @@
-import type { LoaderFunction, BlogMetaFunction } from '~/types'
-import { getPosts, SummarizedPost } from '~/data/posts'
-import { blogTitle } from '~/utils/meta'
-import { useLoaderData } from 'remix'
+import type { Route } from './+types/index'
+import { getPosts } from '~/data/posts'
+import { blogTitle, getRootData, mergeRootMeta } from '~/utils/meta'
 import PageNavigation from '~/components/PageNavigation'
 import PostList from '~/components/PostList'
 import { indexPath } from '~/path'
 import ListPage from '~/components/ListPage'
 import { useCallback } from 'react'
 
-type PageParams = {
-  page: string
-}
-
-type IndexData = {
-  page: number
-  posts: SummarizedPost[]
-  total: number
-  totalPages: number
-  keyword?: string
-}
-
-export const loader: LoaderFunction<IndexData, keyof PageParams> = async ({
-  request,
-  params,
-}) => {
-  const url = new URL(request.url)
+export async function loader({ url, params }: Route.LoaderArgs) {
   const keyword = url.searchParams.get('s')
   const page = isNaN(Number(params.page)) ? 1 : Number(params.page)
 
@@ -39,23 +22,22 @@ export const loader: LoaderFunction<IndexData, keyof PageParams> = async ({
   }
 }
 
-export const meta: BlogMetaFunction<IndexData> = ({
-  parentsData: { root },
-  data: { keyword, page },
-}) => {
-  return {
+export function meta({ matches, loaderData }: Route.MetaArgs) {
+  const keyword = loaderData?.keyword
+  const page = loaderData?.page ?? 1
+  return mergeRootMeta(matches, {
     title: blogTitle(
       [keyword ? `搜索：${keyword}` : '', page > 1 ? `第 ${page} 页` : ''],
-      root,
+      getRootData(matches),
     ),
     ...(keyword ? { robots: 'noindex, nofollow' } : {}),
-  }
+  })
 }
 
-export default function BlogListPage() {
-  const { posts, totalPages, page, keyword } = useLoaderData<IndexData>()
+export default function BlogListPage({ loaderData }: Route.ComponentProps) {
+  const { posts, totalPages, page, keyword } = loaderData
   const path = useCallback(
-    (page) => {
+    (page: number) => {
       return indexPath(page, keyword)
     },
     [keyword],

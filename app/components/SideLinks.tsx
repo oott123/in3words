@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import React from 'react'
-import { Link, useLocation, useResolvedPath, useTransition } from 'remix'
+import { Link, useLocation, useNavigation, useResolvedPath } from 'react-router'
 
-const SideLinks: React.FC = ({ children }) => {
+const SideLinks: React.FC<React.PropsWithChildren> = ({ children }) => {
   return <ul className="SideLinks">{children}</ul>
 }
 
@@ -22,12 +22,12 @@ export const SideLinkItem: React.FC<SideLink> = ({
   className,
 }) => {
   const location = useLocation()
-  const transition = useTransition()
+  const navigation = useNavigation()
   const path = useResolvedPath(to)
 
   const locationPathname = (
-    transition.state === 'loading'
-      ? transition.location.pathname
+    navigation.state === 'loading'
+      ? navigation.location.pathname
       : location.pathname
   ).toLowerCase()
   const toPathname = path.pathname.toLowerCase()

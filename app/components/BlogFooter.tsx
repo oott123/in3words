@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'remix'
+import { Link } from 'react-router'
 import BlogCard from './BlogCard'
 import ExternalLink from './ExternalLink'
 
@@ -18,8 +18,11 @@ const BlogFooter: React.FC = () => {
           </ExternalLink>
           ，使用{' '}
           <ExternalLink href="https://wordpress.org">WordPress</ExternalLink>，
-          <ExternalLink href="https://reactjs.org">React</ExternalLink> 和{' '}
-          <ExternalLink href="https://remix.run">Remix</ExternalLink> 构建。
+          <ExternalLink href="https://react.dev">React</ExternalLink> 和{' '}
+          <ExternalLink href="https://reactrouter.com">
+            React Router
+          </ExternalLink>{' '}
+          构建。
         </p>
       </BlogCard>
     </footer>

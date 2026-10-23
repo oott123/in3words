@@ -23,7 +23,7 @@ export async function getSite(): Promise<SiteMeta> {
     name: data.name,
     description: data.description,
     url: data.url,
-  } as SiteMeta
+  }
 }
 
 export interface CategoryMeta {
@@ -43,14 +43,14 @@ export async function getCategories(): Promise<CategoryMeta[]> {
   }))
 }
 
-export async function getCategory(slugInput: string) {
+export async function getCategory(slugInput: string): Promise<CategoryMeta> {
   const resp = await get('/categories', { slug: slugInput })
   if (!resp[0]) {
     throw createErrorResponse('请求的分类不存在', 'unknown_category', 404)
   }
   const { id, name, count, slug } = resp[0]
 
-  return { id, name, slug, count } as CategoryMeta
+  return { id, name, slug, count }
 }
 
 export type TagMeta = {
@@ -68,27 +68,24 @@ export async function getTagCloud(): Promise<TagMeta[]> {
     _fields: 'id,name,slug,count',
   })
   return (data as any[])
-    .map(
-      ({ id, name, slug, count }: TagMeta) =>
-        ({
-          id,
-          name,
-          slug,
-          count,
-        } as TagMeta),
-    )
+    .map(({ id, name, slug, count }: TagMeta) => ({
+      id,
+      name,
+      slug,
+      count,
+    }))
     .filter((c) => c.count > 1)
     .sort((x1, x2) => x1.name.localeCompare(x2.name))
 }
 
-export async function getTag(slugInput: string) {
+export async function getTag(slugInput: string): Promise<TagMeta> {
   const resp = await get('/tags', { slug: slugInput })
   if (!resp[0]) {
     throw createErrorResponse('请求的标签不存在', 'unknown_tag', 404)
   }
   const { id, name, count, slug } = resp[0]
 
-  return { id, name, slug, count } as TagMeta
+  return { id, name, slug, count }
 }
 
 export type UserMeta = {
@@ -97,12 +94,12 @@ export type UserMeta = {
   id: number
 }
 
-export async function getUser(slugInput: string) {
+export async function getUser(slugInput: string): Promise<UserMeta> {
   const resp = await get('/users', { slug: slugInput })
   if (!resp[0]) {
     throw createErrorResponse('请求的用户不存在', 'unknown_user', 404)
   }
   const { name, slug, id } = resp[0]
 
-  return { name, slug, id } as UserMeta
+  return { name, slug, id }
 }

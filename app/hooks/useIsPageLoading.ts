@@ -1,15 +1,15 @@
-import { useLocation, useTransition } from 'remix'
+import { useLocation, useNavigation } from 'react-router'
 
 export function useIsPageLoading() {
   const location = useLocation()
-  const transition = useTransition()
+  const navigation = useNavigation()
 
-  if (transition.state !== 'loading') {
+  if (navigation.state !== 'loading') {
     return false
   }
 
   return (
-    transition.location.pathname !== location.pathname ||
-    transition.location.search !== location.search
+    navigation.location.pathname !== location.pathname ||
+    navigation.location.search !== location.search
   )
 }

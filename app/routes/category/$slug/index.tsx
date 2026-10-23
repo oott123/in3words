@@ -1,22 +1,12 @@
-import type { LoaderFunction, BlogMetaFunction } from '~/types'
+import type { Route } from './+types/index'
 import { getCategoryPosts } from '~/data/posts'
-import { blogTitle } from '~/utils/meta'
-import { useLoaderData } from 'remix'
+import { blogTitle, getRootData, mergeRootMeta } from '~/utils/meta'
 import { categoryPath } from '~/path'
 import PageNavigation from '~/components/PageNavigation'
 import PostList from '~/components/PostList'
 import ListPage from '~/components/ListPage'
 
-type Params = {
-  page: string
-  slug: string
-}
-
-type Data = Awaited<ReturnType<typeof getCategoryPosts>> & { page: number }
-
-export const loader: LoaderFunction<Data, keyof Params> = async ({
-  params,
-}) => {
+export async function loader({ params }: Route.LoaderArgs) {
   let page = Number(params.page)
   if (isNaN(page)) {
     page = 1
@@ -32,24 +22,24 @@ export const loader: LoaderFunction<Data, keyof Params> = async ({
   return { posts, total, totalPages, page, category }
 }
 
-export const meta: BlogMetaFunction<
-  Data,
-  Record<string, any>,
-  keyof Params
-> = ({
-  parentsData: { root },
-  data: {
+export function meta({ matches, loaderData }: Route.MetaArgs) {
+  if (!loaderData) {
+    return mergeRootMeta(matches, {})
+  }
+  const {
     category: { name },
     page,
-  },
-}) => {
-  return {
-    title: blogTitle((page > 1 ? `第 ${page} 页 - ` : '') + `${name}`, root),
-  }
+  } = loaderData
+  return mergeRootMeta(matches, {
+    title: blogTitle(
+      (page > 1 ? `第 ${page} 页 - ` : '') + `${name}`,
+      getRootData(matches),
+    ),
+  })
 }
 
-export default function BlogListPage() {
-  const { posts, totalPages, page, category } = useLoaderData<Data>()
+export default function BlogListPage({ loaderData }: Route.ComponentProps) {
+  const { posts, totalPages, page, category } = loaderData
 
   return (
     <ListPage>

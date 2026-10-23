@@ -1,28 +1,12 @@
-import type { LoaderFunction, BlogMetaFunction } from '~/types'
-import { getCategoryPosts, getPosts } from '~/data/posts'
-import { blogTitle } from '~/utils/meta'
-import { useLoaderData } from 'remix'
-import { archivePath, categoryPath } from '~/path'
+import type { Route } from './+types/$year'
+import { getPosts } from '~/data/posts'
+import { blogTitle, getRootData, mergeRootMeta } from '~/utils/meta'
+import { archivePath } from '~/path'
 import PageNavigation from '~/components/PageNavigation'
 import PostList from '~/components/PostList'
 import ListPage from '~/components/ListPage'
 import * as yup from 'yup'
 import { addMonths, addDays, addYears } from 'date-fns'
-
-type Params = {
-  page?: string
-  year: string
-  month?: string
-  day?: string
-}
-
-type Data = Awaited<ReturnType<typeof getPosts>> & {
-  page: number
-  year: number
-  month?: number
-  day?: number
-  archiveTitle: string
-}
 
 function getDateSpan({
   year,
@@ -30,8 +14,8 @@ function getDateSpan({
   day,
 }: {
   year: number
-  month?: number | undefined
-  day?: number | undefined
+  month?: number | null
+  day?: number | null
 }) {
   const startDate = new Date(year, (month || 1) - 1, day || 1)
   let endDate: Date
@@ -46,9 +30,7 @@ function getDateSpan({
   return [startDate.toISOString(), endDate.toISOString()] as const
 }
 
-export const loader: LoaderFunction<Data, keyof Params> = async ({
-  params,
-}) => {
+export async function loader({ params }: Route.LoaderArgs) {
   const p = await yup
     .object()
     .shape({
@@ -67,22 +49,33 @@ export const loader: LoaderFunction<Data, keyof Params> = async ({
 
   const [after, before] = getDateSpan(p)
   const { posts, total, totalPages } = await getPosts(p.page, { after, before })
-  return { posts, total, totalPages, ...p, archiveTitle }
-}
-
-export const meta: BlogMetaFunction<
-  Data,
-  Record<string, any>,
-  keyof Params
-> = ({ parentsData: { root }, data: { page, archiveTitle } }) => {
   return {
-    title: blogTitle([page > 1 && `第 ${page} 页`, archiveTitle], root),
+    posts,
+    total,
+    totalPages,
+    page: p.page,
+    year: p.year,
+    month: p.month ?? undefined,
+    day: p.day ?? undefined,
+    archiveTitle,
   }
 }
 
-export default function BlogListPage() {
-  const { posts, totalPages, page, archiveTitle, year, month, day } =
-    useLoaderData<Data>()
+export function meta({ matches, loaderData }: Route.MetaArgs) {
+  if (!loaderData) {
+    return mergeRootMeta(matches, {})
+  }
+  const { page, archiveTitle } = loaderData
+  return mergeRootMeta(matches, {
+    title: blogTitle(
+      [page > 1 && `第 ${page} 页`, archiveTitle],
+      getRootData(matches),
+    ),
+  })
+}
+
+export default function BlogListPage({ loaderData }: Route.ComponentProps) {
+  const { posts, totalPages, page, archiveTitle, year, month, day } = loaderData
 
   return (
     <ListPage>

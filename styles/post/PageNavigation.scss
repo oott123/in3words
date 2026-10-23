@@ -1,14 +1,14 @@
 .PageNavigation {
-  @apply my-4 flex justify-around text-gray-700 items-center;
+  @apply my-4 flex justify-around text-slate-700 items-center;
   line-height: 2rem;
   &_Link {
-    @apply inline-block h-8 px-3 mx-2 bg-gray-50;
+    @apply inline-block h-8 px-3 mx-2 bg-slate-50;
     @apply text-center overflow-hidden align-middle;
-    @apply whitespace-nowrap overflow-ellipsis;
+    @apply whitespace-nowrap text-ellipsis;
     font-variant: tabular-nums;
 
     &-Active {
-      @apply bg-white text-gray-900;
+      @apply bg-white text-slate-900;
     }
 
     &:hover {
@@ -17,7 +17,7 @@
 
     &-Disabled {
       @apply bg-transparent;
-      @apply pointer-events-none text-gray-500;
+      @apply pointer-events-none text-slate-500;
     }
   }
 }

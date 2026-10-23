@@ -1,4 +1,3 @@
-import { json } from 'remix'
 import * as cache from './cache'
 
 if (!globalThis.blogApiGetCache) {
@@ -17,9 +16,7 @@ export async function feed() {
       },
     })
 
-    resp.headers.delete('Set-Cookie')
-
-    return resp
+    return proxyResponse(resp, ['Set-Cookie'])
   } catch (e) {
     console.error(`Request to ${newUrl.toString()} failed`, e)
     throw e
@@ -28,6 +25,7 @@ export async function feed() {
 
 export async function forwardRequest(
   request: Request,
+  url = new URL(request.url),
   baseUrl?: string,
   baseHost?: string,
 ) {
@@ -42,11 +40,7 @@ export async function forwardRequest(
     'Proxy-Authorization',
     'Proxy-Authenticate',
   ]
-  const oldUrl = new URL(request.url)
-  const newUrl = new URL(
-    request.url.substring(oldUrl.origin.length),
-    baseUrl || BASE_URL,
-  )
+  const newUrl = new URL(`${url.pathname}${url.search}`, baseUrl || BASE_URL)
   const newHeaders = new Headers(request.headers)
 
   newHeaders.delete('Host')
@@ -58,7 +52,7 @@ export async function forwardRequest(
   }
 
   // console.log(
-  //   `Forwarding from ${oldUrl.toString()} to ${newUrl.toString()}`,
+  //   `Forwarding from ${url.toString()} to ${newUrl.toString()}`,
   //   newHeaders,
   // )
   try {
@@ -69,17 +63,32 @@ export async function forwardRequest(
       redirect: 'manual',
     })
 
-    resp.headers.delete('Set-Cookie')
-
     // if (resp.status === 404) {
     //   throw createErrorResponse('找不到该页面', 'unknown_route', 404, request.url)
     // }
 
-    return resp
+    return proxyResponse(resp, ['Set-Cookie'])
   } catch (e) {
     console.error(`Request to ${newUrl.toString()} failed`, e)
     throw e
   }
+}
+
+/**
+ * fetch 返回的 Response 的 headers 是只读的，需要复制一份才能修改。
+ * fetch 会自动解压响应体，所以同时去掉 Content-Encoding 和 Content-Length。
+ */
+export function proxyResponse(resp: Response, removeHeaders: string[] = []) {
+  const headers = new Headers(resp.headers)
+  for (const h of [...removeHeaders, 'Content-Encoding', 'Content-Length']) {
+    headers.delete(h)
+  }
+
+  return new Response(resp.body, {
+    status: resp.status,
+    statusText: resp.statusText,
+    headers,
+  })
 }
 
 export type RequestOptions = {
@@ -192,8 +201,6 @@ export type CmsErrorResponse = Response & {
   _isCmsError: true
   message: string
   code: string
-  status: number
-  url?: string
 }
 
 export function createErrorResponse(
@@ -202,21 +209,20 @@ export function createErrorResponse(
   status = 500,
   url?: string,
 ) {
-  const resp = json(
+  const resp = Response.json(
     { message, code, url, _isCmsError: true },
-    status,
+    { status },
   ) as CmsErrorResponse
+  // Response 的 status 和 url 是只读的，已经通过构造参数和响应体传递
   resp._isCmsError = true
   resp.message = message
   resp.code = code
-  resp.status = status
-  if (url) resp.url = url
 
   return resp
 }
 
 export function isErrorResponse(obj: any): obj is CmsErrorResponse {
-  return obj._isCmsError
+  return !!obj?._isCmsError
 }
 
 function buildUrl(

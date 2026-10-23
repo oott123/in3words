@@ -1,14 +1,16 @@
 import classNames from 'classnames'
 import React, { useEffect, useRef } from 'react'
-import { Link, PrefetchPageLinks, useTransition } from 'remix'
+import { Link, PrefetchPageLinks, useNavigation } from 'react-router'
 
-const PageNavigation: React.FC<{
-  totalPages: number
-  page: number
-  path: (page: number) => string
-}> = ({ totalPages, page, path, children }) => {
-  const transition = useTransition()
-  const isLoading = transition.state === 'loading'
+const PageNavigation: React.FC<
+  React.PropsWithChildren<{
+    totalPages: number
+    page: number
+    path: (page: number) => string
+  }>
+> = ({ totalPages, page, path, children }) => {
+  const navigation = useNavigation()
+  const isLoading = navigation.state === 'loading'
   const showPages = getShowPages(page, totalPages)
   const hasNextPage = page + 1 <= totalPages
   const nextPagePath = path(page + 1)
@@ -47,8 +49,8 @@ const PageNavigation: React.FC<{
               ? p === page + 1
                 ? '下一页'
                 : p === page - 1
-                ? '上一页'
-                : p
+                  ? '上一页'
+                  : p
               : '...'}
           </Link>
         ))}

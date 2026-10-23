@@ -35,7 +35,7 @@
     max-width: 200px;
   }
   &_Date {
-    @apply text-gray-500;
+    @apply text-slate-500;
   }
   &_AuthorAvatar {
     @apply w-12 h-12;
@@ -111,7 +111,7 @@
   }
 
   &_Tip {
-    @apply text-sm text-gray-500 mt-2;
+    @apply text-sm text-slate-500 mt-2;
   }
 
   &_Details-Hidden {
@@ -121,7 +121,7 @@
   &_Status {
     @apply text-base text-center my-2 px-4 py-2;
     &-Success {
-      @apply bg-green-200 text-green-800;
+      @apply bg-emerald-200 text-emerald-800;
     }
     &-Error {
       @apply bg-red-200 text-red-800;

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'remix'
-import { TagMeta } from '~/data/site'
+import { Link } from 'react-router'
+import type { TagMeta } from '~/data/site'
 import { tagPath } from '~/path'
 
 const TagCloud: React.FC<{ tags: TagMeta[] }> = ({ tags }) => {

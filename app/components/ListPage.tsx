@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ListPage: React.FC<{ className?: string }> = ({
+const ListPage: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
   className,
   children,
 }) => {

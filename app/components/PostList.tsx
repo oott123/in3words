@@ -1,6 +1,6 @@
 import React from 'react'
-import { useTransition } from 'remix'
-import { SummarizedPost } from '~/data/posts'
+import { useNavigation } from 'react-router'
+import type { SummarizedPost } from '~/data/posts'
 import { useIsPageLoading } from '~/hooks/useIsPageLoading'
 import { useScrollToTop } from '~/hooks/useScrollToTop'
 import { postPath } from '~/path'
@@ -9,9 +9,9 @@ import BlogLoading from './BlogLoading'
 import BlogPost from './BlogPost'
 
 const PostList: React.FC<{ posts: Array<SummarizedPost> }> = ({ posts }) => {
-  const transition = useTransition()
+  const navigation = useNavigation()
   const isLoading = useIsPageLoading()
-  const loadingPath = transition.location?.pathname
+  const loadingPath = navigation.location?.pathname
   const hasLoadingPost = posts.some((p) => postPath(p) === loadingPath)
   useScrollToTop(isLoading)
 

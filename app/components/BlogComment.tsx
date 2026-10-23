@@ -1,17 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BlogCard from './BlogCard'
 import type { Comment } from '~/data/comments'
 import BlogDate from './BlogDate'
 import BlogIcon, { BlogIcons } from './BlogIcon'
 import PageNavigation from './PageNavigation'
-import { Form, useFetcher, useLocation, useTransition } from 'remix'
+import { useFetcher, useLocation, useNavigation } from 'react-router'
 import classNames from 'classnames'
+import type { CommentResult } from '~/routes/comments'
 
-export const SingleComment: React.FC<{ comment: Comment }> = ({
-  comment,
-  children,
-}) => {
-  const preventClick = useCallback((e) => e.preventDefault(), [])
+export const SingleComment: React.FC<
+  React.PropsWithChildren<{ comment: Comment }>
+> = ({ comment, children }) => {
+  const preventClick = useCallback(
+    (e: React.MouseEvent) => e.preventDefault(),
+    [],
+  )
 
   return (
     <article className="BlogComment_Comment">
@@ -71,7 +74,7 @@ const BlogComment: React.FC<{
   postId: number
   newCommentsAllowed: boolean
 }> = ({ comments, page, totalPages, total, postId, newCommentsAllowed }) => {
-  const { state, location } = useTransition()
+  const { state, location } = useNavigation()
   const currentLocation = useLocation()
   const [replyTo, setReplyTo] = useState(0)
   const [showCommentTip, setShowCommentTip] = useState(false)
@@ -86,6 +89,8 @@ const BlogComment: React.FC<{
     const showCommentTip =
       locationCommentId !== null &&
       !comments.some((c) => c.id === locationCommentId)
+    // 服务端拿不到 hash，放在 effect 里设置以免水合不一致
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowCommentTip(showCommentTip)
   }, [currentLocation.hash, comments])
 
@@ -181,7 +186,7 @@ const CommentForm: React.FC<{
   const location = useLocation()
   const [hasMemorized, setHasMemorized] = useState(false)
 
-  const comment = useFetcher()
+  const comment = useFetcher<CommentResult>()
   const commentSuccess = comment.data?.success
   const commentApproved = commentSuccess && comment.data?.comment?.approved
   const commentIsSpam = commentSuccess && comment.data?.comment?.isSpam
@@ -194,7 +199,7 @@ const CommentForm: React.FC<{
     if (!isSubmitting && commentSuccess) {
       commentInput.setValue('')
       if (commentApproved) {
-        onSuccess && onSuccess()
+        onSuccess?.()
       }
     }
   }, [
@@ -208,6 +213,7 @@ const CommentForm: React.FC<{
 
   useEffect(() => {
     if (nameInput.value && emailInput.value) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasMemorized(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -271,8 +277,8 @@ const CommentForm: React.FC<{
             {commentApproved
               ? '评论发表成功。'
               : commentIsSpam
-              ? '评论已提交，人工检查后才能显示。'
-              : '评论已提交，人工审核后很快就能显示。'}
+                ? '评论已提交，人工检查后才能显示。'
+                : '评论已提交，人工审核后很快就能显示。'}
           </div>
         )}
         {commentError && (
@@ -307,14 +313,14 @@ const CommentForm: React.FC<{
   )
 }
 
+function getLocalStorage(): Record<string, string | undefined> {
+  return typeof window === 'undefined' ? {} : window.localStorage
+}
+
 function useMemorizedInput(key: string) {
-  const localStorage: Record<string, string | undefined> = useMemo(
-    () => (typeof window === 'undefined' ? {} : window.localStorage),
-    [],
-  )
   const prefix = 'i3w_'
   const lsKey = `${prefix}${key}`
-  const [value, setValue] = useState(localStorage[lsKey] || '')
+  const [value, setValue] = useState(() => getLocalStorage()[lsKey] || '')
 
   const onChange = useCallback((e: React.ChangeEvent) => {
     setValue((e.target as HTMLInputElement).value)
@@ -323,14 +329,14 @@ function useMemorizedInput(key: string) {
   const mySetValue = useCallback(
     (value: string) => {
       setValue(value)
-      localStorage[lsKey] = value
+      getLocalStorage()[lsKey] = value
     },
-    [lsKey, localStorage],
+    [lsKey],
   )
 
   useEffect(() => {
-    localStorage[lsKey] = value
-  }, [value, lsKey, localStorage])
+    getLocalStorage()[lsKey] = value
+  }, [value, lsKey])
 
   return { dom: { value, onChange }, setValue: mySetValue, value }
 }

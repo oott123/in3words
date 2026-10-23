@@ -1,36 +1,16 @@
-import { renderToString } from 'react-dom/server'
-import { RemixServer } from 'remix'
-import type { EntryContext } from 'remix'
-import jsesc from 'jsesc'
+import 'dotenv/config'
+import { PassThrough } from 'node:stream'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config()
+import type { EntryContext } from 'react-router'
+import { createReadableStreamFromReadable } from '@react-router/node'
+import { ServerRouter } from 'react-router'
+import { isbot } from 'isbot'
+import type { RenderToPipeableStreamOptions } from 'react-dom/server'
+import { renderToPipeableStream } from 'react-dom/server'
 
-export default function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext,
-) {
-  let markup = renderToString(
-    <RemixServer context={remixContext} url={request.url} />,
-  )
+export const streamTimeout = 5_000
 
-  if (remixContext.serverHandoffString) {
-    const str = `<script>window.__remixContext = ${remixContext.serverHandoffString};</script>`
-    const find = markup.indexOf(str)
-    const replace = `<script type="application/json" id="in3wordsContext">${jsesc(
-      eval(`(${remixContext.serverHandoffString})`),
-      {
-        isScriptContext: true,
-        json: true,
-        minimal: true,
-      },
-    )}</script><script>window.__remixContext = JSON.parse(document.getElementById('in3wordsContext').textContent);document.body.removeChild(document.currentScript);</script>`
-    markup =
-      markup.substring(0, find) + replace + markup.substring(find + str.length)
-  }
-
+function setDocumentHeaders(request: Request, responseHeaders: Headers) {
   responseHeaders.set('Content-Type', 'text/html')
   if (process.env.CDN_URL) {
     responseHeaders.append('Link', `<${process.env.CDN_URL}>; rel=preconnect`)
@@ -44,9 +24,74 @@ export default function handleRequest(
   if (request.method === 'GET') {
     responseHeaders.append('Cache-Control', 'public, max-age=60, s-maxage=3600')
   }
+}
 
-  return new Response('<!DOCTYPE html>' + markup, {
-    status: responseStatusCode,
-    headers: responseHeaders,
+export default function handleRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  routerContext: EntryContext,
+) {
+  // https://httpwg.org/specs/rfc9110.html#HEAD
+  if (request.method.toUpperCase() === 'HEAD') {
+    setDocumentHeaders(request, responseHeaders)
+    return new Response(null, {
+      status: responseStatusCode,
+      headers: responseHeaders,
+    })
+  }
+
+  return new Promise<Response>((resolve, reject) => {
+    let shellRendered = false
+    const userAgent = request.headers.get('user-agent')
+
+    // 爬虫需要等待全部内容渲染完成后再返回
+    const readyOption: keyof RenderToPipeableStreamOptions =
+      (userAgent && isbot(userAgent)) || routerContext.isSpaMode
+        ? 'onAllReady'
+        : 'onShellReady'
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
+      () => abort(),
+      streamTimeout + 1000,
+    )
+
+    const { pipe, abort } = renderToPipeableStream(
+      <ServerRouter context={routerContext} url={request.url} />,
+      {
+        [readyOption]() {
+          shellRendered = true
+          const body = new PassThrough({
+            final(callback) {
+              clearTimeout(timeoutId)
+              timeoutId = undefined
+              callback()
+            },
+          })
+          const stream = createReadableStreamFromReadable(body)
+
+          setDocumentHeaders(request, responseHeaders)
+
+          pipe(body)
+
+          resolve(
+            new Response(stream, {
+              headers: responseHeaders,
+              status: responseStatusCode,
+            }),
+          )
+        },
+        onShellError(error: unknown) {
+          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+          reject(error)
+        },
+        onError(error: unknown) {
+          responseStatusCode = 500
+          if (shellRendered) {
+            console.error(error)
+          }
+        },
+      },
+    )
   })
 }
